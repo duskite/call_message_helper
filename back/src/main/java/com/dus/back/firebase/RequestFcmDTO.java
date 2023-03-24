@@ -10,4 +10,5 @@ public class RequestFcmDTO {
 
     private RequestFcmType requestFcmType;
     private TelDTO telDTO;
+
 }

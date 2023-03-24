@@ -16,24 +16,18 @@ public class CallController {
         this.callService = callService;
     }
 
-    @GetMapping("/call-view")
-    public String callView(){
-
-        return "tel/call/call-form";
-    }
-
     @PostMapping("/stop")
-    public String callStop(TelDTO telDTO){
+    public String stopCall(TelDTO telDTO){
 
-        callService.callStop(telDTO);
-        return "redirect:/call/call-view";
+        callService.stopCall(telDTO);
+        return "redirect:/home";
     }
 
     @PostMapping("/start")
-    public String callStart(TelDTO telDTO){
+    public String startCall(TelDTO telDTO){
 
-        callService.callStart(telDTO);
-        return "redirect:/call/call-view";
+        callService.startCall(telDTO);
+        return "redirect:/home";
     }
 
 

@@ -27,4 +27,16 @@ class MemberServiceImplTest {
         Assertions.assertThat(member).isEqualTo(saveMember);
     }
 
+    @Test
+    void findByUserId(){
+        String userId = "asda";
+
+        Member member = new Member();
+        member.setUserId(userId);
+        memberService.save(member);
+
+        Member findMember = memberService.findByUserId(userId);
+        Assertions.assertThat(findMember.getUserId()).isEqualTo(member.getUserId());
+    }
+
 }

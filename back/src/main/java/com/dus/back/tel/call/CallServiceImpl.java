@@ -19,7 +19,7 @@ public class CallServiceImpl implements CallService{
     }
 
     @Override
-    public void callStart(TelDTO telDTO) {
+    public void startCall(TelDTO telDTO) {
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_START);
         requestFcmDTO.setTelDTO(telDTO);
@@ -30,7 +30,7 @@ public class CallServiceImpl implements CallService{
     }
 
     @Override
-    public void callStop(TelDTO telDTO) {
+    public void stopCall(TelDTO telDTO) {
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_END);
 

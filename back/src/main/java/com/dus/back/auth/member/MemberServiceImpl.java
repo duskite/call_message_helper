@@ -1,8 +1,13 @@
 package com.dus.back.auth.member;
 
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,6 +26,26 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findById(Long id) {
-        return memberRepository.findById(id);
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        return optionalMember.get();
     }
+
+    @Override
+    public Member findByUserId(String userId) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+        return optionalMember.get();
+    }
+
+    @Override
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : errors.getFieldErrors()) {
+            String validName = error.getField();
+            validatorResult.put(validName, error.getDefaultMessage());
+        }
+
+        return validatorResult;
+    }
+
 }

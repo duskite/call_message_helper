@@ -30,4 +30,24 @@ public class FcmRepositoryImpl implements FcmRepository{
         return result.stream().findAny();
     }
 
+    @Override
+    public List<Fcm> findAllByUserId(String userId) {
+        List<Fcm> result = em.createQuery("select m from Fcm m where m.userId =:userId", Fcm.class)
+                .setParameter("userId", userId)
+                .getResultList();
+        return result;
+    }
+
+    @Override
+    public boolean existByPhoneNumber(String phoneNumber) {
+        List<Fcm> fcms = em.createQuery("select m from Fcm m where m.phoneNumber=:phoneNumber", Fcm.class)
+                .setParameter("phoneNumber", phoneNumber)
+                .getResultList();
+
+        if(fcms.size() == 0){
+            return false;
+        }
+
+        return true;
+    }
 }

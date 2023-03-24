@@ -1,52 +1,64 @@
 package com.dus.back.auth;
 
+import com.dus.back.auth.fcm.Fcm;
 import com.dus.back.auth.fcm.FcmDTO;
 import com.dus.back.auth.fcm.FcmService;
 import com.dus.back.auth.member.MemberDTO;
 import com.dus.back.auth.member.MemberService;
-import com.dus.back.auth.member.MemberType;
-import org.springframework.data.repository.query.Param;
+import com.dus.back.auth.vaild.CheckUserIdValidator;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Map;
+
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/auth/*")
 public class AuthController {
     private final FcmService fcmService;
     private final MemberService memberService;
+    private final CheckUserIdValidator checkUserIdValidator;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthController(FcmService fcmService, MemberService memberService) {
+    public AuthController(FcmService fcmService, MemberService memberService, CheckUserIdValidator checkUserIdValidator, BCryptPasswordEncoder passwordEncoder) {
         this.fcmService = fcmService;
         this.memberService = memberService;
+        this.checkUserIdValidator = checkUserIdValidator;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping(value = "/member", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
-    public String saveMember(@Param("userId") String userId, @Param("password") String password){
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setUserId(userId);
-        memberDTO.setPassword(password);
-        memberDTO.setMemberType(MemberType.PERSONAL);
+    @InitBinder
+    public void validatorBinder(WebDataBinder binder) {
+        binder.addValidators(checkUserIdValidator);
+    }
 
+    @PostMapping("/member")
+    public String saveMember(@Valid MemberDTO memberDTO, Errors errors, Model model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("memberDTO", memberDTO);
+
+            Map<String, String> validatorResult = memberService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "/member/signup-form";
+        }
+
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         memberService.save(memberDTO.toEntity());
-
-        return "redirect:/";
+        return "redirect:/member/signin-form";
     }
-
-    @GetMapping("/member/signup-form")
-    public String signUpView(){
-        return "/member/signup-form";
-    }
-
-    @GetMapping("/member/signin-form")
-    public String signInView(){
-        return "/member/signin-form";
-    }
-
 
     @PostMapping("/fcm-token")
     @ResponseBody
     public Long saveFcm(@RequestBody FcmDTO fcmDTO){
-        System.out.println(fcmDTO.getPhoneNumber());
+
         return fcmService.save(fcmDTO.toEntity());
     }
+
 }

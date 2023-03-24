@@ -6,8 +6,10 @@ import com.google.firebase.messaging.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.dus.back.firebase.RequestFcmType.*;
 
+/**
+ * 안드로이드 단말기로 요청하는 부분을 전담하는 서비스
+ */
 @Service
 @Slf4j
 public class RequestFcmService {

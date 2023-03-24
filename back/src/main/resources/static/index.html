@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
+<head th:replace="fragments/header :: header"/>
 <body>
-<p>테스트</p>
 
-<a href="/call/call-view">전화 테스트</a> <br>
-<a href="/msg/msg-view">문자 테스트</a> <br>
-<a href="/auth/member/signup-form">회원가입</a>
+  <div class="container">
+    <h1>
+      <a href="/member/signin-form">Login</a>
+    </h1>
+  </div>
 
 </body>
 </html>
