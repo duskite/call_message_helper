@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<h1>Call Test</h1>
+<a href="/">처음으로</a>
+
+<div class="container">
+  <form action="/call/start" method="post">
+    <div class="form-group">
+
+
+      <label>번호</label>
+      <input type="tel" name="myPhoneNumber" placeholder="임시 내 번호">
+
+      <br>
+
+      <label>번호</label>
+      <input type="tel" name="phoneNumber" placeholder="번호를 입력하세요">
+
+    </div>
+
+    <br>
+    <button type="submit">전화 걸기</button>
+  </form>
+</div>
+
+<div class="container">
+  <form action="/call/stop" method="post">
+    <div class="form-group">
+      <label>번호</label>
+      <input type="tel" name="myPhoneNumber" placeholder="임시 내 번호">
+    </div>
+    <button type="submit">전화 끊기</button>
+  </form>
+</div>
+
+
+</body>
+</html>
