@@ -20,5 +20,11 @@ public interface CallService {
     void stopCall(TelDTO telDTO);
 
 
+    /**
+     * 현재 단말기에 걸려온 통화를 수신
+     * @param telDTO
+     */
+    void receiveCall(TelDTO telDTO);
+
 
 }

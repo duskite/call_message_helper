@@ -23,4 +23,11 @@ public class MsgController {
 
         return "redirect:/home";
     }
+
+    @PostMapping("/mms")
+    public String sendMms(TelDTO telDTO) {
+        msgService.sendMms(telDTO);
+
+        return "redirect:/home";
+    }
 }
