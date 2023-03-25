@@ -1,6 +1,7 @@
 package com.duskite.callandmsghelper;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,13 +9,15 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.duskite.callandmsghelper.dto.MemberDTO;
+import com.duskite.callandmsghelper.dto.LoginDTO;
 import com.duskite.callandmsghelper.http.HttpUil;
 import com.duskite.callandmsghelper.http.HttpUtilImpl;
 
 import org.json.JSONException;
 
 public class SignInActivity extends AppCompatActivity {
+
+    private static String TAG = "SignInActivity";
 
     private EditText edtUserId;
     private EditText edtPassword;
@@ -48,12 +51,15 @@ public class SignInActivity extends AppCompatActivity {
                     String userId = edtUserId.getText().toString();
                     String password = edtPassword.getText().toString();
 
-                    MemberDTO memberDTO = new MemberDTO();
-                    memberDTO.setUserId(userId);
-                    memberDTO.setPassword(password);
+                    LoginDTO loginDTO = new LoginDTO();
+                    loginDTO.setUserId(userId);
+                    loginDTO.setPassword(password);
+
+                    Log.d(TAG, loginDTO.getUserId());
+                    Log.d(TAG, loginDTO.getPassword());
 
                     try {
-                        httpUtil.logIn(memberDTO);
+                        httpUtil.logIn(loginDTO);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

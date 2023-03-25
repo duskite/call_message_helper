@@ -8,6 +8,5 @@ import lombok.Setter;
 public class LoginDTO {
     private String userId;
     private String password;
-
-    private Role role = Role.ROLE_MEMBER;
+    
 }

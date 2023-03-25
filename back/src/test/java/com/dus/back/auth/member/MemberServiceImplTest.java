@@ -2,6 +2,7 @@ package com.dus.back.auth.member;
 
 import com.dus.back.member.Member;
 import com.dus.back.member.MemberService;
+import com.dus.back.member.MemberType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ class MemberServiceImplTest {
         Member member = new Member();
         member.setUserId("aaaa");
         member.setPassword("1234");
+        member.setMemberType(MemberType.PERSONAL);
 
         Long saveId = memberService.save(member);
         Member saveMember = memberService.findById(saveId);

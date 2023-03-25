@@ -1,6 +1,6 @@
 package com.duskite.callandmsghelper.dto;
 
-public class MemberDTO {
+public class LoginDTO {
 
     private String userId;
     private String password;

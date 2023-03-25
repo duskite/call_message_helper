@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 /**
- * 화면을 보여주는 컨트롤러
+ * 사용자별 메인 화면을 보여주는 컨트롤러
  */
 @Slf4j
 @Controller

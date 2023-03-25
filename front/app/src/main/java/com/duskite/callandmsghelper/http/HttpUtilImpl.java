@@ -3,7 +3,7 @@ package com.duskite.callandmsghelper.http;
 import android.util.Log;
 
 import com.duskite.callandmsghelper.dto.FcmDTO;
-import com.duskite.callandmsghelper.dto.MemberDTO;
+import com.duskite.callandmsghelper.dto.LoginDTO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,10 +20,10 @@ import okhttp3.Response;
 
 public class HttpUtilImpl implements HttpUil{
 
+    private static final String TAG = "HttpUtilImpl";
+
     private static HttpUtilImpl HttpUtilImpl;
     private OkHttpClient client;
-    private final String BASE_URL = "http://192.168.1.7:8080/";
-    private final String FCM_URL = BASE_URL + "auth/fcm-token/";
 
     private HttpUtilImpl(){
         client = new OkHttpClient();
@@ -47,12 +47,12 @@ public class HttpUtilImpl implements HttpUil{
     }
 
     @Override
-    public void logIn(MemberDTO memberDTO) throws JSONException {
+    public void logIn(LoginDTO loginDTO) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", memberDTO.getUserId());
-        jsonObject.put("password", memberDTO.getPassword());
+        jsonObject.put("userId", loginDTO.getUserId());
+        jsonObject.put("password", loginDTO.getPassword());
 
-//        httpRequest(makeRequestBody(jsonObject), FCM_URL);
+        httpRequest(makeRequestBody(jsonObject), LOGIN_URL);
     }
 
     private RequestBody makeRequestBody(JSONObject jsonObject){
@@ -77,9 +77,10 @@ public class HttpUtilImpl implements HttpUil{
             public void onResponse(Call call, Response response) throws IOException {
 
                 if(!response.isSuccessful()){
-                    Log.e("http요청", "실패");
+                    Log.e(TAG, "응답 실패");
                 }else {
-                    Log.e("http요청", "성공");
+                    Log.e(TAG, "응답 성공: " + response.code());
+
                 }
             }
         });
