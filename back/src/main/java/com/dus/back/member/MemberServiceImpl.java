@@ -1,11 +1,13 @@
 package com.dus.back.member;
 
+import com.dus.back.fcm.FcmRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

@@ -2,6 +2,7 @@ package com.dus.back.member;
 
 import org.springframework.validation.Errors;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,5 +37,6 @@ public interface MemberService {
      * @return
      */
     Map<String, String> validateHandling(Errors errors);
+
 
 }

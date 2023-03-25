@@ -23,11 +23,12 @@ public class SecurityConfig {
                 .antMatchers("/","/member/signin-form", "/member/login").permitAll()
                 .antMatchers("/home").authenticated();
         http.formLogin()
-                .loginPage("/member/signin-form").failureHandler(loginFailHandler()).defaultSuccessUrl("/home", true);
-        http.formLogin()
+                .loginPage("/member/signin-form")
+                .successHandler(loginSuccessHandler())
+                .failureHandler(loginFailHandler())
                 .usernameParameter("userId")
                 .passwordParameter("password")
-                .loginProcessingUrl("/member/login").defaultSuccessUrl("/home", true);
+                .loginProcessingUrl("/member/login");
         http.exceptionHandling().accessDeniedPage("/forbidden");
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/");
         http.userDetailsService(userDetailsService);
@@ -36,8 +37,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public LoginFailHandler loginFailHandler(){
-        return new LoginFailHandler();
+    public LoginFailureHandler loginFailHandler(){
+        return new LoginFailureHandler();
+    }
+
+    @Bean
+    public LoginSuccessHandler loginSuccessHandler(){
+        return new LoginSuccessHandler();
     }
 
     @Bean

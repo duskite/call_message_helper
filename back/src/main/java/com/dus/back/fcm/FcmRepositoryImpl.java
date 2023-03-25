@@ -32,6 +32,7 @@ public class FcmRepositoryImpl implements FcmRepository{
 
     @Override
     public List<Fcm> findAllByUserId(String userId) {
+
         List<Fcm> result = em.createQuery("select m from Fcm m where m.userId =:userId", Fcm.class)
                 .setParameter("userId", userId)
                 .getResultList();

@@ -44,6 +44,7 @@ public class MemberController {
         }
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        memberDTO.setMemberType(MemberType.PERSONAL);
         memberService.save(memberDTO.toEntity());
         return "redirect:/member/signin-form";
     }

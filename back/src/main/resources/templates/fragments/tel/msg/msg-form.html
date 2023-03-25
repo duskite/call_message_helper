@@ -6,16 +6,17 @@
     <form th:action="@{/msg/sms}" th:object="${telDTO}" method="post">
 
       <div class="form-group">
-        <label>임시</label>
-        <input type="tel" th:field="*{myPhoneNumber}" class="form-control" placeholder="임시">
+        <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumber}">
       </div>
+
+
       <div class="form-group">
         <label>상대방 번호</label>
-        <input type="tel" th:field="*{phoneNumber}" class="form-control" placeholder="번호를 입력하세요">
+        <input type="tel" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
       </div>
       <div class="form-group">
         <label>메세지 내용</label>
-        <input type="tel" th:field="*{msg}" class="form-control" placeholder="메세지 내용을 입력하세요">
+        <input type="tel" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요">
       </div>
 
       <button type="submit" class="btn btn-primary">전송</button>
