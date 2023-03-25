@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,20 +44,25 @@ public class HttpUtilImpl implements HttpUil{
         jsonObject.put("phoneNumber", fcmDTO.getPhoneNumber());
         jsonObject.put("token", fcmDTO.getToken());
 
-        httpRequest(makeRequestBody(jsonObject), FCM_URL);
+        httpRequest(makeJsonBody(jsonObject), FCM_URL);
     }
 
     @Override
-    public void logIn(LoginDTO loginDTO) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", loginDTO.getUserId());
-        jsonObject.put("password", loginDTO.getPassword());
-
-        httpRequest(makeRequestBody(jsonObject), LOGIN_URL);
+    public void logIn(LoginDTO loginDTO) {
+        httpRequest(makeLoginBody(loginDTO), LOGIN_URL);
     }
 
-    private RequestBody makeRequestBody(JSONObject jsonObject){
+    private RequestBody makeJsonBody(JSONObject jsonObject){
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return body;
+    }
+
+    private RequestBody makeLoginBody(LoginDTO loginDTO){
+        RequestBody body = new FormBody.Builder()
+                .add("userId", loginDTO.getUserId())
+                .add("password", loginDTO.getPassword())
+                .build();
+
         return body;
     }
 
@@ -64,7 +70,6 @@ public class HttpUtilImpl implements HttpUil{
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
-                .addHeader("content-type", "application/json")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

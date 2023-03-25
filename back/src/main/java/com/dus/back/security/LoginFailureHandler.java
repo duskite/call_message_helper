@@ -25,6 +25,10 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("로그인 실패");
 
+        String userId = request.getParameter("userId");
+        log.error(userId);
+
+
         String errorMessage = null;
         if(exception instanceof BadCredentialsException) {
             errorMessage = "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해주세요.";
