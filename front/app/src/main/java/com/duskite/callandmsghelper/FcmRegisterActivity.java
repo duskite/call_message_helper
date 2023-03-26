@@ -98,7 +98,7 @@ public class FcmRegisterActivity extends AppCompatActivity {
         FcmDTO fcmDTO = new FcmDTO();
         fcmDTO.setToken(token);
         fcmDTO.setPhoneNumber(getMyNumber());
-        fcmDTO.setUserId("ysy5593");
+        fcmDTO.setUserId("asd");
 
         return fcmDTO;
     }

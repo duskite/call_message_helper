@@ -17,15 +17,17 @@ public class MsgController {
         this.msgService = msgService;
     }
 
-    @GetMapping("/msg-view")
-    public String msgView(){
-        return "tel/msg/msg-form";
-    }
-
-    @PostMapping("/sms/send")
-    public String msgSend(TelDTO telDTO) {
+    @PostMapping("/sms")
+    public String sendSms(TelDTO telDTO) {
         msgService.sendSms(telDTO);
 
-        return "redirect:/msg/msg-view";
+        return "redirect:/home";
+    }
+
+    @PostMapping("/mms")
+    public String sendMms(TelDTO telDTO) {
+        msgService.sendMms(telDTO);
+
+        return "redirect:/home";
     }
 }

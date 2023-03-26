@@ -1,36 +1,19 @@
 package com.duskite.callandmsghelper;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.duskite.callandmsghelper.dto.FcmDTO;
-import com.duskite.callandmsghelper.dto.MemberDTO;
-import com.duskite.callandmsghelper.http.HttpUil;
-import com.duskite.callandmsghelper.http.HttpUtilImpl;
 import com.duskite.callandmsghelper.tel.FcmService;
 import com.duskite.callandmsghelper.tel.MsgBroadcastReceiver;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -13,6 +13,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
+/**
+ *  안드로이드 단말기에 FCM 요청을 위해
+ *  Firebase-admin private key를 이용하여 Firebase 측에 인증 받는 컴포넌트
+ *
+ */
 @Slf4j
 @Component
 public class RequestFcmInitializer {

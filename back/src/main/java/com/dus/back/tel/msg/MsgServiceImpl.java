@@ -1,6 +1,6 @@
 package com.dus.back.tel.msg;
 
-import com.dus.back.auth.fcm.FcmService;
+import com.dus.back.fcm.FcmService;
 import com.dus.back.firebase.RequestFcmDTO;
 import com.dus.back.firebase.RequestFcmService;
 import com.dus.back.firebase.RequestFcmType;
@@ -26,5 +26,20 @@ public class MsgServiceImpl implements MsgService{
 
         String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
         requestFcmService.sendFcmMessage(token, requestFcmDTO);
+    }
+
+    @Override
+    public void sendMms(TelDTO telDTO) {
+
+    }
+
+    @Override
+    public void receiveSms(TelDTO telDTO) {
+
+    }
+
+    @Override
+    public void receiveMms(TelDTO telDTO) {
+
     }
 }

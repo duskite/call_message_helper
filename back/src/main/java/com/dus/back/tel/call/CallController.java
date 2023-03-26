@@ -1,11 +1,13 @@
 package com.dus.back.tel.call;
 
 import com.dus.back.tel.TelDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
 @Controller
 @RequestMapping("/call")
 public class CallController {
@@ -16,24 +18,22 @@ public class CallController {
         this.callService = callService;
     }
 
-    @GetMapping("/call-view")
-    public String callView(){
-
-        return "tel/call/call-form";
-    }
-
     @PostMapping("/stop")
-    public String callStop(TelDTO telDTO){
+    public String stopCall(TelDTO telDTO){
 
-        callService.callStop(telDTO);
-        return "redirect:/call/call-view";
+        log.error(telDTO.getMyPhoneNumber());
+
+        callService.stopCall(telDTO);
+        return "redirect:/home";
     }
 
     @PostMapping("/start")
-    public String callStart(TelDTO telDTO){
+    public String startCall(TelDTO telDTO){
 
-        callService.callStart(telDTO);
-        return "redirect:/call/call-view";
+        log.error(telDTO.getMyPhoneNumber());
+
+        callService.startCall(telDTO);
+        return "redirect:/home";
     }
 
 
