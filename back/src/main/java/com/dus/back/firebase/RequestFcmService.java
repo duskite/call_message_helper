@@ -22,14 +22,14 @@ public class RequestFcmService {
             case MMS:
                 message = makeFcmSmsMessage(token,
                         requestFcmDTO.getRequestFcmType(),
-                        requestFcmDTO.getTelDTO().getPhoneNumber(),
+                        requestFcmDTO.getTelDTO().getTargetPhoneNumber(),
                         requestFcmDTO.getTelDTO().getMsg());
                 break;
 
             case CALL_START:
                 message = makeFcmCallMessage(token,
                         requestFcmDTO.getRequestFcmType(),
-                        requestFcmDTO.getTelDTO().getPhoneNumber());
+                        requestFcmDTO.getTelDTO().getTargetPhoneNumber());
                 break;
             case CALL_END:
                 message = makeFcmCallStopMessage(token,
@@ -50,7 +50,7 @@ public class RequestFcmService {
     private Message makeFcmSmsMessage(String token, RequestFcmType requestFcmType, String phoneNumber, String msg) {
         Message message = Message.builder()
                 .setToken(token)
-                .putData("phoneNumber", phoneNumber)
+                .putData("targetPhoneNumber", phoneNumber)
                 .putData("msg", msg)
                 .putData("requestFcmType", requestFcmType.name())
                 .build();
@@ -61,7 +61,7 @@ public class RequestFcmService {
     private Message makeFcmCallMessage(String token, RequestFcmType requestFcmType, String phoneNumber){
         Message message = Message.builder()
                 .setToken(token)
-                .putData("phoneNumber",phoneNumber)
+                .putData("targetPhoneNumber",phoneNumber)
                 .putData("requestFcmType", requestFcmType.name())
                 .build();
 

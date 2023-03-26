@@ -1,35 +1,70 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="call-form">
+<div id="call-form" th:fragment="call-form">
   <div class="container">
-    <form th:action="@{/call/start}" th:object="${telDTO}" method="post">
-
+    <form method="post">
       <div class="form-group">
-        <input type="hidden" name="myPhoneNumber" class="form-control" th:value="${myPhoneNumber}">
+        <input type="hidden" id="myPhoneNumber" name="myPhoneNumber" class="form-control" th:value="${myPhoneNumbers.get(0)}">
       </div>
-
 
       <div class="form-group">
         <label>상대방 번호</label>
-        <input type="tel" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+        <input type="text" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
       </div>
-      <button type="submit" class="btn btn-primary">전화 걸기</button>
+      <button type="button" onclick="callStart()" class="btn btn-primary">전화 걸기</button>
     </form>
   </div>
 
   <div class="container">
-    <form th:action="@{/call/stop}" th:object="${telDTO}" method="post">
-
+    <form method="post">
       <div class="form-group">
-        <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumber}">
+        <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumbers.get(0)}">
       </div>
 
-
-      <button type="submit" class="btn btn-primary">전화 끊기</button>
+      <button type="button" onclick="callStop()" class="btn btn-primary">전화 끊기</button>
     </form>
   </div>
 </div>
+
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+  function callStart(){
+    let telDTO = {
+      myPhoneNumber: $("#myPhoneNumber").val(),
+      targetPhoneNumber: $("#targetCallNumber").val(),
+    };
+
+    console.log(telDTO);
+
+    $.ajax({
+      url: "/call/start",
+      type: "POST",
+      data: telDTO
+    }).done(function (result){
+      if(result){
+        alert("전화 걸기 성공");
+        $("#targetCallNumber").val("");
+      }else {
+        alert("실패")
+      }
+    });
+  }
+
+  function callStop(){
+    let telDTO = {
+      myPhoneNumber: $("#myPhoneNumber").val(),
+    };
+
+    $.ajax({
+      url: "/call/stop",
+      type: "POST",
+      data: telDTO
+    }).done(function (){
+      alert("전화 끊기를 요청했습니다.");
+    });
+  }
+</script>
 
 </body>
 </html>

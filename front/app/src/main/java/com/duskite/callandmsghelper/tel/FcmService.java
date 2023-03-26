@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.telecom.TelecomManager;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -20,12 +21,16 @@ import java.util.Map;
 
 public class FcmService extends FirebaseMessagingService {
 
+    private static String TAG = "FcmService";
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
 
         Map<String, String> fcmData = message.getData();
         String fcmType = fcmData.get("requestFcmType");
-        String phoneNumber = fcmData.get("phoneNumber");
+        String phoneNumber = fcmData.get("targetPhoneNumber");
+
+        Log.d(TAG, "넘어온 번호:" + phoneNumber);
 
         if(fcmType.equals("SMS")){
             String msg = fcmData.get("msg");
@@ -48,6 +53,9 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     private void sendSMS(String number, String msg){
+
+        Log.d(TAG, "넘어온 번호:" + number);
+
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(number, null, msg, null, null);
     }

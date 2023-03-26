@@ -7,8 +7,10 @@
 <a href="/logout">로그아웃</a>
 <h2 th:text="${userId}"></h2>
 
-<div th:if="${myPhoneNumber}">
-  <h2 th:text="${myPhoneNumber}"></h2>
+<div th:if="${hasNumbers}">
+  <ul th:each="myPhoneNumber : ${myPhoneNumbers}">
+    <li th:text="${myPhoneNumber}"></li>
+  </ul>
   <div class="container">
     <div th:replace="fragments/tel/call/call-form"/>
     <div th:replace="fragments/tel/msg/msg-form"/>
@@ -16,7 +18,7 @@
 </div>
 
 
-<div th:unless="${myPhoneNumber}">
+<div th:unless="${hasNumbers}">
   <h2>등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
 </div>
 
