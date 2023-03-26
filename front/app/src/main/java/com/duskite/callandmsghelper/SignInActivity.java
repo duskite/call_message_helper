@@ -1,10 +1,14 @@
 package com.duskite.callandmsghelper;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.duskite.callandmsghelper.dto.LoginDTO;
 import com.duskite.callandmsghelper.http.HttpUil;
 import com.duskite.callandmsghelper.http.HttpUtilImpl;
+import com.duskite.callandmsghelper.http.OnLoginResultListener;
 
 import org.json.JSONException;
 
@@ -38,6 +43,26 @@ public class SignInActivity extends AppCompatActivity {
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
 
         httpUtil = HttpUtilImpl.getInstance();
+        httpUtil.setOnLoginResultListener(new OnLoginResultListener() {
+            @Override
+            public void loginResult(boolean isLogin, String errorMessage) {
+                if(isLogin){
+                    Intent intent = new Intent(getApplicationContext(), FcmRegisterActivity.class);
+                    startActivity(intent);
+                }else {
+                    Log.e(TAG, errorMessage);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    }, 0);
+                }
+
+            }
+        });
 
         btnSignIn.setOnClickListener(setOnClickListener);
     }
@@ -58,11 +83,13 @@ public class SignInActivity extends AppCompatActivity {
                     Log.d(TAG, loginDTO.getUserId());
                     Log.d(TAG, loginDTO.getPassword());
 
+
                     try {
                         httpUtil.logIn(loginDTO);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
+
                     break;
             }
         }

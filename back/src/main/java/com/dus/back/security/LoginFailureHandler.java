@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 
 /**
  * 로그인 실패시 처리하는 핸들러
+ * 웹과 안드로이드 앱 따로 처리
  *
  */
 @Slf4j
@@ -24,10 +25,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         log.error("로그인 실패");
-
         String userId = request.getParameter("userId");
-        log.error(userId);
-
 
         String errorMessage = null;
         if(exception instanceof BadCredentialsException) {
@@ -44,7 +42,16 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
         log.error(errorMessage);
         errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
-        setDefaultFailureUrl("/member/signin-form?error=true&exception=" + errorMessage);
-        super.onAuthenticationFailure(request, response, exception);
+
+        String device = request.getParameter("device");
+        if(device.equals("android")){
+            log.info("안드로이드에서 로그인 요청");
+            response.setHeader("login-error", errorMessage);
+        }else {
+            log.info("웹에서 로그인 요청");
+            setDefaultFailureUrl("/member/signin-form?error=true&exception=" + errorMessage);
+            super.onAuthenticationFailure(request, response, exception);
+        }
+
     }
 }

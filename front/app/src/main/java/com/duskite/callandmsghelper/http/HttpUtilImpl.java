@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,6 +26,7 @@ public class HttpUtilImpl implements HttpUil{
     private static final String TAG = "HttpUtilImpl";
 
     private static HttpUtilImpl HttpUtilImpl;
+    private OnLoginResultListener onLoginResultListener;
     private OkHttpClient client;
 
     private HttpUtilImpl(){
@@ -38,40 +41,35 @@ public class HttpUtilImpl implements HttpUil{
     }
 
     @Override
-    public void sendFcm(FcmDTO fcmDTO) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userId", fcmDTO.getUserId());
-        jsonObject.put("phoneNumber", fcmDTO.getPhoneNumber());
-        jsonObject.put("token", fcmDTO.getToken());
+    public void sendFcm(FcmDTO fcmDTO){
 
-        httpRequest(makeJsonBody(jsonObject), FCM_URL);
+        try{
+            Request request = makeRequest(makeFcmBody(fcmDTO), FCM_URL);
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(!response.isSuccessful()){
+                        Log.d(TAG, "응답 실패");
+                    }else {
+                        Log.d(TAG, "응답 성공: " + response.code());
+                    }
+                }
+            });
+        }catch (JSONException e){
+
+        }
+
     }
 
     @Override
     public void logIn(LoginDTO loginDTO) {
-        httpRequest(makeLoginBody(loginDTO), LOGIN_URL);
-    }
 
-    private RequestBody makeJsonBody(JSONObject jsonObject){
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return body;
-    }
-
-    private RequestBody makeLoginBody(LoginDTO loginDTO){
-        RequestBody body = new FormBody.Builder()
-                .add("userId", loginDTO.getUserId())
-                .add("password", loginDTO.getPassword())
-                .build();
-
-        return body;
-    }
-
-    private void httpRequest(RequestBody body, String url){
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
+        Request request = makeRequest(makeLoginBody(loginDTO), LOGIN_URL);
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -80,14 +78,59 @@ public class HttpUtilImpl implements HttpUil{
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
                 if(!response.isSuccessful()){
-                    Log.e(TAG, "응답 실패");
+                    Log.d(TAG, "응답 실패");
                 }else {
-                    Log.e(TAG, "응답 성공: " + response.code());
-
+                    Log.d(TAG, "응답 성공: " + response.code());
+                    String userId = response.header("login-userId");
+                    String errorMessage = response.header("login-error");
+                    if(userId != null){
+                        Log.d(TAG, userId);
+                        onLoginResultListener.loginResult(true, null);
+                    }else {
+                        errorMessage = URLDecoder.decode(errorMessage, "UTF-8");
+                        Log.d(TAG, errorMessage);
+                        onLoginResultListener.loginResult(false, errorMessage);
+                    }
                 }
+
             }
         });
     }
+
+    @Override
+    public void setOnLoginResultListener(OnLoginResultListener onLoginResultListener) {
+        this.onLoginResultListener = onLoginResultListener;
+    }
+
+
+    private RequestBody makeFcmBody(FcmDTO fcmDTO) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("userId", fcmDTO.getUserId());
+        jsonObject.put("phoneNumber", fcmDTO.getPhoneNumber());
+        jsonObject.put("token", fcmDTO.getToken());
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return body;
+    }
+
+    private RequestBody makeLoginBody(LoginDTO loginDTO){
+        RequestBody body = new FormBody.Builder()
+                .add("userId", loginDTO.getUserId())
+                .add("password", loginDTO.getPassword())
+                .add("device", "android")
+                .build();
+
+        return body;
+    }
+
+    private Request makeRequest(RequestBody body, String url) {
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        return request;
+    }
+
 }
