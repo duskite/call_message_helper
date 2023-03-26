@@ -22,16 +22,14 @@ public class MsgController {
     @ResponseBody
     public boolean sendSms(TelDTO telDTO) {
         log.error(telDTO.getTargetPhoneNumber());
-        msgService.sendSms(telDTO);
 
-        return true;
+        return msgService.sendSms(telDTO);
     }
 
     @PostMapping("/mms")
     @ResponseBody
     public boolean sendMms(TelDTO telDTO) {
-        msgService.sendMms(telDTO);
 
-        return true;
+        return msgService.sendMms(telDTO);
     }
 }

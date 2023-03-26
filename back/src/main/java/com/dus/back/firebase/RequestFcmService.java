@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RequestFcmService {
 
-    public void sendFcmMessage(String token, RequestFcmDTO requestFcmDTO) {
+    public boolean sendFcmMessage(String token, RequestFcmDTO requestFcmDTO) {
 
         Message message = null;
         switch (requestFcmDTO.getRequestFcmType()){
@@ -41,8 +41,10 @@ public class RequestFcmService {
             String response = FirebaseMessaging.getInstance().send(message);
 
             log.info(response);
+            return true;
         }catch (FirebaseMessagingException e){
             log.error("FCM 메세지 전송중 오류");
+            return false;
         }
     }
 

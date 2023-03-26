@@ -22,8 +22,7 @@ public class CallController {
 
         log.error(telDTO.getMyPhoneNumber());
 
-        callService.stopCall(telDTO);
-        return true;
+        return callService.stopCall(telDTO);
     }
 
     @PostMapping("/start")
@@ -32,8 +31,8 @@ public class CallController {
 
         log.error(telDTO.getMyPhoneNumber());
 
-        callService.startCall(telDTO);
-        return true;
+
+        return callService.startCall(telDTO);
     }
 
 }

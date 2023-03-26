@@ -19,18 +19,18 @@ public class MsgServiceImpl implements MsgService{
     }
 
     @Override
-    public void sendSms(TelDTO telDTO) {
+    public boolean sendSms(TelDTO telDTO) {
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.SMS);
         requestFcmDTO.setTelDTO(telDTO);
 
         String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
-        requestFcmService.sendFcmMessage(token, requestFcmDTO);
+        return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 
     @Override
-    public void sendMms(TelDTO telDTO) {
-
+    public boolean sendMms(TelDTO telDTO) {
+        return false;
     }
 
     @Override

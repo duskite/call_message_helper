@@ -11,13 +11,13 @@ public interface CallService {
      * 안드로이드 단말기에 통화 시작 요청
      * @param telDTO
      */
-    void startCall(TelDTO telDTO);
+    boolean startCall(TelDTO telDTO);
 
     /**
      * 안드로이드 단말기에 통화 종료 요청
      * @param telDTO
      */
-    void stopCall(TelDTO telDTO);
+    boolean stopCall(TelDTO telDTO);
 
 
     /**
