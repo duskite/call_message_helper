@@ -43,8 +43,8 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         log.error(errorMessage);
         errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
 
-        String device = request.getParameter("device");
-        if(device.equals("android")){
+        String android = request.getParameter("android");
+        if(android != null){
             log.info("안드로이드에서 로그인 요청");
             response.setHeader("login-error", errorMessage);
         }else {

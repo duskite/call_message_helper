@@ -20,8 +20,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        String device = request.getParameter("device");
-        if(device.equals("android")){
+        String android = request.getParameter("android");
+        if(android != null){
             log.info("안드로이드에서 로그인 요청");
             response.setHeader("login-userId", authentication.getName());
         }else {

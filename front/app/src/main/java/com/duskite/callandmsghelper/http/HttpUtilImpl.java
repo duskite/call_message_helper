@@ -118,7 +118,7 @@ public class HttpUtilImpl implements HttpUil{
         RequestBody body = new FormBody.Builder()
                 .add("userId", loginDTO.getUserId())
                 .add("password", loginDTO.getPassword())
-                .add("device", "android")
+                .add("android", "android")
                 .build();
 
         return body;
