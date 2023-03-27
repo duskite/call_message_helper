@@ -3,6 +3,7 @@ package com.dus.back.member;
 import com.dus.back.security.LoginDTO;
 import com.dus.back.vaild.CheckUserIdValidator;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,8 +46,17 @@ public class MemberController {
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         memberDTO.setMemberType(MemberType.BUSINESS);
+
         memberService.save(memberDTO.toEntity());
+
         return "redirect:/member/signin-form";
+    }
+
+    @PostMapping("/member/update/password")
+    @ResponseBody
+    public boolean updatePassword(MemberDTO memberDTO) {
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
+        return memberService.update(memberDTO.toEntity());
     }
 
     @GetMapping("/member/signup-form")
@@ -64,5 +74,15 @@ public class MemberController {
         return "/member/signin-form";
     }
 
+    @GetMapping("/member/info/{userId}")
+    public String info(Model model, Authentication authentication, @PathVariable("userId") String userId) {
+
+        if (userId.equals(authentication.getName())) {
+            model.addAttribute("userId", userId);
+            return "/member/update-form";
+        }else {
+            return "forbidden";
+        }
+    }
 
 }

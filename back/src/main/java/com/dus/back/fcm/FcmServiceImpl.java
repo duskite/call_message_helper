@@ -20,7 +20,11 @@ public class FcmServiceImpl implements FcmService {
 
     @Override
     public Long save(Fcm fcm) {
-        return fcmRepository.save(fcm);
+        if(!fcmRepository.existByPhoneNumber(fcm.getPhoneNumber())){
+            return fcmRepository.save(fcm);
+        }else {
+            return -1L;
+        }
     }
 
 

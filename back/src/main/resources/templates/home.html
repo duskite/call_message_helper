@@ -1,24 +1,58 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/head :: head"/>
+
 <body>
 
-<h1>home</h1>
-<a href="/logout">로그아웃</a>
-<h2 th:text="${userId}"></h2>
+<nav th:replace="fragments/nav :: nav"/>
 
-<div th:if="${myPhoneNumber}">
-  <h2 th:text="${myPhoneNumber}"></h2>
-  <div class="container">
-    <div th:replace="fragments/tel/call/call-form"/>
-    <div th:replace="fragments/tel/msg/msg-form"/>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="fixed card col">
+      <h2 th:text="${userId}"></h2>
+      <a href="/logout">로그아웃</a>
+      <a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
+
+      <!--  번호가 등록되어 있는 유저는 기본값으로 하나 설정해놓음, 대부분 하나의 번호만 등록하는 유저가 많음 -->
+      <div th:if="${hasNumbers}">
+        현재 번호: <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            사용할 번호 선택
+          </button>
+          <ul class="dropdown-menu" id="phone-numbers">
+            <li th:each="myPhoneNumber : ${myPhoneNumbers}">
+              <a class="dropdown-item" th:text="${myPhoneNumber}"></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div th:unless="${hasNumbers}">
+        <h2>등록된 번호 없음</h2>
+      </div>
+    </div>
+
+    <div class="fixed col card" th:if="${hasNumbers}">
+      <div class="row">
+        <div class="col" th:replace="fragments/tel/call/call-form"/>
+        <div class="col" th:replace="fragments/tel/msg/msg-form"/>
+        <div class="col" th:replace="fragments/boilerplate/boilerplate-list"/>
+      </div>
+    </div>
+
+    <div class="fixed col card" th:unless="${hasNumbers}">
+      <div class="row">
+        <h2 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
+      </div>
+    </div>
   </div>
 </div>
 
-
-<div th:unless="${myPhoneNumber}">
-  <h2>등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
-</div>
-
+<div th:replace="fragments/cdnjs"/>
+<script type="text/javascript">
+  $("#phone-numbers li > a").on("click", function () {
+    $("#current-number").text($(this).text());
+  })
+</script>
 </body>
 </html>

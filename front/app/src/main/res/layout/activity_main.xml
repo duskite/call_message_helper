@@ -13,11 +13,4 @@
         android:id="@+id/btnSignInActivity"
         android:text="로그인"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnRegisterFcmActivity"
-        android:text="토큰 등록"/>
-
-
 </LinearLayout>

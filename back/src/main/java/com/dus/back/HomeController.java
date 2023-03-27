@@ -34,21 +34,14 @@ public class HomeController {
     public String home(Model model, Authentication authentication){
 
         String userId = authentication.getName();
+        List<String> myPhoneNumbers = fcmService.findAllPhoneNumbers(userId);
+        boolean hasNumbers = (myPhoneNumbers.size() > 0) ? true: false;
 
-        List<String> phoneNumbers = fcmService.findAllPhoneNumbers(userId);
-
-        model.addAttribute("telDTO", new TelDTO());
         model.addAttribute("userId", userId);
-
-
-        // 하나만 넘기는 상황 체크중
-        try{
-            model.addAttribute("myPhoneNumber", phoneNumbers.get(0));
-        }catch (IndexOutOfBoundsException e){
-
-        }
-
+        model.addAttribute("hasNumbers", hasNumbers);
+        model.addAttribute("myPhoneNumbers", myPhoneNumbers);
 
         return "home";
     }
+
 }

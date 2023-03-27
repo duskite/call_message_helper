@@ -45,9 +45,10 @@ public class SignInActivity extends AppCompatActivity {
         httpUtil = HttpUtilImpl.getInstance();
         httpUtil.setOnLoginResultListener(new OnLoginResultListener() {
             @Override
-            public void loginResult(boolean isLogin, String errorMessage) {
-                if(isLogin){
+            public void loginResult(String userId, String errorMessage) {
+                if(userId != null){
                     Intent intent = new Intent(getApplicationContext(), FcmRegisterActivity.class);
+                    intent.putExtra("userId", userId);
                     startActivity(intent);
                 }else {
                     Log.e(TAG, errorMessage);

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.telecom.TelecomManager;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -20,12 +21,20 @@ import java.util.Map;
 
 public class FcmService extends FirebaseMessagingService {
 
+    private static String TAG = "FcmService";
+
+    /**
+     * 서버로부터 받은 메세지 타입에 따라 단말기 동작 분기 처리
+     * @param message Remote message that has been received.
+     */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
 
         Map<String, String> fcmData = message.getData();
         String fcmType = fcmData.get("requestFcmType");
-        String phoneNumber = fcmData.get("phoneNumber");
+        String phoneNumber = fcmData.get("targetPhoneNumber");
+
+        Log.d(TAG, "넘어온 번호:" + phoneNumber);
 
         if(fcmType.equals("SMS")){
             String msg = fcmData.get("msg");
@@ -33,7 +42,6 @@ public class FcmService extends FirebaseMessagingService {
         } else if (fcmType.equals("MMS")) {
             String msg = fcmData.get("msg");
             sendMMS(phoneNumber, msg);
-
         } else if (fcmType.equals("CALL_START")) {
             callStart(phoneNumber);
         } else if(fcmType.equals("CALL_END")){
@@ -48,6 +56,9 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     private void sendSMS(String number, String msg){
+
+        Log.d(TAG, "넘어온 번호:" + number);
+
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(number, null, msg, null, null);
     }

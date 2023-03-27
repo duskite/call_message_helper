@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -18,16 +19,17 @@ public class MsgController {
     }
 
     @PostMapping("/sms")
-    public String sendSms(TelDTO telDTO) {
-        msgService.sendSms(telDTO);
+    @ResponseBody
+    public boolean sendSms(TelDTO telDTO) {
+        log.error(telDTO.getTargetPhoneNumber());
 
-        return "redirect:/home";
+        return msgService.sendSms(telDTO);
     }
 
     @PostMapping("/mms")
-    public String sendMms(TelDTO telDTO) {
-        msgService.sendMms(telDTO);
+    @ResponseBody
+    public boolean sendMms(TelDTO telDTO) {
 
-        return "redirect:/home";
+        return msgService.sendMms(telDTO);
     }
 }

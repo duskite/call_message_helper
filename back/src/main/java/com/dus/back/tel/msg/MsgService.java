@@ -11,13 +11,13 @@ public interface MsgService {
      * 안드로이드 단말기에 sms 발송 요청
      * @param telDTO
      */
-    void sendSms(TelDTO telDTO);
+    boolean sendSms(TelDTO telDTO);
 
     /**
      * 안드로이드 단말기에 mms 발송 요청
      * @param telDTO
      */
-    void sendMms(TelDTO telDTO);
+    boolean sendMms(TelDTO telDTO);
 
     /**
      * 현재 단말기에서 받은 sms 를 수신

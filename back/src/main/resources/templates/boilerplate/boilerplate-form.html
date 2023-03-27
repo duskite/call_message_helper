@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
-<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"/>
-<body>
 
+<body>
 <nav th:replace="fragments/nav :: nav"/>
 
-<div class="container">
-    <h1>올바르지 않은 접근입니다.</h1>
-</div>
+<div th:replace="fragments/boilerplate/boilerplate-list"/>
+<div th:replace="fragments/boilerplate/boilerplate-update"/>
 
 </body>
 </html>

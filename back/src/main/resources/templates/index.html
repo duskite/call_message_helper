@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:replace="fragments/header :: header"/>
-<body>
+<head th:replace="fragments/head :: head"/>
 
-  <div class="container col-md-4">
-    <h1>
-      <a href="/member/signin-form">Login</a>
-    </h1>
+<body>
+<nav th:replace="fragments/nav :: nav"/>
+
+<div class="container position-relative">
+  <div class="row justify-content-center">
+    <div class="col-xl-6">
+        <h1 class="mb-5 fw-bold text-center">전화 문자 헬퍼 서비스</h1>
+        <div class="row">
+          <div class="col">
+            <a class="btn btn-primary btn-lg" href="/member/signin-form">로그인</a>
+          </div>
+          <div class="col">
+            <a class="btn btn-primary btn-lg" href="/member/signup-form">회원가입</a>
+          </div>
+        </div>
+    </div>
   </div>
+</div>
+
 
 </body>
 </html>

@@ -1,35 +1,63 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="call-form">
-  <div class="container">
-    <form th:action="@{/call/start}" th:object="${telDTO}" method="post">
+<div id="call-form" th:fragment="call-form">
+  <div>
+    <form method="post">
 
-      <div class="form-group">
-        <input type="hidden" name="myPhoneNumber" class="form-control" th:value="${myPhoneNumber}">
-      </div>
-
-
+      <!-- 내 번호는 current-number로 가져옴 -->
       <div class="form-group">
         <label>상대방 번호</label>
-        <input type="tel" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+        <input type="text" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
       </div>
-      <button type="submit" class="btn btn-primary">전화 걸기</button>
+      <button type="button" onclick="callStart()" class="btn btn-primary">전화 걸기</button>
     </form>
   </div>
 
-  <div class="container">
-    <form th:action="@{/call/stop}" th:object="${telDTO}" method="post">
-
-      <div class="form-group">
-        <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumber}">
-      </div>
-
-
-      <button type="submit" class="btn btn-primary">전화 끊기</button>
+  <div>
+    <form method="post">
+      <button type="button" onclick="callStop()" class="btn btn-primary">전화 끊기</button>
     </form>
   </div>
 </div>
+
+<script>
+  function callStart(){
+    let telDTO = {
+      myPhoneNumber: $("#current-number").text(),
+      targetPhoneNumber: $("#targetCallNumber").val(),
+    };
+
+    console.log(telDTO);
+
+    $.ajax({
+      url: "/call/start",
+      type: "POST",
+      data: telDTO
+    }).done(function (result){
+      if(result){
+        alert("전화 걸기 성공");
+        $("#targetCallNumber").val("");
+      }else {
+        alert("실패")
+      }
+    });
+  }
+
+  function callStop(){
+    let telDTO = {
+      myPhoneNumber: $("#current-number").text(),
+    };
+
+    $.ajax({
+      url: "/call/stop",
+      type: "POST",
+      data: telDTO
+    }).done(function (){
+      alert("전화 끊기를 요청했습니다.");
+    });
+  }
+</script>
 
 </body>
 </html>

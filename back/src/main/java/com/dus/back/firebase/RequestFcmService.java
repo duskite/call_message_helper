@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RequestFcmService {
 
-    public void sendFcmMessage(String token, RequestFcmDTO requestFcmDTO) {
+    public boolean sendFcmMessage(String token, RequestFcmDTO requestFcmDTO) {
 
         Message message = null;
         switch (requestFcmDTO.getRequestFcmType()){
@@ -22,14 +22,14 @@ public class RequestFcmService {
             case MMS:
                 message = makeFcmSmsMessage(token,
                         requestFcmDTO.getRequestFcmType(),
-                        requestFcmDTO.getTelDTO().getPhoneNumber(),
+                        requestFcmDTO.getTelDTO().getTargetPhoneNumber(),
                         requestFcmDTO.getTelDTO().getMsg());
                 break;
 
             case CALL_START:
                 message = makeFcmCallMessage(token,
                         requestFcmDTO.getRequestFcmType(),
-                        requestFcmDTO.getTelDTO().getPhoneNumber());
+                        requestFcmDTO.getTelDTO().getTargetPhoneNumber());
                 break;
             case CALL_END:
                 message = makeFcmCallStopMessage(token,
@@ -41,8 +41,10 @@ public class RequestFcmService {
             String response = FirebaseMessaging.getInstance().send(message);
 
             log.info(response);
+            return true;
         }catch (FirebaseMessagingException e){
             log.error("FCM 메세지 전송중 오류");
+            return false;
         }
     }
 
@@ -50,7 +52,7 @@ public class RequestFcmService {
     private Message makeFcmSmsMessage(String token, RequestFcmType requestFcmType, String phoneNumber, String msg) {
         Message message = Message.builder()
                 .setToken(token)
-                .putData("phoneNumber", phoneNumber)
+                .putData("targetPhoneNumber", phoneNumber)
                 .putData("msg", msg)
                 .putData("requestFcmType", requestFcmType.name())
                 .build();
@@ -61,7 +63,7 @@ public class RequestFcmService {
     private Message makeFcmCallMessage(String token, RequestFcmType requestFcmType, String phoneNumber){
         Message message = Message.builder()
                 .setToken(token)
-                .putData("phoneNumber",phoneNumber)
+                .putData("targetPhoneNumber",phoneNumber)
                 .putData("requestFcmType", requestFcmType.name())
                 .build();
 

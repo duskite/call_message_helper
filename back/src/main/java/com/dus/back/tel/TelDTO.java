@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 public class TelDTO {
 
     private String myPhoneNumber;
-    private String phoneNumber;
+    private String targetPhoneNumber;
 
     @Nullable
     private String msg;

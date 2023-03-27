@@ -4,5 +4,5 @@ import androidx.annotation.Nullable;
 
 public interface OnLoginResultListener {
 
-    void loginResult(boolean isLogin, @Nullable String errorMessage);
+    void loginResult(String userId, @Nullable String errorMessage);
 }

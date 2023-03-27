@@ -21,7 +21,7 @@ public class CallServiceImpl implements CallService{
     }
 
     @Override
-    public void startCall(TelDTO telDTO) {
+    public boolean startCall(TelDTO telDTO) {
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_START);
         requestFcmDTO.setTelDTO(telDTO);
@@ -29,17 +29,17 @@ public class CallServiceImpl implements CallService{
         String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
         log.error(token);
 
-        requestFcmService.sendFcmMessage(token, requestFcmDTO);
+        return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 
     @Override
-    public void stopCall(TelDTO telDTO) {
+    public boolean stopCall(TelDTO telDTO) {
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_END);
 
         String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
 
-        requestFcmService.sendFcmMessage(token, requestFcmDTO);
+        return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 
     @Override

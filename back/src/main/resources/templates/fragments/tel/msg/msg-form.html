@@ -2,27 +2,46 @@
 <body>
 
 <div th:fragment="msg-form">
-  <div class="container">
-    <form th:action="@{/msg/sms}" th:object="${telDTO}" method="post">
+    <form method="post">
 
-      <div class="form-group">
-        <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumber}">
-      </div>
-
+      <!-- 내 번호는 current-number로 가져옴 -->
 
       <div class="form-group">
         <label>상대방 번호</label>
-        <input type="tel" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+        <input type="text" id="targetMsgNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
       </div>
       <div class="form-group">
         <label>메세지 내용</label>
-        <input type="tel" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요">
+        <textarea type="text" id="msg" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary">전송</button>
+      <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
     </form>
-  </div>
 </div>
 
+<script>
+  function sendMsg(){
+    let telDTO = {
+      myPhoneNumber: $("#current-number").text(),
+      targetPhoneNumber: $("#targetMsgNumber").val(),
+      msg: $("#msg").val(),
+    };
+
+    $.ajax({
+      url: "/msg/sms",
+      type: "POST",
+      data: telDTO
+    }).done(function (result){
+      if(result){
+        alert("메세지 전송 요청 성공");
+        $("#targetMsgNumber").val("");
+        $("#msg").val("");
+      }else {
+        alert("실패");
+      }
+    });
+
+  }
+</script>
 </body>
 </html>
