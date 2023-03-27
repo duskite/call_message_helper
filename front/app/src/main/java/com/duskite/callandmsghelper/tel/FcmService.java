@@ -23,6 +23,10 @@ public class FcmService extends FirebaseMessagingService {
 
     private static String TAG = "FcmService";
 
+    /**
+     * 서버로부터 받은 메세지 타입에 따라 단말기 동작 분기 처리
+     * @param message Remote message that has been received.
+     */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
 
@@ -38,7 +42,6 @@ public class FcmService extends FirebaseMessagingService {
         } else if (fcmType.equals("MMS")) {
             String msg = fcmData.get("msg");
             sendMMS(phoneNumber, msg);
-
         } else if (fcmType.equals("CALL_START")) {
             callStart(phoneNumber);
         } else if(fcmType.equals("CALL_END")){

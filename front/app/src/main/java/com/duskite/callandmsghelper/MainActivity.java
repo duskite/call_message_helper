@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.RECEIVE_MMS
     };
 
-    private Button btnSignInActivity, btnRegisterFcmActivity;
+    private Button btnSignInActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
         getPermission(PERMISSIONS);
 
         btnSignInActivity = (Button) findViewById(R.id.btnSignInActivity);
-        btnRegisterFcmActivity = (Button) findViewById(R.id.btnRegisterFcmActivity);
         btnSignInActivity.setOnClickListener(setOnClickListener);
-        btnRegisterFcmActivity.setOnClickListener(setOnClickListener);
 
         Intent intent = new Intent(this, FcmService.class);
         startService(intent);
@@ -66,11 +64,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btnSignInActivity:
                     Intent signin = new Intent(getApplicationContext(), SignInActivity.class);
                     startActivity(signin);
-                    break;
-
-                case R.id.btnRegisterFcmActivity:
-                    Intent fcm = new Intent(getApplicationContext(), FcmRegisterActivity.class);
-                    startActivity(fcm);
                     break;
             }
         }

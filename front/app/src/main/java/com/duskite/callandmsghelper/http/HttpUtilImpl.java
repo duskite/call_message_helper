@@ -86,11 +86,11 @@ public class HttpUtilImpl implements HttpUil{
                     String errorMessage = response.header("login-error");
                     if(userId != null){
                         Log.d(TAG, userId);
-                        onLoginResultListener.loginResult(true, null);
+                        onLoginResultListener.loginResult(userId, null);
                     }else {
                         errorMessage = URLDecoder.decode(errorMessage, "UTF-8");
                         Log.d(TAG, errorMessage);
-                        onLoginResultListener.loginResult(false, errorMessage);
+                        onLoginResultListener.loginResult(userId, errorMessage);
                     }
                 }
 

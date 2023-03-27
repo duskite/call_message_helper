@@ -1,6 +1,7 @@
 package com.duskite.callandmsghelper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -29,12 +30,15 @@ public class FcmRegisterActivity extends AppCompatActivity {
 
     private Button btnRegisterFcm;
     private HttpUil httpUtil;
-    private String fcmToken;
+    private String fcmToken, userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fcmregister);
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
 
         init();
     }
@@ -57,12 +61,17 @@ public class FcmRegisterActivity extends AppCompatActivity {
                 case R.id.btnRegisterFcm:
                     if(fcmToken != null){
                         sendFcm(fcmToken);
+                    }else {
+                        Toast.makeText(getApplicationContext(), "아직 토큰이 발행되지 않았습니다. 잠시후 다시 시도해주세요.", Toast.LENGTH_LONG).show();
                     }
                     break;
             }
         }
     };
 
+    /**
+     * fcm 토큰 발급
+     */
     private void createFcmToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -79,6 +88,10 @@ public class FcmRegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * httputil에 fcm정보 전송 요청
+     * @param token
+     */
     private void sendFcm(String token){
         try{
             if(token != null){
@@ -93,16 +106,26 @@ public class FcmRegisterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 토큰, 내 번호, 유저ID를 조합하여 서버에 등록할 fcm정보 생성
+     * @param token
+     * @return fcm정보: FcmDTO
+     * @throws IOException
+     */
     private FcmDTO makeFcm(String token) throws IOException {
 
         FcmDTO fcmDTO = new FcmDTO();
         fcmDTO.setToken(token);
         fcmDTO.setPhoneNumber(getMyNumber());
-        fcmDTO.setUserId("asd");
+        fcmDTO.setUserId(userId);
 
         return fcmDTO;
     }
 
+    /**
+     * 내 번호 가져오기
+     * @return 현재 단말기 번호: String
+     */
     private String getMyNumber() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 

@@ -7,7 +7,7 @@ import org.json.JSONException;
 
 public interface HttpUil {
 
-    String BASE_URL = "http://192.168.1.10:8080";
+    String BASE_URL = "http://192.168.1.8:8080";
     String FCM_URL = BASE_URL + "/fcm-token";
     String LOGIN_URL = BASE_URL + "/member/login";
 
