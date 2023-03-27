@@ -39,4 +39,12 @@ public interface MemberService {
     Map<String, String> validateHandling(Errors errors);
 
 
+    /**
+     * 회원정보 변경
+     * @param member
+     * @return
+     */
+    boolean update(Member member);
+
+
 }

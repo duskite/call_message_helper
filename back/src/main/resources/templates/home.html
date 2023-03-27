@@ -6,14 +6,24 @@
 <h1>home</h1>
 <a href="/logout">로그아웃</a>
 <h2 th:text="${userId}"></h2>
+<a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
 
 <div th:if="${hasNumbers}">
-  <ul th:each="myPhoneNumber : ${myPhoneNumbers}">
-    <li th:text="${myPhoneNumber}"></li>
-  </ul>
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      내 번호 목록
+    </button>
+    <ul class="dropdown-menu" th:each="myPhoneNumber : ${myPhoneNumbers}">
+      <li><a class="dropdown-item" th:text="${myPhoneNumber}"></a></li>
+    </ul>
+  </div>
+
   <div class="container">
-    <div th:replace="fragments/tel/call/call-form"/>
-    <div th:replace="fragments/tel/msg/msg-form"/>
+    <div class="row">
+      <div class="col" th:replace="fragments/tel/call/call-form"/>
+      <div class="col" th:replace="fragments/tel/msg/msg-form"/>
+      <div class="col"/>
+    </div>
   </div>
 </div>
 

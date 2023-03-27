@@ -50,4 +50,15 @@ public class MemberServiceImpl implements MemberService{
         return validatorResult;
     }
 
+    @Override
+    public boolean update(Member member) {
+        Optional<Member> findMember = memberRepository.findByUserId(member.getUserId());
+        if(findMember.isEmpty()){
+            return false;
+        }else {
+            findMember.get().setPassword(member.getPassword());
+            return true;
+        }
+    }
+
 }
