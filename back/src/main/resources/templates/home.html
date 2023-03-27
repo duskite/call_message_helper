@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:replace="fragments/header :: header"/>
+<head th:replace="fragments/head :: head"/>
 <body>
 
-<h1>home</h1>
-<a href="/logout">로그아웃</a>
-<h2 th:text="${userId}"></h2>
-<a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
+<nav th:replace="fragments/nav :: nav"/>
 
-<div th:if="${hasNumbers}">
-  <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      내 번호 목록
-    </button>
-    <ul class="dropdown-menu" th:each="myPhoneNumber : ${myPhoneNumbers}">
-      <li><a class="dropdown-item" th:text="${myPhoneNumber}"></a></li>
-    </ul>
-  </div>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="fixed card col">
+      <h2 th:text="${userId}"></h2>
+      <a href="/logout">로그아웃</a>
+      <a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          내 번호 목록
+        </button>
+        <ul class="dropdown-menu" th:each="myPhoneNumber : ${myPhoneNumbers}">
+          <li><a class="dropdown-item" th:text="${myPhoneNumber}"></a></li>
+        </ul>
+      </div>
+    </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col" th:replace="fragments/tel/call/call-form"/>
-      <div class="col" th:replace="fragments/tel/msg/msg-form"/>
-      <div class="col"/>
+    <div class="fixed col card" th:if="${hasNumbers}">
+      <div class="row">
+        <div class="col" th:replace="fragments/tel/call/call-form"/>
+        <div class="col" th:replace="fragments/tel/msg/msg-form"/>
+        <div class="col"/>
+      </div>
+    </div>
+
+    <div class="fixed col card" th:unless="${hasNumbers}">
+      <div class="row">
+        <h2 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
+      </div>
     </div>
   </div>
-</div>
-
-
-<div th:unless="${hasNumbers}">
-  <h2>등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
 </div>
 
 </body>

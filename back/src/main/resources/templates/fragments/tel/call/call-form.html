@@ -2,7 +2,7 @@
 <body>
 
 <div id="call-form" th:fragment="call-form">
-  <div class="container">
+  <div>
     <form method="post">
       <div class="form-group">
         <input type="hidden" id="myPhoneNumber" name="myPhoneNumber" class="form-control" th:value="${myPhoneNumbers.get(0)}">
@@ -16,7 +16,7 @@
     </form>
   </div>
 
-  <div class="container">
+  <div>
     <form method="post">
       <div class="form-group">
         <input type="hidden" name="myPhoneNumber" th:value="${myPhoneNumbers.get(0)}">

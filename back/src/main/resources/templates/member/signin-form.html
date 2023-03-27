@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"/>
-
+<head th:replace="fragments/head :: head"/>
 <body>
-<div class="container col-md-4">
-    <h1>로그인</h1>
-    <div th:if="error">
-        <p style="color:red" th:text="${exception}"></p>
-    </div>
+<nav th:replace="fragments/nav :: nav"/>
+<div class="container">
+    <h1 class="mb-5 fw-bold text-center">로그인</h1>
+
     <form th:action="@{/member/login}" th:object="${loginDTO}" method="post">
         <div class="form-group">
             <label>유저 아이디</label>
@@ -19,11 +17,14 @@
             <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요">
         </div>
 
-        <div class="container">
-            <a href="/member/signup-form">회원 가입</a>
+        <div th:if="error">
+            <p style="color:red" th:text="${exception}"></p>
         </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
+
+        <a class="btn btn-primary btn-lg" href="/member/signup-form">회원 가입</a>
+        <button type="submit" class="btn btn-primary btn-lg">로그인</button>
     </form>
+
 </div>
 </body>
 </html>

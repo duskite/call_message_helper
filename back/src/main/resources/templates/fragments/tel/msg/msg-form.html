@@ -2,7 +2,6 @@
 <body>
 
 <div th:fragment="msg-form">
-  <div class="container">
     <form method="post">
 
       <div class="form-group">
@@ -16,12 +15,11 @@
       </div>
       <div class="form-group">
         <label>메세지 내용</label>
-        <input type="text" id="msg" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요">
+        <textarea type="text" id="msg" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요"></textarea>
       </div>
 
       <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
     </form>
-  </div>
 </div>
 
 <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>

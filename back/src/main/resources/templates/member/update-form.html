@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header"/>
-
+<head th:replace="fragments/head :: head"/>
 <body>
-<div class="contaner">
-  <h1 th:text="${userId}"/>
-  <h1>비밀번호 변경</h1>
+<nav th:replace="fragments/nav :: nav"/>
+<div class="container">
+  <h1 class="mb-5 fw-bold text-center">비밀번호 변경</h1>
 
-  <div class="container">
-    <form method="post">
-      <div class="form-group">
-        <label>아이디</label>
-        <input type="text" id="userId" name="userId" class="form-control" th:value="${userId}" readonly/>
-      </div>
-      <div class="form-group">
-        <label>변경할 비밀번호</label>
-        <input type="password" id="password" name="password" class="form-control" placeholder="새로운 비밀번호를 입력하세요.">
-      </div>
-      <div class="form-group">
-        <label>변경할 비밀번호 재입력</label>
-        <input type="password" id="checkPassword" class="form-control" placeholder="새로운 비밀번호를 다시 한번 입력하세요.">
-      </div>
+  <form method="post">
+    <div class="form-group">
+      <label>아이디</label>
+      <input type="text" id="userId" name="userId" class="form-control" th:value="${userId}" readonly/>
+    </div>
+    <div class="form-group">
+      <label>변경할 비밀번호</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="새로운 비밀번호를 입력하세요.">
+    </div>
+    <div class="form-group">
+      <label>변경할 비밀번호 재입력</label>
+      <input type="password" id="checkPassword" class="form-control" placeholder="새로운 비밀번호를 다시 한번 입력하세요.">
+    </div>
 
-      <button type="button" onclick="updatePassword()" class="btn btn-primary">비밀번호 변경</button>
-    </form>
-  </div>
+    <button type="button" onclick="updatePassword()" class="btn btn-primary">비밀번호 변경</button>
+  </form>
 
 </div>
 
