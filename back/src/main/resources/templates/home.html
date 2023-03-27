@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head th:replace="fragments/head :: head"/>
+
 <body>
 
 <nav th:replace="fragments/nav :: nav"/>
@@ -11,11 +12,20 @@
       <h2 th:text="${userId}"></h2>
       <a href="/logout">로그아웃</a>
       <a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
+
+      <!--  번호가 등록되어 있는 유저는 기본값으로 하나 설정해놓음, 대부분 하나의 번호만 등록하는 유저가 많음 -->
+      <div th:if="${hasNumbers}">
+        현재 번호: <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
+      </div>
+      <div th:unless="${hasNumbers}">
+        <h2>등록된 번호 없음</h2>
+      </div>
+
       <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          내 번호 목록
+          사용할 번호 선택
         </button>
-        <ul class="dropdown-menu" th:each="myPhoneNumber : ${myPhoneNumbers}">
+        <ul class="dropdown-menu" id="phone-numbers" th:each="myPhoneNumber : ${myPhoneNumbers}">
           <li><a class="dropdown-item" th:text="${myPhoneNumber}"></a></li>
         </ul>
       </div>
@@ -37,5 +47,11 @@
   </div>
 </div>
 
+<div th:replace="fragments/cdnjs"/>
+<script type="text/javascript">
+  $("#phone-numbers li > a").on("click", function () {
+    $("#current-number").text($(this).text());
+  })
+</script>
 </body>
 </html>
