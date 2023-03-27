@@ -24,7 +24,7 @@ class MemberServiceImplTest {
         member.setPassword("1234");
         member.setMemberType(MemberType.PERSONAL);
 
-        Long saveId = memberService.save(member);
+        Long saveId = memberService.addMember(member);
         Member saveMember = memberService.findById(saveId);
 
         Assertions.assertThat(member).isEqualTo(saveMember);
@@ -36,7 +36,7 @@ class MemberServiceImplTest {
 
         Member member = new Member();
         member.setUserId(userId);
-        memberService.save(member);
+        memberService.addMember(member);
 
         Member findMember = memberService.findByUserId(userId);
         Assertions.assertThat(findMember.getUserId()).isEqualTo(member.getUserId());

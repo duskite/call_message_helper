@@ -1,10 +1,17 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="boilerplate-list">
-  <p>상용구 리스트</p>
+<div id="boilerplate-list" th:fragment="boilerplate-list">
+  <h3>상용구 리스트</h3>
+  <div th:each="boilerplate: ${boilerplateList}">
+    <p th:text="${boilerplate.subject}"></p>
+    <p th:text="${boilerplate.text}"></p>
+    <div class="text-right">
+      <span><button class="btn">수정</button></span>
+      <span><button class="btn">삭제</button></span>
+    </div>
+  </div>
 
-  <a th:href="@{/boilerplate-form/{userId}(userId = ${userId})}">상용구 관리</a>
 </div>
 
 </body>

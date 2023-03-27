@@ -24,7 +24,7 @@ public class MsgServiceImpl implements MsgService{
         requestFcmDTO.setRequestFcmType(RequestFcmType.SMS);
         requestFcmDTO.setTelDTO(telDTO);
 
-        String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
+        String token = fcmService.findByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 

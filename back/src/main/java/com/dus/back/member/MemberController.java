@@ -32,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/member")
-    public String saveMember(@Valid MemberDTO memberDTO, Errors errors, Model model) {
+    public String memberAdd(@Valid MemberDTO memberDTO, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("memberDTO", memberDTO);
 
@@ -41,37 +41,37 @@ public class MemberController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/member/signup-form";
+            return "/member/signup-page";
         }
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         memberDTO.setMemberType(MemberType.BUSINESS);
 
-        memberService.save(memberDTO.toEntity());
+        memberService.addMember(memberDTO.toEntity());
 
-        return "redirect:/member/signin-form";
+        return "redirect:/member/signin-page";
     }
 
     @PostMapping("/member/update/password")
     @ResponseBody
-    public boolean updatePassword(MemberDTO memberDTO) {
+    public boolean passwordModify(MemberDTO memberDTO) {
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        return memberService.update(memberDTO.toEntity());
+        return memberService.modifyMember(memberDTO.toEntity());
     }
 
-    @GetMapping("/member/signup-form")
+    @GetMapping("/member/signup-page")
     public String signUp(Model model, MemberDTO memberDTO) {
         model.addAttribute("memberDTO", memberDTO);
-        return "/member/signup-form";
+        return "/member/signup-page";
     }
 
-    @GetMapping("/member/signin-form")
+    @GetMapping("/member/signin-page")
     public String signIn(Model model, @Nullable @RequestParam("error") String error, @Nullable @RequestParam("exception") String exception){
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         model.addAttribute("loginDTO", new LoginDTO());
 
-        return "/member/signin-form";
+        return "/member/signin-page";
     }
 
     @GetMapping("/member/info/{userId}")
@@ -79,7 +79,7 @@ public class MemberController {
 
         if (userId.equals(authentication.getName())) {
             model.addAttribute("userId", userId);
-            return "/member/update-form";
+            return "/member/update-page";
         }else {
             return "forbidden";
         }

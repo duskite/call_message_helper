@@ -26,7 +26,7 @@ public class CallServiceImpl implements CallService{
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_START);
         requestFcmDTO.setTelDTO(telDTO);
 
-        String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
+        String token = fcmService.findByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
         log.error(token);
 
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
@@ -37,7 +37,7 @@ public class CallServiceImpl implements CallService{
         RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
         requestFcmDTO.setRequestFcmType(RequestFcmType.CALL_END);
 
-        String token = fcmService.findOneByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
+        String token = fcmService.findByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
 
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head th:replace="fragments/head :: head"/>
+
+<body>
+<nav th:replace="fragments/nav :: nav"/>
+
+<div class="container">
+    <h1 class="mb-5 fw-bold text-center">상용구 관리</h1>
+
+    <div th:replace="fragments/boilerplate/boilerplate-list"/>
+    <div th:replace="fragments/boilerplate/boilerplate-form"/>
+</div>
+
+<div th:replace="fragments/cdnjs"/>
+</body>
+</html>

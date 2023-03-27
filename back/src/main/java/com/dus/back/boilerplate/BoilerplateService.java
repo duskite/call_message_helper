@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface BoilerplateService {
 
-    BoilerplateDTO createBoilerplate();
-    BoilerplateDTO updateBoilerplate();
-    boolean deleteBoilerplate();
+    Long addBoilerplate(Boilerplate boilerplate);
+    Long modifyBoilerplate(Boilerplate boilerplate);
+    boolean removeBoilerplate(Boilerplate boilerplate);
 
-    List<BoilerplateDTO> loadAllBoilerplate();
+    List<Boilerplate> findAllBoilerplate(String authorUserId);
 }

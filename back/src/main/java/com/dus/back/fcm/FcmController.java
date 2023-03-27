@@ -16,8 +16,8 @@ public class FcmController {
 
     @PostMapping("/fcm-token")
     @ResponseBody
-    public Long saveFcm(@RequestBody FcmDTO fcmDTO){
+    public Long fcmAdd(@RequestBody FcmDTO fcmDTO){
 
-        return fcmService.save(fcmDTO.toEntity());
+        return fcmService.addFcm(fcmDTO.toEntity());
     }
 }

@@ -1,0 +1,42 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="boilerplate-form">
+    <h3>상용구 등록, 수정</h3>
+
+    <div class="form-group">
+        <label>상용구 제목</label>
+        <input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력하세요.">
+    </div>
+    <div class="form-group">
+        <label>상용구 내용</label>
+        <textarea type="text" id="text" name="text" class="form-control" placeholder="내용을 입력하세요."></textarea>
+    </div>
+
+    <button type="button" onclick="sendBoilerplate()" class="btn btn-primary">등록</button>
+</div>
+
+
+<script>
+    function sendBoilerplate(){
+        let boilerPlateDTO = {
+            subject: $("#subject").val(),
+            text: $("#text").val(),
+            authorUserId: "qqq"
+        };
+
+        console.log(boilerPlateDTO);
+
+        $.ajax({
+            url: "/boilerplate",
+            type: "POST",
+            data: boilerPlateDTO
+        }).done(function (fragment){
+            $("#boilerplate-list").replaceWith(fragment);
+        });
+
+    }
+</script>
+
+</body>
+</html>

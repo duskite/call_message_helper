@@ -15,7 +15,7 @@ public interface MemberService {
      * @param member
      * @return id
      */
-    Long save(Member member);
+    Long addMember(Member member);
 
     /**
      * id를 이용하여 유저 정보 조회
@@ -44,7 +44,7 @@ public interface MemberService {
      * @param member
      * @return
      */
-    boolean update(Member member);
+    boolean modifyMember(Member member);
 
 
 }
