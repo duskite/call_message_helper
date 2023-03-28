@@ -77,12 +77,13 @@ public class MemberController {
     @GetMapping("/member/info/{userId}")
     public String info(Model model, Authentication authentication, @PathVariable("userId") String userId) {
 
-        if (userId.equals(authentication.getName())) {
-            model.addAttribute("userId", userId);
-            return "/member/update-page";
-        }else {
+        if(!userId.equals(authentication.getName())){
             return "forbidden";
         }
+
+        model.addAttribute("userId", userId);
+        return "/member/update-page";
+
     }
 
 }

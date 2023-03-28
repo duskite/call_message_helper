@@ -23,6 +23,11 @@ public class BoilerplateRepositoryImpl implements BoilerplateRepository {
     }
 
     @Override
+    public void remove(Boilerplate boilerplate) {
+        em.remove(boilerplate);
+    }
+
+    @Override
     public Optional<Boilerplate> findById(Long id) {
         return Optional.ofNullable(em.find(Boilerplate.class, id));
     }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,6 +28,13 @@ public class BoilerplateServiceImpl implements BoilerplateService {
 
     @Override
     public boolean removeBoilerplate(Boilerplate boilerplate) {
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findBySubject(boilerplate.getSubject());
+        if(optionalBoilerplate.isPresent()){
+            Boilerplate findBoilerplate = optionalBoilerplate.get();
+            boilerplateRepository.remove(findBoilerplate);
+
+            return true;
+        }
         return false;
     }
 

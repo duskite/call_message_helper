@@ -22,16 +22,16 @@ public class Boilerplate {
     private Long id;
 
     private String subject;
-    private String text;
+    private String msg;
     private BoilerplateType boilerplateType;
     private String authorUserId;
     @Nullable
     private String groupId;
 
     @Builder
-    public Boilerplate(String subject, String text, BoilerplateType boilerplateType, String authorUserId, @Nullable String groupId) {
+    public Boilerplate(String subject, String msg, BoilerplateType boilerplateType, String authorUserId, @Nullable String groupId) {
         this.subject = subject;
-        this.text = text;
+        this.msg = msg;
         this.boilerplateType = boilerplateType;
         this.authorUserId = authorUserId;
         this.groupId = groupId;

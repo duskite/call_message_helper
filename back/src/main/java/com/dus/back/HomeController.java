@@ -1,8 +1,8 @@
 package com.dus.back;
 
+import com.dus.back.boilerplate.Boilerplate;
+import com.dus.back.boilerplate.BoilerplateService;
 import com.dus.back.fcm.FcmService;
-import com.dus.back.member.MemberService;
-import com.dus.back.tel.TelDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,9 +19,11 @@ import java.util.List;
 public class HomeController {
 
     private final FcmService fcmService;
+    private final BoilerplateService boilerplateService;
 
-    public HomeController(FcmService fcmService) {
+    public HomeController(FcmService fcmService, BoilerplateService boilerplateService) {
         this.fcmService = fcmService;
+        this.boilerplateService = boilerplateService;
     }
 
 
@@ -37,9 +39,12 @@ public class HomeController {
         List<String> myPhoneNumbers = fcmService.findAllPhoneNumbers(userId);
         boolean hasNumbers = (myPhoneNumbers.size() > 0) ? true: false;
 
+        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+
         model.addAttribute("userId", userId);
         model.addAttribute("hasNumbers", hasNumbers);
         model.addAttribute("myPhoneNumbers", myPhoneNumbers);
+        model.addAttribute("boilerplateList", boilerplateList);
 
         return "home";
     }

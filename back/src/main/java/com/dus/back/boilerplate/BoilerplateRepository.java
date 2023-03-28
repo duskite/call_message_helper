@@ -6,6 +6,9 @@ import java.util.Optional;
 public interface BoilerplateRepository {
 
     Long save(Boilerplate boilerplate);
+
+    void remove(Boilerplate boilerplate);
+
     Optional<Boilerplate> findById(Long id);
 
     /**
@@ -21,4 +24,5 @@ public interface BoilerplateRepository {
      * @return
      */
     Optional<Boilerplate> findBySubject(String subject);
+
 }
