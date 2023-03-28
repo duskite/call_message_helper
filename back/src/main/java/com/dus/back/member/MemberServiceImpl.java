@@ -22,7 +22,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Long save(Member member) {
+    public Long addMember(Member member) {
         return memberRepository.save(member);
     }
 
@@ -51,7 +51,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public boolean update(Member member) {
+    public boolean modifyMember(Member member) {
         Optional<Member> findMember = memberRepository.findByUserId(member.getUserId());
         if(findMember.isEmpty()){
             return false;

@@ -1,11 +1,13 @@
 package com.dus.back.fcm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@Slf4j
 public class FcmController {
 
     private final FcmService fcmService;
@@ -16,8 +18,10 @@ public class FcmController {
 
     @PostMapping("/fcm-token")
     @ResponseBody
-    public Long saveFcm(@RequestBody FcmDTO fcmDTO){
+    public Long fcmAdd(@RequestBody FcmDTO fcmDTO){
+        log.info("FCM 등록 요청. userId: {}", fcmDTO.getUserId());
+        log.info("FCM 등록 요청. phoneNumber: {}", fcmDTO.getPhoneNumber());
 
-        return fcmService.save(fcmDTO.toEntity());
+        return fcmService.addFcm(fcmDTO.toEntity());
     }
 }

@@ -34,9 +34,12 @@
 
     <div class="fixed col card" th:if="${hasNumbers}">
       <div class="row">
-        <div class="col" th:replace="fragments/tel/call/call-form"/>
-        <div class="col" th:replace="fragments/tel/msg/msg-form"/>
-        <div class="col" th:replace="fragments/boilerplate/boilerplate-list"/>
+        <div th:replace="fragments/tel/call/call-form"/>
+        <div th:replace="fragments/tel/msg/msg-form"/>
+        <div class="col">
+          <div th:replace="fragments/boilerplate/boilerplate-list"/>
+          <a th:href="@{/boilerplate-page/{userId}(userId = ${userId})}">상용구 관리</a>
+        </div>
       </div>
     </div>
 
@@ -48,7 +51,6 @@
   </div>
 </div>
 
-<div th:replace="fragments/cdnjs"/>
 <script type="text/javascript">
   $("#phone-numbers li > a").on("click", function () {
     $("#current-number").text($(this).text());

@@ -19,7 +19,7 @@ public class FcmServiceImpl implements FcmService {
 
 
     @Override
-    public Long save(Fcm fcm) {
+    public Long addFcm(Fcm fcm) {
         if(!fcmRepository.existByPhoneNumber(fcm.getPhoneNumber())){
             return fcmRepository.save(fcm);
         }else {
@@ -29,7 +29,7 @@ public class FcmServiceImpl implements FcmService {
 
 
     @Override
-    public Fcm findOneByPhoneNumber(String phoneNumber) {
+    public Fcm findByPhoneNumber(String phoneNumber) {
         Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(phoneNumber);
         return optionalFcm.get();
     }
