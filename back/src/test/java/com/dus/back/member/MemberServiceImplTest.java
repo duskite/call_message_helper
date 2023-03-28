@@ -1,4 +1,4 @@
-package com.dus.back.auth.member;
+package com.dus.back.member;
 
 import com.dus.back.member.Member;
 import com.dus.back.member.MemberService;

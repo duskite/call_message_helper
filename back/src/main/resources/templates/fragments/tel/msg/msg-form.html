@@ -3,7 +3,6 @@
 
 <div class="col" th:fragment="msg-form">
     <form method="post">
-
       <!-- 내 번호는 current-number로 가져옴 -->
 
       <div class="form-group">
@@ -17,6 +16,18 @@
 
       <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
     </form>
+
+    <div>
+        <form th:action="@{/msg/excel}" method="post" enctype="multipart/form-data">
+            <input th:class="file-selector-button" type="file" name="file">
+            <input type="submit" value="연락처 엑셀 파일 업로드">
+        </form>
+
+        <br>
+        <form th:action="@{/msg/excel-download}" method="get">
+            <input type="submit" value="메세지 대량 발송 양식 다운로드">
+        </form>
+    </div>
 </div>
 
 <script>

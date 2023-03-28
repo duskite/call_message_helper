@@ -2,6 +2,8 @@ package com.dus.back.tel.msg;
 
 import com.dus.back.tel.TelDTO;
 
+import java.util.List;
+
 /**
  *  문자 수발신 처리 서비스
  */
@@ -30,4 +32,11 @@ public interface MsgService {
      * @param telDTO
      */
     void receiveMms(TelDTO telDTO);
+
+    /**
+     * 문자 대량 발송 요청
+     * @param telDTOList
+     * @return
+     */
+    boolean sendManySms(List<TelDTO> telDTOList);
 }

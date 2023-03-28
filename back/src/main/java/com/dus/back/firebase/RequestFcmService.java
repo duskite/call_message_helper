@@ -40,10 +40,10 @@ public class RequestFcmService {
         try{
             String response = FirebaseMessaging.getInstance().send(message);
 
-            log.info(response);
+            log.info("FCM 전송 response {}", response);
             return true;
         }catch (FirebaseMessagingException e){
-            log.error("FCM 메세지 전송중 오류");
+            log.error("FCM 전송중 오류 {}", e.getMessage());
             return false;
         }
     }

@@ -7,6 +7,8 @@ import com.dus.back.firebase.RequestFcmType;
 import com.dus.back.tel.TelDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MsgServiceImpl implements MsgService{
 
@@ -41,5 +43,24 @@ public class MsgServiceImpl implements MsgService{
     @Override
     public void receiveMms(TelDTO telDTO) {
 
+    }
+
+    @Override
+    public boolean sendManySms(List<TelDTO> telDTOList) {
+        if(telDTOList.isEmpty()){
+            return false;
+        }
+
+        String token = fcmService.findByPhoneNumber(telDTOList.get(0).getMyPhoneNumber()).getToken();
+
+        for (TelDTO telDTO : telDTOList) {
+            RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
+            requestFcmDTO.setRequestFcmType(RequestFcmType.SMS);
+            requestFcmDTO.setTelDTO(telDTO);
+
+            requestFcmService.sendFcmMessage(token, requestFcmDTO);
+        }
+
+        return true;
     }
 }

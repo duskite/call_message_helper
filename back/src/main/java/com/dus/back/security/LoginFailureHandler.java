@@ -24,7 +24,6 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.error("로그인 실패");
         String userId = request.getParameter("userId");
 
         String errorMessage = null;
@@ -40,7 +39,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             errorMessage = "알 수 없는 오류로 로그인 요청을 처리할 수 없습니다. 관리자에게 문의하세요.";
         }
 
-        log.error(errorMessage);
+        log.error("로그인 실패. 사유: {}", errorMessage);
         errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
 
         String android = request.getParameter("android");
