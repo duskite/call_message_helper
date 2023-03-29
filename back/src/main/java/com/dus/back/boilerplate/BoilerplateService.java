@@ -1,5 +1,7 @@
 package com.dus.back.boilerplate;
 
+import com.dus.back.domain.Boilerplate;
+
 import java.util.List;
 
 public interface BoilerplateService {
@@ -31,4 +33,12 @@ public interface BoilerplateService {
      * @return
      */
     List<Boilerplate> findAllBoilerplate(String authorUserId);
+
+
+    /**
+     * 상용구 중복 체크 unique(userId, subject)
+     * @param boilerplate
+     */
+    void duplicateCheck(Boilerplate boilerplate);
+
 }

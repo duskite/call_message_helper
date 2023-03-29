@@ -32,6 +32,11 @@ public class FcmService extends FirebaseMessagingService {
 
         Map<String, String> fcmData = message.getData();
         String fcmType = fcmData.get("requestFcmType");
+        if(fcmType.equals("STAND_BY")){
+            Log.d(TAG, "FCM 수신 대기 요청");
+            return;
+        }
+
         String phoneNumber = fcmData.get("targetPhoneNumber");
 
         Log.d(TAG, "넘어온 번호:" + phoneNumber);
@@ -47,7 +52,6 @@ public class FcmService extends FirebaseMessagingService {
         } else if(fcmType.equals("CALL_END")){
             callEnd();
         }
-
     }
 
     @Override

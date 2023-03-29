@@ -31,7 +31,6 @@ public class CallController {
 
         log.error(telDTO.getMyPhoneNumber());
 
-
         return callService.startCall(telDTO);
     }
 

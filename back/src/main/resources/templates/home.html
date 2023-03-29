@@ -3,19 +3,32 @@
 <head th:replace="fragments/head :: head"/>
 
 <body>
-
 <nav th:replace="fragments/nav :: nav"/>
-
-<div class="container">
+<div class="container py-5" style="max-width: 1200px">
   <div class="row justify-content-center">
-    <div class="fixed card col">
+
+    <div class="fixed card col-3 mx-3">
       <h2 th:text="${userId}"></h2>
-      <a href="/logout">로그아웃</a>
-      <a th:href="@{/member/info/{userId}(userId = ${userId})}">내 정보</a>
+
+      <div class="row">
+        <div class="col">
+          <a class="btn btn-primary btn-sm" th:href="@{/member/info/{userId}(userId = ${userId})}">
+            내 정보
+          </a>
+        </div>
+        <div class="col">
+          <a class="btn btn-secondary btn-sm" th:href="@{/logout}">
+            로그아웃
+          </a>
+        </div>
+      </div>
+
+      <hr class="my-4">
 
       <!--  번호가 등록되어 있는 유저는 기본값으로 하나 설정해놓음, 대부분 하나의 번호만 등록하는 유저가 많음 -->
       <div th:if="${hasNumbers}">
-        현재 번호: <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
+        <label for="current-number">현재 번호</label>
+        <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
         <div class="dropdown">
           <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             사용할 번호 선택
@@ -34,12 +47,20 @@
 
     <div class="fixed col card" th:if="${hasNumbers}">
       <div class="row">
-        <div th:replace="fragments/tel/call/call-form"/>
-        <div th:replace="fragments/tel/msg/msg-form"/>
+
+        <div class="col">
+          <div th:replace="fragments/tel/call/call-form"/>
+        </div>
+
+        <div class="col">
+          <div th:replace="fragments/tel/msg/msg-form"/>
+        </div>
+
         <div class="col">
           <div th:replace="fragments/boilerplate/boilerplate-list"/>
           <a th:href="@{/boilerplate-page/{userId}(userId = ${userId})}">상용구 관리</a>
         </div>
+
       </div>
     </div>
 

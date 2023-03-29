@@ -1,5 +1,7 @@
 package com.dus.back.fcm;
 
+import com.dus.back.domain.Boilerplate;
+import com.dus.back.domain.Fcm;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -22,6 +24,16 @@ public class FcmRepositoryImpl implements FcmRepository{
     }
 
     @Override
+    public void remove(Fcm fcm) {
+        em.remove(fcm);
+    }
+
+    @Override
+    public Optional<Fcm> findById(Long id) {
+        return Optional.ofNullable(em.find(Fcm.class, id));
+    }
+
+    @Override
     public Optional<Fcm> findByPhoneNumber(String phoneNumber) {
         List<Fcm> result = em.createQuery("select m from Fcm m where m.phoneNumber =:phoneNumber", Fcm.class)
                 .setParameter("phoneNumber", phoneNumber)
@@ -39,16 +51,4 @@ public class FcmRepositoryImpl implements FcmRepository{
         return result;
     }
 
-    @Override
-    public boolean existByPhoneNumber(String phoneNumber) {
-        List<Fcm> fcms = em.createQuery("select m from Fcm m where m.phoneNumber=:phoneNumber", Fcm.class)
-                .setParameter("phoneNumber", phoneNumber)
-                .getResultList();
-
-        if(fcms.size() == 0){
-            return false;
-        }
-
-        return true;
-    }
 }

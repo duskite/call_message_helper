@@ -48,7 +48,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
             response.setHeader("login-error", errorMessage);
         }else {
             log.info("웹에서 로그인 요청");
-            setDefaultFailureUrl("/member/signin-form?error=true&exception=" + errorMessage);
+            setDefaultFailureUrl("/member/signin-page?error=true&exception=" + errorMessage);
             super.onAuthenticationFailure(request, response, exception);
         }
 

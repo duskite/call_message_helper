@@ -1,6 +1,6 @@
 package com.dus.back.security;
 
-import com.dus.back.member.Member;
+import com.dus.back.domain.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.authority.AuthorityUtils;

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"/>
+<body>
+<nav th:replace="fragments/nav :: nav"/>
+<div class="container" style="max-width: 600px">
+
+  <div class="py-5 text-center">
+    <h2>비밀번호 변경</h2>
+  </div>
+
+    <div class="form-group">
+      <label for="userId">아이디</label>
+      <input type="text" id="userId" name="userId" class="form-control" th:value="${userId}" readonly/>
+    </div>
+    <div class="form-group">
+      <label for="password">새로운 비밀번호</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="새로운 비밀번호를 입력하세요.">
+    </div>
+    <div class="form-group">
+      <label for="checkPassword">새로운 비밀번호 재입력</label>
+      <input type="password" id="checkPassword" class="form-control" placeholder="새로운 비밀번호를 다시 한번 입력하세요.">
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" th:onclick="updatePassword()">
+          비밀번호 변경
+        </button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/home}'|" type="button">
+          돌아가기
+        </button>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+
+    <button class="btn btn-dark btn-sm" th:onclick="deleteMember()">
+        회원 탈퇴
+    </button>
+
+
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+  /*<![CDATA[*/
+  function deleteMember(){
+    let memberDTO = {
+      userId: [[${userId}]]
+    };
+
+    deleteRequest(memberDTO);
+  }
+  /*]]>*/
+
+  /*<![CDATA[*/
+  function updatePassword(){
+
+    let memberDTO = {
+      userId: [[${userId}]],
+      password : $("#password").val(),
+      checkPassword : $("#checkPassword").val()
+    }
+
+    if(checkPassword(memberDTO.password, memberDTO.checkPassword)){
+      updateRequest(memberDTO);
+    }else {
+      refreshPasswordInput();
+      alert("비밀번호가 불일치 합니다.");
+    }
+  }
+  /*]]>*/
+
+  // 패스워드 입력란 비우기
+  function refreshPasswordInput(){
+    $("#password").val("");
+    $("#checkPassword").val("");
+  }
+
+  function deleteRequest(memberDTO){
+    $.ajax({
+      url: "/member",
+      type: "DELETE",
+      data: memberDTO
+    }).done(function (result) {
+      if(result){
+        alert("회원탈퇴 성공");
+
+        document.location.href = "/member/signin-page";
+      }else {
+        alert("실패");
+      }
+    });
+  }
+
+  function updateRequest(memberDTO){
+    $.ajax({
+      url: "/member/update/password",
+      type: "POST",
+      data: memberDTO
+    }).done(function (result){
+      if(result){
+        refreshPasswordInput();
+        alert("비밀번호 변경 성공");
+
+        document.location.href = "/member/signin-page";
+      }else {
+        alert("변경 실패");
+      }
+    });
+  }
+
+  // 패스워드 일치 확인
+  function checkPassword(password1, password2){
+    if(password1 != password2){
+      return false;
+    }else {
+      return true;
+    }
+  }
+
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div class="col" id="boilerplate-list" th:fragment="boilerplate-list">
+<div id="boilerplate-list" th:fragment="boilerplate-list">
   <h3>상용구 리스트</h3>
   <div class="form-check" th:each="boilerplate, boilerplateStat: ${boilerplateList}">
     <input class="form-check-input" type="radio" name="boilerplate" th:id="'boilerplate' + ${boilerplateStat.index}">
