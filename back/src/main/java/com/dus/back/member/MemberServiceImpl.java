@@ -1,14 +1,16 @@
 package com.dus.back.member;
 
-import com.dus.back.fcm.FcmRepository;
+import com.dus.back.domain.Member;
+import com.dus.back.exception.DuplicateException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,19 +25,44 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Long addMember(Member member) {
+        duplicateCheck(member);
         return memberRepository.save(member);
+    }
+
+    @Override
+    public void deleteMember(String userId) {
+        Optional<Member> findMember = memberRepository.findByUserId(userId);
+        if(findMember.isPresent()){
+            memberRepository.remove(findMember.get());
+        }
+    }
+
+    @Override
+    public void duplicateCheck(Member member) {
+        Optional<Member> findMember = memberRepository.findByUserId(member.getUserId());
+        if(findMember.isPresent()){
+            throw new DuplicateException("중복 아이디");
+        }
     }
 
     @Override
     public Member findById(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
-        return optionalMember.get();
+        if(optionalMember.isPresent()){
+            return optionalMember.get();
+        }else {
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
     public Member findByUserId(String userId) {
         Optional<Member> optionalMember = memberRepository.findByUserId(userId);
-        return optionalMember.get();
+        if(optionalMember.isPresent()){
+            return optionalMember.get();
+        }else {
+            throw new NoSuchElementException("userId로 조회되는 유저가 없음");
+        }
     }
 
     @Override
@@ -51,13 +78,14 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public boolean modifyMember(Member member) {
-        Optional<Member> findMember = memberRepository.findByUserId(member.getUserId());
-        if(findMember.isEmpty()){
-            return false;
-        }else {
-            findMember.get().setPassword(member.getPassword());
+    public boolean modifyPassword(Member member) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(member.getUserId());
+        if(optionalMember.isPresent()){
+            Member findMember = optionalMember.get();
+            findMember.updatePassword(member.getPassword());
             return true;
+        }else {
+            return false;
         }
     }
 

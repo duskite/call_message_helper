@@ -1,5 +1,6 @@
 package com.dus.back.member;
 
+import com.dus.back.domain.Member;
 import com.dus.back.security.Role;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,6 @@ public class MemberDTO {
     private Role role = Role.ROLE_MEMBER;
 
     public Member toEntity(){
-        return Member.builder().userId(userId).password(password).email(email).memberType(memberType).role(role).build();
+        return Member.builder().userId(userId).email(email).password(password).memberType(memberType).role(role).build();
     }
 }

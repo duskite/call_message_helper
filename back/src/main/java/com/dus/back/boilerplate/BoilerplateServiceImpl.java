@@ -1,5 +1,6 @@
 package com.dus.back.boilerplate;
 
+import com.dus.back.domain.Boilerplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,7 +29,8 @@ public class BoilerplateServiceImpl implements BoilerplateService {
 
     @Override
     public boolean removeBoilerplate(Boilerplate boilerplate) {
-        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findBySubject(boilerplate.getSubject());
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository
+                .findBySubjectAndAuthorUserId(boilerplate.getSubject(), boilerplate.getAuthorUserId());
         if(optionalBoilerplate.isPresent()){
             Boilerplate findBoilerplate = optionalBoilerplate.get();
             boilerplateRepository.remove(findBoilerplate);

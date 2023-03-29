@@ -1,5 +1,7 @@
 package com.dus.back.member;
 
+import com.dus.back.domain.Member;
+
 import java.util.Optional;
 
 public interface MemberRepository {
@@ -10,6 +12,8 @@ public interface MemberRepository {
      * @return id
      */
     Long save(Member member);
+
+    void remove(Member member);
 
     /**
      * id를 이용하여 유저 정보 조회
@@ -25,11 +29,4 @@ public interface MemberRepository {
      */
     Optional<Member> findByUserId(String userId);
 
-
-    /**
-     * 가입된 userId인지 중복 체크
-     * @param userId
-     * @return
-     */
-    boolean existByUserId(String userId);
 }

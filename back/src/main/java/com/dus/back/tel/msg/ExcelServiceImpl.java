@@ -45,7 +45,7 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public List<TelDTO> getTelDTOList(MultipartFile file, String msg, String myPhoneNumber) {
+    public List<TelDTO> loadTelDTOList(MultipartFile file, String msg, String myPhoneNumber) {
         List<TelDTO> telDTOList = new ArrayList<>();
 
         try{
@@ -70,7 +70,7 @@ public class ExcelServiceImpl implements ExcelService {
                 String targetPhoneNumber = cell.getStringCellValue();
                 log.info("번호: {}", targetPhoneNumber);
 
-                telDTO.setTargetPhoneNumber(getRegularNumber(targetPhoneNumber));
+                telDTO.setTargetPhoneNumber(convertRegularNumber(targetPhoneNumber));
                 telDTO.setMsg(msg);
                 telDTO.setMyPhoneNumber(myPhoneNumber);
 
@@ -88,7 +88,7 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     @Override
-    public String getRegularNumber(String targetPhoneNumber) {
+    public String convertRegularNumber(String targetPhoneNumber) {
         return targetPhoneNumber.replace("[^0-9]", "");
     }
 

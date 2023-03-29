@@ -1,5 +1,6 @@
 package com.dus.back.member;
 
+import com.dus.back.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -22,6 +23,10 @@ public class MemberRepositoryImpl implements MemberRepository{
     }
 
     @Override
+    public void remove(Member member) {
+        em.remove(member);
+    }
+    @Override
     public Optional<Member> findById(Long id) {
         return Optional.ofNullable(em.find(Member.class, id));
     }
@@ -35,16 +40,4 @@ public class MemberRepositoryImpl implements MemberRepository{
         return members.stream().findAny();
     }
 
-    @Override
-    public boolean existByUserId(String userId) {
-        List<Member> members = em.createQuery("select m from Member m where m.userId=:userId", Member.class)
-                .setParameter("userId", userId)
-                .getResultList();
-
-        if(members.size() == 0){
-            return false;
-        }
-
-        return true;
-    }
 }

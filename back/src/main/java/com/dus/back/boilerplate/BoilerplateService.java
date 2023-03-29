@@ -1,5 +1,7 @@
 package com.dus.back.boilerplate;
 
+import com.dus.back.domain.Boilerplate;
+
 import java.util.List;
 
 public interface BoilerplateService {

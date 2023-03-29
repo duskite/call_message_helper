@@ -1,5 +1,8 @@
 package com.dus.back.fcm;
 
+import com.dus.back.domain.Fcm;
+import org.apache.poi.sl.draw.geom.GuideIf;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +14,14 @@ public interface FcmRepository {
      * @return id
      */
     Long save(Fcm fcm);
+
+    /**
+     * FCM 정보 삭제
+     * @param fcm
+     */
+    void remove(Fcm fcm);
+
+    Optional<Fcm> findById(Long id);
 
 
     /**
@@ -28,5 +39,4 @@ public interface FcmRepository {
      */
     List<Fcm> findAllByUserId(String userId);
 
-    boolean existByPhoneNumber(String phoneNumber);
 }

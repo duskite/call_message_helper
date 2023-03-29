@@ -1,5 +1,6 @@
 package com.dus.back.boilerplate;
 
+import com.dus.back.domain.Boilerplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,34 +27,37 @@ public class BoilerplateController {
         }
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+
         model.addAttribute("boilerplateList", boilerplateList);
-        model.addAttribute("userId", userId);
+        model.addAttribute("userId", authentication.getName());
         model.addAttribute("isEditablePage", true);
 
         return "/boilerplate/boilerplate-page";
     }
 
     @PostMapping("/boilerplate")
-    public String boilerplateAdd(Model model, BoilerplateDTO boilerplateDTO) {
+    public String boilerplateAdd(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
 
         boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
 
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(boilerplateDTO.getAuthorUserId());
+        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(authentication.getName());
+
         model.addAttribute("boilerplateList", boilerplateList);
-        model.addAttribute("userId", boilerplateDTO.getAuthorUserId());
+        model.addAttribute("userId", authentication.getName());
         model.addAttribute("isEditablePage", true);
 
         return "/fragments/boilerplate/boilerplate-list";
     }
 
     @DeleteMapping("/boilerplate")
-    public String boilerplateDelete(Model model, BoilerplateDTO boilerplateDTO) {
+    public String boilerplateDelete(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
 
         boilerplateService.removeBoilerplate(boilerplateDTO.toEntity());
 
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(boilerplateDTO.getAuthorUserId());
+        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(authentication.getName());
+
         model.addAttribute("boilerplateList", boilerplateList);
-        model.addAttribute("userId", boilerplateDTO.getAuthorUserId());
+        model.addAttribute("userId", authentication.getName());
         model.addAttribute("isEditablePage", true);
 
         return "/fragments/boilerplate/boilerplate-list";

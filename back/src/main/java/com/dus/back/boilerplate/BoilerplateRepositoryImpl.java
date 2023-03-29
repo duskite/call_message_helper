@@ -1,6 +1,6 @@
 package com.dus.back.boilerplate;
 
-import com.dus.back.fcm.Fcm;
+import com.dus.back.domain.Boilerplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -41,9 +41,10 @@ public class BoilerplateRepositoryImpl implements BoilerplateRepository {
     }
 
     @Override
-    public Optional<Boilerplate> findBySubject(String subject) {
-        List<Boilerplate> result = em.createQuery("select m from Boilerplate m where m.subject =:subject", Boilerplate.class)
+    public Optional<Boilerplate> findBySubjectAndAuthorUserId(String subject, String authorUserId) {
+        List<Boilerplate> result = em.createQuery("select m from Boilerplate m where m.subject =:subject and m.authorUserId=:authorUserId", Boilerplate.class)
                 .setParameter("subject", subject)
+                .setParameter("authorUserId", authorUserId)
                 .getResultList();
 
         return result.stream().findAny();

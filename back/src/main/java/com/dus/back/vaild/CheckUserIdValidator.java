@@ -1,7 +1,9 @@
 package com.dus.back.vaild;
 
+import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberDTO;
 import com.dus.back.member.MemberRepository;
+import com.dus.back.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -14,10 +16,10 @@ import org.springframework.validation.Validator;
 @Component
 public class CheckUserIdValidator implements Validator {
 
-    private final MemberRepository memberRepository;
-
-    public CheckUserIdValidator(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+//    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    public CheckUserIdValidator(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Override
@@ -36,7 +38,10 @@ public class CheckUserIdValidator implements Validator {
     }
 
     public void doValidate(MemberDTO memberDTO, Errors errors) {
-        if(memberRepository.existByUserId(memberDTO.toEntity().getUserId())){
+
+        try{
+            memberService.duplicateCheck(memberDTO.toEntity());
+        }catch (DuplicateException e){
             errors.rejectValue("userId", "아이디 중복", "이미 사용중인 아이디입니다.");
         }
     }

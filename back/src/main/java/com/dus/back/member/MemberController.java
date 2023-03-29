@@ -2,6 +2,7 @@ package com.dus.back.member;
 
 import com.dus.back.security.LoginDTO;
 import com.dus.back.vaild.CheckUserIdValidator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final CheckUserIdValidator checkUserIdValidator;
@@ -45,18 +47,37 @@ public class MemberController {
         }
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        memberDTO.setMemberType(MemberType.BUSINESS);
+        memberDTO.setMemberType(MemberType.PERSONAL);
 
         memberService.addMember(memberDTO.toEntity());
 
         return "redirect:/member/signin-page";
     }
 
+    @DeleteMapping("/member")
+    @ResponseBody
+    public boolean memberDelete(@RequestParam("userId") String userId, Authentication authentication) {
+        if (!userId.equals(authentication.getName())) {
+            return false;
+        }
+
+        memberService.deleteMember(userId);
+        return true;
+    }
+
     @PostMapping("/member/update/password")
     @ResponseBody
-    public boolean passwordModify(MemberDTO memberDTO) {
+    public boolean passwordModify(MemberDTO memberDTO, Authentication authentication) {
+
+        if(!memberDTO.getUserId().equals(authentication.getName())){
+            return false;
+        }
+
+        log.info("비밀번호 변경 요청");
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        return memberService.modifyMember(memberDTO.toEntity());
+        memberService.modifyPassword(memberDTO.toEntity());
+
+        return true;
     }
 
     @GetMapping("/member/signup-page")
@@ -82,7 +103,7 @@ public class MemberController {
         }
 
         model.addAttribute("userId", userId);
-        return "/member/update-page";
+        return "/member/info-page";
 
     }
 

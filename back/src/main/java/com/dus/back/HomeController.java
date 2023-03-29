@@ -1,6 +1,6 @@
 package com.dus.back;
 
-import com.dus.back.boilerplate.Boilerplate;
+import com.dus.back.domain.Boilerplate;
 import com.dus.back.boilerplate.BoilerplateService;
 import com.dus.back.fcm.FcmService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +36,16 @@ public class HomeController {
     public String home(Model model, Authentication authentication){
 
         String userId = authentication.getName();
-        List<String> myPhoneNumbers = fcmService.findAllPhoneNumbers(userId);
+
+        List<String> myPhoneNumbers = fcmService.findAllPhoneNumbersByUserId(userId);
         boolean hasNumbers = (myPhoneNumbers.size() > 0) ? true: false;
 
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+//        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+//        model.addAttribute("boilerplateList", boilerplateList);
 
         model.addAttribute("userId", userId);
         model.addAttribute("hasNumbers", hasNumbers);
         model.addAttribute("myPhoneNumbers", myPhoneNumbers);
-        model.addAttribute("boilerplateList", boilerplateList);
 
         return "home";
     }

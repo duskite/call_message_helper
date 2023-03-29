@@ -7,10 +7,17 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSignInActivity"
-        android:text="로그인"/>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSignInActivity"
+            android:text="로그인"/>
+    </LinearLayout>
 
 </LinearLayout>

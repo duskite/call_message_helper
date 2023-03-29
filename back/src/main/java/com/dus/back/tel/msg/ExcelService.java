@@ -25,14 +25,14 @@ public interface ExcelService {
      * @param file
      * @return
      */
-    List<TelDTO> getTelDTOList(MultipartFile file, String msg, String myPhoneNumber);
+    List<TelDTO> loadTelDTOList(MultipartFile file, String msg, String myPhoneNumber);
 
     /**
      * 번호를 01012345678 과 같이 숫자로만 이루어지게 변경
      * @param targetPhoneNumber
      * @return
      */
-    String getRegularNumber(String targetPhoneNumber);
+    String convertRegularNumber(String targetPhoneNumber);
 
 
 }

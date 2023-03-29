@@ -67,7 +67,7 @@ public class MsgController {
         log.info("업로드 된 엑셀 파일 사이즈: {}", contactFile.getSize());
 
         String temp = "temp";
-        List<TelDTO> telDTOList = excelService.getTelDTOList(contactFile, temp, "01027405593");
+        List<TelDTO> telDTOList = excelService.loadTelDTOList(contactFile, temp, "01027405593");
         return msgService.sendManySms(telDTOList);
 
     }

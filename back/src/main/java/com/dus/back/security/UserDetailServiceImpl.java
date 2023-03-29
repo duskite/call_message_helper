@@ -1,6 +1,6 @@
 package com.dus.back.security;
 
-import com.dus.back.member.Member;
+import com.dus.back.domain.Member;
 import com.dus.back.member.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

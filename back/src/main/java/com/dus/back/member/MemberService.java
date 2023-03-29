@@ -1,8 +1,8 @@
 package com.dus.back.member;
 
+import com.dus.back.domain.Member;
 import org.springframework.validation.Errors;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +16,10 @@ public interface MemberService {
      * @return id
      */
     Long addMember(Member member);
+
+    void deleteMember(String userId);
+
+    void duplicateCheck(Member member);
 
     /**
      * id를 이용하여 유저 정보 조회
@@ -40,11 +44,11 @@ public interface MemberService {
 
 
     /**
-     * 회원정보 변경
+     * 비밀번호 변경
      * @param member
      * @return
      */
-    boolean modifyMember(Member member);
+    boolean modifyPassword(Member member);
 
 
 }

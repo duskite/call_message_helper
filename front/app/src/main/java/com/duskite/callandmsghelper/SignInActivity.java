@@ -17,6 +17,7 @@ import com.duskite.callandmsghelper.dto.LoginDTO;
 import com.duskite.callandmsghelper.http.HttpUil;
 import com.duskite.callandmsghelper.http.HttpUtilImpl;
 import com.duskite.callandmsghelper.http.OnLoginResultListener;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
 
@@ -24,8 +25,7 @@ public class SignInActivity extends AppCompatActivity {
 
     private static String TAG = "SignInActivity";
 
-    private EditText edtUserId;
-    private EditText edtPassword;
+    private TextInputEditText edtUserId, edtPassword;
     private Button btnSignIn;
     private HttpUil httpUtil;
 
@@ -38,8 +38,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void init(){
-        edtUserId = (EditText) findViewById(R.id.edtUserId);
-        edtPassword = (EditText) findViewById(R.id.edtPassword);
+        edtUserId = (TextInputEditText) findViewById(R.id.edtUserId);
+        edtPassword = (TextInputEditText) findViewById(R.id.edtPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
 
         httpUtil = HttpUtilImpl.getInstance();
