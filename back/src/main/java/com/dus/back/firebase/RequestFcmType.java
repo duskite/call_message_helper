@@ -4,5 +4,6 @@ public enum RequestFcmType {
     SMS,
     MMS,
     CALL_START,
-    CALL_END
+    CALL_END,
+    STAND_BY
 }

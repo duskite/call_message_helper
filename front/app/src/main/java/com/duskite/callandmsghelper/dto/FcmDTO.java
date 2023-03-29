@@ -1,6 +1,5 @@
 package com.duskite.callandmsghelper.dto;
 
-
 public class FcmDTO {
 
     private String userId;

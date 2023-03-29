@@ -35,6 +35,11 @@ public class RequestFcmService {
                 message = makeFcmCallStopMessage(token,
                         requestFcmDTO.getRequestFcmType());
                 break;
+
+            case STAND_BY:
+                message = makeFcmStandBy(token, requestFcmDTO.getRequestFcmType());
+
+                break;
         }
 
         try{
@@ -46,6 +51,21 @@ public class RequestFcmService {
             log.error("FCM 전송중 오류 {}", e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * 안드로이드 단말기에 fcm 원활한 수신을 위해 대기요청 보냄
+     * @param token
+     * @param requestFcmType
+     * @return
+     */
+    private Message makeFcmStandBy(String token, RequestFcmType requestFcmType){
+        Message message = Message.builder()
+                .setToken(token)
+                .putData("requestFcmType", requestFcmType.name())
+                .build();
+
+        return message;
     }
 
 
