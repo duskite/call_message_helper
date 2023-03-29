@@ -26,7 +26,7 @@ public class BoilerplateController {
             return "forbidden";
         }
 
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(authentication.getName());
 
         model.addAttribute("boilerplateList", boilerplateList);
         model.addAttribute("userId", authentication.getName());

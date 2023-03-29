@@ -8,6 +8,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = @UniqueConstraint(
+        name = "AuthorUserIdAndSubject", columnNames = {"authorUserId", "subject"}
+))
 public class Boilerplate {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

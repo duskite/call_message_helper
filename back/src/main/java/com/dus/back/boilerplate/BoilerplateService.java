@@ -33,4 +33,12 @@ public interface BoilerplateService {
      * @return
      */
     List<Boilerplate> findAllBoilerplate(String authorUserId);
+
+
+    /**
+     * 상용구 중복 체크 unique(userId, subject)
+     * @param boilerplate
+     */
+    void duplicateCheck(Boilerplate boilerplate);
+
 }
