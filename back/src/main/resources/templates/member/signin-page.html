@@ -3,26 +3,41 @@
 <head th:replace="fragments/head :: head"/>
 <body>
 <nav th:replace="fragments/nav :: nav"/>
-<div class="container">
-    <h1 class="mb-5 fw-bold text-center">로그인</h1>
+<div class="container" style="max-width: 600px">
+
+    <div class="py-5 text-center">
+        <h2>로그인</h2>
+    </div>
 
     <form th:action="@{/member/login}" th:object="${loginDTO}" method="post">
         <div class="form-group">
-            <label>유저 아이디</label>
-            <input type="text" th:field="*{userId}" class="form-control" placeholder="아이디를 입력하세요">
+            <label for="userId">아이디</label>
+            <input type="text" th:field="*{userId}" id="userId" class="form-control" placeholder="아이디를 입력하세요">
         </div>
 
         <div class="form-group">
-            <label>비밀번호</label>
-            <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요">
+            <label for="password">비밀번호</label>
+            <input type="password" th:field="*{password}"  id="password" class="form-control" placeholder="비밀번호를 입력하세요">
         </div>
 
         <div th:if="error">
             <p style="color:red" th:text="${exception}"></p>
         </div>
 
-        <a class="btn btn-primary btn-lg" href="/member/signup-page">회원 가입</a>
-        <button type="submit" class="btn btn-primary btn-lg">로그인</button>
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">
+                    로그인
+                </button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/member/signup-page}'|" type="button">
+                    회원가입
+                </button>
+            </div>
+        </div>
     </form>
 
 </div>
