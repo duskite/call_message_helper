@@ -19,5 +19,65 @@
     </div>
 </div>
 
+<!--<script type="text/javascript" th:inline="javascript">-->
+
+<!--    function createBoilerplate(){-->
+<!--        let boilerPlateDTO = {-->
+<!--            subject: $("#subject").val(),-->
+<!--            msg: $("#msg").val(),-->
+<!--            authorUserId: [[${userId}]]-->
+<!--        };-->
+
+<!--        console.log(boilerPlateDTO);-->
+
+<!--        $.ajax({-->
+<!--            url: "/boilerplate",-->
+<!--            type: "POST",-->
+<!--            data: boilerPlateDTO-->
+<!--        }).done(function (fragment){-->
+<!--            $("#boilerplate-list").replaceWith(fragment);-->
+
+<!--            $("#subject").val("");-->
+<!--            $("#msg").val("");-->
+<!--        });-->
+<!--    }-->
+<!--    -->
+<!--    $(".form-check-input").on("click", function () {-->
+<!--        let selected = $(this).attr("id");-->
+<!--        let selectedMsg = selected + 'msg';-->
+<!--        let selectedLabel = selected + 'label';-->
+<!--        console.log("선택된 라디오 버튼 라벨:" + selectedLabel + ", 내용: " + selectedMsg);-->
+<!--        $("#msg").text($('#' + selectedMsg).text());-->
+<!--        $("#subject").text($('#' + selectedLabel).text());-->
+<!--    });-->
+
+<!--    $(".boilerplate-remove-btn").on("click", function () {-->
+<!--        let selected = $(this).attr("id");-->
+<!--        let selectedLabel = selected.replace("remove-btn", "label");-->
+<!--        let subject = $('#' + selectedLabel).text();-->
+
+<!--        console.log(subject)-->
+
+<!--        removeBoilerplate(subject);-->
+<!--    })-->
+
+<!--    function removeBoilerplate(subject){-->
+<!--        let boilerPlateDTO = {-->
+<!--            subject: subject,-->
+<!--            authorUserId: [[${userId}]]-->
+<!--        };-->
+
+<!--        console.log(boilerPlateDTO);-->
+
+<!--        $.ajax({-->
+<!--            url: "/boilerplate",-->
+<!--            type: "DELETE",-->
+<!--            data: boilerPlateDTO-->
+<!--        }).done(function (fragment){-->
+<!--            $("#boilerplate-list").replaceWith(fragment);-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+
 </body>
 </html>

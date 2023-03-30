@@ -30,9 +30,11 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript" th:inline="javascript">
+
   function sendMsg(){
     let telDTO = {
+      userId: [[${userId}]],
       myPhoneNumber: $("#current-number").text(),
       targetPhoneNumber: $("#targetMsgNumber").val(),
       msg: $("#msg").val(),
@@ -46,12 +48,11 @@
       if(result){
         alert("메세지 전송 요청 성공");
         $("#targetMsgNumber").val("");
-        $("#msg").val("");
+        $("#msg").text("");
       }else {
         alert("실패");
       }
     });
-
   }
 </script>
 </body>

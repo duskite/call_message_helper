@@ -31,16 +31,16 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public void deleteMember(String userId) {
-        Optional<Member> findMember = memberRepository.findByUserId(userId);
-        if(findMember.isPresent()){
-            memberRepository.remove(findMember.get());
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+        if(optionalMember.isPresent()){
+            memberRepository.remove(optionalMember.get());
         }
     }
 
     @Override
     public void duplicateCheck(Member member) {
-        Optional<Member> findMember = memberRepository.findByUserId(member.getUserId());
-        if(findMember.isPresent()){
+        Optional<Member> optionalMember = memberRepository.findByUserId(member.getUserId());
+        if(optionalMember.isPresent()){
             throw new DuplicateException("중복 아이디");
         }
     }
@@ -84,6 +84,17 @@ public class MemberServiceImpl implements MemberService{
             Member findMember = optionalMember.get();
             findMember.updatePassword(member.getPassword());
             return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isBusinessUser(String userId) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
+        if (optionalMember.isPresent()) {
+            MemberType memberType = optionalMember.get().getMemberType();
+            return memberType == MemberType.BUSINESS;
         }else {
             return false;
         }

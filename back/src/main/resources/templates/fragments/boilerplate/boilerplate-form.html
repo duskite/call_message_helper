@@ -19,11 +19,10 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    /*<![CDATA[*/
     function createBoilerplate(){
         let boilerPlateDTO = {
             subject: $("#subject").val(),
-            msg: $("#msg").val(),
+            msg: $("#msg").text(),
             authorUserId: [[${userId}]]
         };
 
@@ -37,10 +36,9 @@
             $("#boilerplate-list").replaceWith(fragment);
 
             $("#subject").val("");
-            $("#msg").val("");
+            $("#msg").text("");
         });
     }
-    /*]]>*/
 </script>
 
 </body>

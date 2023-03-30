@@ -16,6 +16,11 @@
             내 정보
           </a>
         </div>
+        <div class="col" th:if="${isBusinessUser}">
+          <a class="btn btn-primary btn-sm" th:href="@{/team-page/admin/{adminUserId}(adminUserId = ${userId})}">
+            팀 관리
+          </a>
+        </div>
         <div class="col">
           <a class="btn btn-secondary btn-sm" th:href="@{/logout}">
             로그아웃

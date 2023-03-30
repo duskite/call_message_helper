@@ -44,7 +44,7 @@ public class BoilerplateServiceImpl implements BoilerplateService {
     }
 
     @Override
-    public boolean removeBoilerplate(Boilerplate boilerplate) {
+    public boolean deleteBoilerplate(Boilerplate boilerplate) {
         Optional<Boilerplate> optionalBoilerplate = boilerplateRepository
                 .findBySubjectAndAuthorUserId(boilerplate.getSubject(), boilerplate.getAuthorUserId());
 

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,25 +15,28 @@ import javax.persistence.*;
 public class Team {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String teamName;
 
-    private String admin;
+    private String adminUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @ManyToMany
+    @JoinTable(name = "team_member",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id"))
+    private List<Member> members = new ArrayList<>();
 
-    public void setAdmin(String admin) {
-        this.admin = admin;
-    }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
+    private List<Boilerplate> boilerplates = new ArrayList<>();
 
     public void setMember(Member member) {
-        this.member = member;
-        member.getTeams().add(this);
+        this.members.add(member);
     }
 
     @Builder
-    public Team(String teamName) {
+    public Team(String teamName, String adminUserId) {
         this.teamName = teamName;
+        this.adminUserId = adminUserId;
     }
 }

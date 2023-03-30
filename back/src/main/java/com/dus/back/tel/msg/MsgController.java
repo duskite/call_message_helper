@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +31,22 @@ public class MsgController {
 
     @PostMapping("/sms")
     @ResponseBody
-    public boolean sendSms(TelDTO telDTO) {
+    public boolean sendSms(TelDTO telDTO, Authentication authentication) {
+
+        if(!telDTO.getUserId().equals(authentication.getName())){
+            return false;
+        }
 
         return msgService.sendSms(telDTO);
     }
 
     @PostMapping("/mms")
     @ResponseBody
-    public boolean sendMms(TelDTO telDTO) {
+    public boolean sendMms(TelDTO telDTO, Authentication authentication) {
+
+        if(!telDTO.getUserId().equals(authentication.getName())){
+            return false;
+        }
 
         return msgService.sendMms(telDTO);
     }

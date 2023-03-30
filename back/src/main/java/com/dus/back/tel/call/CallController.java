@@ -2,6 +2,7 @@ package com.dus.back.tel.call;
 
 import com.dus.back.tel.TelDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +19,26 @@ public class CallController {
 
     @PostMapping("/stop")
     @ResponseBody
-    public boolean stopCall(TelDTO telDTO){
+    public boolean stopCall(TelDTO telDTO, Authentication authentication){
+        log.info("전화 요청. userId: {}", telDTO.getUserId());
+        log.info("전화 요청. myPhoneNumber: {}", telDTO.getMyPhoneNumber());
 
-        log.error(telDTO.getMyPhoneNumber());
+        if(!telDTO.getUserId().equals(authentication.getName())){
+            return false;
+        }
 
         return callService.stopCall(telDTO);
     }
 
     @PostMapping("/start")
     @ResponseBody
-    public boolean startCall(TelDTO telDTO){
+    public boolean startCall(TelDTO telDTO, Authentication authentication){
+        log.info("전화 요청. userId: {}", telDTO.getUserId());
+        log.info("전화 요청. phoneNumber: {}", telDTO.getMyPhoneNumber());
 
-        log.error(telDTO.getMyPhoneNumber());
+        if(!telDTO.getUserId().equals(authentication.getName())){
+            return false;
+        }
 
         return callService.startCall(telDTO);
     }

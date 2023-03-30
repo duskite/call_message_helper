@@ -51,4 +51,12 @@ public interface MemberService {
     boolean modifyPassword(Member member);
 
 
+    /**
+     * 기업 고객인지 확인
+     * @param userId
+     * @return
+     */
+    boolean isBusinessUser(String userId);
+
+
 }

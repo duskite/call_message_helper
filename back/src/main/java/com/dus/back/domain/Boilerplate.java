@@ -16,13 +16,12 @@ public class Boilerplate {
     private Long id;
     private String subject;
     private String msg;
-
     private String authorUserId;
 
     @Enumerated(EnumType.STRING)
     private BoilerplateType boilerplateType;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
@@ -40,6 +39,11 @@ public class Boilerplate {
     public void setMember(Member member) {
         this.member = member;
         member.getBoilerplates().add(this);
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+        team.getBoilerplates().add(this);
     }
 
     @Builder

@@ -8,6 +8,8 @@ import org.springframework.lang.Nullable;
 @Setter
 public class TelDTO {
 
+
+    private String userId;
     private String myPhoneNumber;
     private String targetPhoneNumber;
 

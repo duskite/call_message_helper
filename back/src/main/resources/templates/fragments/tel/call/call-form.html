@@ -18,9 +18,10 @@
   </div>
 </div>
 
-<script>
+<script type="text/javascript" th:inline="javascript">
   function callStart(){
     let telDTO = {
+      userId: [[${userId}]],
       myPhoneNumber: $("#current-number").text(),
       targetPhoneNumber: $("#targetCallNumber").val(),
     };
@@ -41,8 +42,10 @@
     });
   }
 
+
   function callStop(){
     let telDTO = {
+      userId: [[${userId}]],
       myPhoneNumber: $("#current-number").text(),
     };
 

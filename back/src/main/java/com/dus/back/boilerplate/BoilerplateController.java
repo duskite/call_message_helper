@@ -52,7 +52,7 @@ public class BoilerplateController {
     @DeleteMapping("/boilerplate")
     public String boilerplateDelete(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
 
-        boilerplateService.removeBoilerplate(boilerplateDTO.toEntity());
+        boilerplateService.deleteBoilerplate(boilerplateDTO.toEntity());
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(authentication.getName());
 

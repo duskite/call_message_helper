@@ -25,7 +25,7 @@ public interface BoilerplateService {
      * @param boilerplate
      * @return
      */
-    boolean removeBoilerplate(Boilerplate boilerplate);
+    boolean deleteBoilerplate(Boilerplate boilerplate);
 
     /**
      * 작성자ID를 이용하여 등록된 모든 상용구 조회

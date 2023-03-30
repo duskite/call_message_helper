@@ -7,6 +7,7 @@ import com.dus.back.fcm.FcmService;
 import com.dus.back.firebase.RequestFcmDTO;
 import com.dus.back.firebase.RequestFcmService;
 import com.dus.back.firebase.RequestFcmType;
+import com.dus.back.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,13 @@ public class HomeController {
     private final FcmService fcmService;
     private final BoilerplateService boilerplateService;
     private final RequestFcmService requestFcmService;
+    private final MemberService memberService;
 
-    public HomeController(FcmService fcmService, BoilerplateService boilerplateService, RequestFcmService requestFcmService) {
+    public HomeController(FcmService fcmService, BoilerplateService boilerplateService, RequestFcmService requestFcmService, MemberService memberService) {
         this.fcmService = fcmService;
         this.boilerplateService = boilerplateService;
         this.requestFcmService = requestFcmService;
+        this.memberService = memberService;
     }
 
 
@@ -50,9 +53,12 @@ public class HomeController {
         List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
 
+        boolean isBusinessUser = memberService.isBusinessUser(userId);
+
         model.addAttribute("userId", userId);
         model.addAttribute("hasNumbers", hasNumbers);
         model.addAttribute("myPhoneNumbers", myPhoneNumbers);
+        model.addAttribute("isBusinessUser", isBusinessUser);
 
         return "home";
     }
