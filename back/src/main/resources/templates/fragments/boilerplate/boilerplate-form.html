@@ -64,7 +64,22 @@
         $(".field-error").css("display", "block");
     }
 
+    function checkFillField(){
+        if($("#subject").val() == "" || $("#msg").val() == ""){
+            alert("값을 입력해주세요.");
+
+            return false;
+        }
+
+        return true;
+    }
+
     function updateBoilerplate() {
+        if(!checkFillField()){
+
+            return;
+        }
+
         const boilerPlateDTO = {
             subject: $("#subject").val(),
             msg: $("#msg").val(),

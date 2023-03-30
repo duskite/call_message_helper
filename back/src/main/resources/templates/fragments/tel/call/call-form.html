@@ -17,6 +17,11 @@
 
 <script type="text/javascript" th:inline="javascript">
   function callStart(){
+
+    if(!checkFillField()){
+      return;
+    }
+
     const telDTO = {
       userId: [[${userId}]],
       myPhoneNumber: $("#current-number").text(),
@@ -52,5 +57,15 @@
     }).done(function (){
       alert("전화 끊기를 요청했습니다.");
     });
+  }
+
+  function checkFillField(){
+    if($("#current-number").val() == "" || $("#targetCallNumber").val() == ""){
+      alert("값을 입력해주세요.");
+
+      return false;
+    }
+
+    return true;
   }
 </script>

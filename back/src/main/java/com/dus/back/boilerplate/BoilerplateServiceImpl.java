@@ -10,10 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -86,14 +83,13 @@ public class BoilerplateServiceImpl implements BoilerplateService {
     }
 
     @Override
-    public Map<String, String> validateHandling(Errors errors) {
-        Map<String, String> validatorResult = new HashMap<>();
-
-        for (FieldError error : errors.getFieldErrors()) {
-            String validName = error.getField();
-            validatorResult.put(validName, error.getDefaultMessage());
+    public Boilerplate findById(Long id) {
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findById(id);
+        if(optionalBoilerplate.isPresent()){
+            return optionalBoilerplate.get();
+        }else {
+            throw new NoSuchElementException();
         }
-
-        return validatorResult;
     }
+
 }

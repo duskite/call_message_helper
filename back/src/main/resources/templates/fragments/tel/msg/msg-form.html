@@ -43,7 +43,11 @@
 <script type="text/javascript" th:inline="javascript">
 
   function sendMsg(){
-    let telDTO = {
+    if(!checkFillField()){
+        return;
+    }
+
+    const telDTO = {
       userId: [[${userId}]],
       myPhoneNumber: $("#current-number").text(),
       targetPhoneNumber: $("#targetMsgNumber").val(),
@@ -73,5 +77,19 @@
       $("#msg").val("");
       $("#targetMsgNumber").val("");
   }
+
+  function checkFillField(){
+      if($("#current-number").val() == "" ||
+          $("#targetCallNumber").val() == "" ||
+          $("#msg").val() == ""){
+          
+          alert("값을 입력해주세요.");
+
+          return false;
+      }
+
+      return true;
+  }
+
 
 </script>

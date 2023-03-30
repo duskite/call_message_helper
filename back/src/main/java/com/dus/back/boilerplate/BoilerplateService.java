@@ -43,7 +43,7 @@ public interface BoilerplateService {
      */
     void duplicateCheck(Boilerplate boilerplate);
 
+    Boilerplate findById(Long id);
 
-    Map<String, String> validateHandling(Errors errors);
 
 }
