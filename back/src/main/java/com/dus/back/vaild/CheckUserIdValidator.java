@@ -16,7 +16,6 @@ import org.springframework.validation.Validator;
 @Component
 public class CheckUserIdValidator implements Validator {
 
-//    private final MemberRepository memberRepository;
     private final MemberService memberService;
     public CheckUserIdValidator(MemberService memberService) {
         this.memberService = memberService;

@@ -47,7 +47,7 @@ public class HomeController {
         String userId = authentication.getName();
 
         List<String> myPhoneNumbers = fcmService.findAllPhoneNumbersByUserId(userId);
-        standbyPhone(myPhoneNumbers);
+        standByPhone(myPhoneNumbers);
         boolean hasNumbers = (myPhoneNumbers.size() > 0) ? true: false;
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
@@ -67,7 +67,7 @@ public class HomeController {
      * 로그인시 휴대폰 깨우기 요청
      * @param myPhoneNumbers
      */
-    private void standbyPhone(List<String> myPhoneNumbers) {
+    private void standByPhone(List<String> myPhoneNumbers) {
         for (String phoneNumber : myPhoneNumbers) {
             Fcm findFcm = fcmService.findByPhoneNumber(phoneNumber);
             RequestFcmDTO requestFcmDTO = new RequestFcmDTO();

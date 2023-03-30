@@ -1,6 +1,3 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
 <div th:fragment="msg-form">
     <div>
       <!-- 내 번호는 current-number로 가져옴 -->
@@ -14,7 +11,20 @@
         <textarea rows="15" type="text" id="msg" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요"></textarea>
       </div>
 
-      <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
+            </div>
+            <div class="col">
+                <button type="button" onclick="clearMsg()" class="btn btn-secondary">메세지 비우기</button>
+            </div>
+            <div class="col">
+                <button type="button" onclick="clearAll()" class="btn btn-secondary">모두 비우기</button>
+            </div>
+        </div>
+
+
     </div>
 
     <div>
@@ -48,12 +58,20 @@
       if(result){
         alert("메세지 전송 요청 성공");
         $("#targetMsgNumber").val("");
-        $("#msg").text("");
+        $("#msg").val("");
       }else {
         alert("실패");
       }
     });
   }
+
+  function clearMsg(){
+      $("#msg").val("");
+  }
+
+  function clearAll(){
+      $("#msg").val("");
+      $("#targetMsgNumber").val("");
+  }
+
 </script>
-</body>
-</html>

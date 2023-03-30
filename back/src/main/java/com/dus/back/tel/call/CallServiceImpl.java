@@ -27,7 +27,6 @@ public class CallServiceImpl implements CallService{
         requestFcmDTO.setTelDTO(telDTO);
 
         String token = fcmService.findByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
-        log.error(token);
 
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }

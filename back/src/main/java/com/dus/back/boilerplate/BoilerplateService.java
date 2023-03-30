@@ -1,8 +1,10 @@
 package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
+import org.springframework.validation.Errors;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BoilerplateService {
 
@@ -18,7 +20,7 @@ public interface BoilerplateService {
      * @param boilerplate
      * @return
      */
-    Long modifyBoilerplate(Boilerplate boilerplate);
+    boolean modifyBoilerplate(Boilerplate boilerplate);
 
     /**
      * 상용구 삭제
@@ -40,5 +42,8 @@ public interface BoilerplateService {
      * @param boilerplate
      */
     void duplicateCheck(Boilerplate boilerplate);
+
+
+    Map<String, String> validateHandling(Errors errors);
 
 }

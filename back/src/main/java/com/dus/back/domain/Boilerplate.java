@@ -29,8 +29,7 @@ public class Boilerplate {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Boilerplate update(String subject, String msg) {
-        this.subject = subject;
+    public Boilerplate update(String msg) {
         this.msg = msg;
 
         return this;

@@ -1,61 +1,64 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
 <div id="boilerplate-list" th:fragment="boilerplate-list">
   <h3>상용구 리스트</h3>
-  <div class="form-check" th:each="boilerplate, boilerplateStat: ${boilerplateList}">
-    <input class="form-check-input" type="radio" name="boilerplate" th:id="'boilerplate' + ${boilerplateStat.index}">
-    <label class="form-check-label" th:for="'boilerplate' + ${boilerplateStat.index}"
-           th:id="'boilerplate' + ${boilerplateStat.index} + 'label'"
-           th:text="${boilerplate.getSubject()}"></label>
-    <p style="display: none" th:id="'boilerplate' + ${boilerplateStat.index} +'msg'" th:text="${boilerplate.getMsg()}"></p>
+
+  <div th:each="boilerplate, i : ${boilerplateList}" class="form-check">
+    <input type="radio" name="boilerplate-radio" th:id="${'radio' + i.index}" th:value="${boilerplate.getMsg()}" class="form-check-input">
+    <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.getSubject()}" class="form-check-label"></label>
 
     <div class="text-right" th:if="${isEditablePage}">
-      <span><button class="boilerplate-remove-btn btn btn-primary" th:id="'boilerplate' + ${boilerplateStat.index} + 'remove-btn'">삭제</button></span>
+      <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-primary" >삭제</button></span>
     </div>
   </div>
+
 
 </div>
 
 <script type="text/javascript" th:inline="javascript">
-  // 이 부분 정상 작동을 안함
-  $(".form-check-input").on("click", function () {
-    let selected = $(this).attr("id");
-    let selectedMsg = selected + 'msg';
-    let selectedLabel = selected + 'label';
-    console.log("선택된 라디오 버튼 라벨:" + selectedLabel + ", 내용: " + selectedMsg);
-    $("#msg").text($('#' + selectedMsg).text());
-    $("#subject").text($('#' + selectedLabel).text());
+
+  // 상용구 선택
+  $("input[name=boilerplate-radio]").on("click", function (){
+    const selectedRadio = $(this).attr("id");
+    const index = selectedRadio.replace("radio", "");
+
+    const subject = $("#label" + index).text();
+    const msg = $(this).val();
+
+    console.log("선택된 라디오 버튼: " + selectedRadio);
+    console.log("선택된 메세지: " + msg);
+    console.log("선택된 제목: " + subject);
+
+    $("#subject").val(subject);
+    $("#msg").val(msg);
+    $(".field-error").css("display", "none");
   });
 
-  $(".boilerplate-remove-btn").on("click", function () {
-    let selected = $(this).attr("id");
-    let selectedLabel = selected.replace("remove-btn", "label");
-    let subject = $('#' + selectedLabel).text();
+  // 상용구 삭제 버튼 클릭시
+  $(".boilerplate-remove-btn").on("click", function (){
+    const selectedBtn = $(this).attr("id");
+    const index = selectedBtn.replace("remove", "");
 
-    console.log(subject)
+    const subject = $("#label" + index).text();
+    console.log("삭제요청 제목: " + subject);
 
-    removeBoilerplate(subject);
-  })
+    deleteBoilerplate(subject);
+  });
 
-  function removeBoilerplate(subject){
-    let boilerPlateDTO = {
+  // 서버로 삭제 요청
+  function deleteBoilerplate(subject){
+    const boilerplateDTO = {
       subject: subject,
       authorUserId: [[${userId}]]
     };
 
-    console.log(boilerPlateDTO);
+    console.log(boilerplateDTO);
 
     $.ajax({
       url: "/boilerplate",
       type: "DELETE",
-      data: boilerPlateDTO
-    }).done(function (fragment){
+      data: boilerplateDTO
+    }).done((fragment)=>{
       $("#boilerplate-list").replaceWith(fragment);
     });
   }
 
 </script>
-
-</body>
-</html>

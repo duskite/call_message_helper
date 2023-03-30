@@ -1,28 +1,33 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-
 <div th:fragment="boilerplate-form">
     <h3>상용구 등록</h3>
 
+    <h5 class="field-error" style="display: none"></h5>
+
     <div class="form-group">
         <label>상용구 제목</label>
-        <input type="text" id="subject" name="subject" class="form-control" placeholder="제목을 입력하세요.">
+        <input type="text" id="subject"  class="form-control" placeholder="제목을 입력하세요.">
     </div>
     <div class="form-group">
         <label>상용구 내용</label>
-        <textarea type="text" id="msg" name="msg" class="form-control" placeholder="내용을 입력하세요."></textarea>
+        <textarea rows="15" type="text" id="msg" class="form-control" placeholder="내용을 입력하세요."></textarea>
     </div>
 
-    <button type="button" onclick="createBoilerplate()" class="btn btn-primary">등록</button>
+    <div class="row">
+        <div class="col">
+            <button type="button" onclick="createBoilerplate()" class="btn btn-primary">등록</button>
+        </div>
+        <div class="col">
+            <button type="button" onclick="updateBoilerplate()" class="btn btn-secondary">수정</button>
+        </div>
+    </div>
 </div>
-
 
 <script type="text/javascript" th:inline="javascript">
 
     function createBoilerplate(){
-        let boilerPlateDTO = {
+        const boilerPlateDTO = {
             subject: $("#subject").val(),
-            msg: $("#msg").text(),
+            msg: $("#msg").val(),
             authorUserId: [[${userId}]]
         };
 
@@ -31,15 +36,56 @@
         $.ajax({
             url: "/boilerplate",
             type: "POST",
-            data: boilerPlateDTO
-        }).done(function (fragment){
-            $("#boilerplate-list").replaceWith(fragment);
+            data: boilerPlateDTO,
+            success: function (fragment){
+                $("#boilerplate-list").replaceWith(fragment);
 
-            $("#subject").val("");
-            $("#msg").text("");
+                $("#subject").val("");
+                $("#msg").val("");
+            },
+            error: function (request){
+                console.log(request.status);
+                console.log(request.getResponseHeader("duplicate-error"));
+                if(request.status == 400 && request.getResponseHeader("duplicate-error") == "true"){
+
+                    const errorMessage = "상용구 이름은 중복 될 수 없습니다.";
+                    showErrorMessage(errorMessage)
+
+                    alert(errorMessage);
+                }else {
+                    alert("잠시 후 다시 시도해주세요.");
+                }
+            }
+        });
+    }
+
+    function showErrorMessage(errorMessage){
+        $(".field-error").text(errorMessage);
+        $(".field-error").css("display", "block");
+    }
+
+    function updateBoilerplate() {
+        const boilerPlateDTO = {
+            subject: $("#subject").val(),
+            msg: $("#msg").val(),
+            authorUserId: [[${userId}]]
+        };
+
+        console.log(boilerPlateDTO);
+
+        $.ajax({
+            url: "/boilerplate",
+            type: "PUT",
+            data: boilerPlateDTO,
+            success: function (fragment){
+                $("#boilerplate-list").replaceWith(fragment);
+
+                $("#subject").val("");
+                $("#msg").val("");
+            },
+            error: function (){
+                alert("잠시 후 다시 시도해주세요");
+            }
         });
     }
 </script>
-
-</body>
-</html>

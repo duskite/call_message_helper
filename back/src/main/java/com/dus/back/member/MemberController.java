@@ -36,6 +36,7 @@ public class MemberController {
     @PostMapping("/member")
     public String memberAdd(@Valid MemberDTO memberDTO, Errors errors, Model model) {
         if (errors.hasErrors()) {
+            log.info("회원 가입 에러 발생");
             model.addAttribute("memberDTO", memberDTO);
 
             Map<String, String> validatorResult = memberService.validateHandling(errors);

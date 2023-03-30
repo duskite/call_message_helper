@@ -3,10 +3,12 @@ package com.dus.back.boilerplate;
 import com.dus.back.domain.Boilerplate;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.lang.Nullable;
 
 @Getter
 @Setter
+@ToString
 public class BoilerplateDTO {
 
     private String subject;

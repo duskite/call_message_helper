@@ -6,9 +6,13 @@ import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,18 +33,30 @@ public class BoilerplateServiceImpl implements BoilerplateService {
         duplicateCheck(boilerplate);
 
         String userId = boilerplate.getAuthorUserId();
-        log.info("fcm 등록을 위해 member 조회. userId: {}", userId);
+        log.info("상용구 등록을 위해 member 조회. userId: {}", userId);
         Member findMember = memberService.findByUserId(userId);
         boilerplate.setMember(findMember);
 
         return boilerplateRepository.save(boilerplate);
     }
 
-
-
     @Override
-    public Long modifyBoilerplate(Boilerplate boilerplate) {
-        return null;
+    public boolean modifyBoilerplate(Boilerplate boilerplate) {
+        String subject = boilerplate.getSubject();
+        String userId = boilerplate.getAuthorUserId();
+
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findBySubjectAndAuthorUserId(subject, userId);
+        if (optionalBoilerplate.isPresent()) {
+            Boilerplate findBoilerplate = optionalBoilerplate.get();
+
+            findBoilerplate.update(boilerplate.getMsg());
+
+            log.info("boilerplate modify 성공");
+            return true;
+        }else {
+            log.info("boilerplate modify 실패");
+            return false;
+        }
     }
 
     @Override
@@ -67,5 +83,17 @@ public class BoilerplateServiceImpl implements BoilerplateService {
         if (optionalBoilerplate.isPresent()) {
             throw new DuplicateException("상용구 중복");
         }
+    }
+
+    @Override
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+
+        for (FieldError error : errors.getFieldErrors()) {
+            String validName = error.getField();
+            validatorResult.put(validName, error.getDefaultMessage());
+        }
+
+        return validatorResult;
     }
 }
