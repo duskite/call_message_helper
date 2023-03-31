@@ -31,47 +31,47 @@
       <hr class="my-4">
 
       <!--  번호가 등록되어 있는 유저는 기본값으로 하나 설정해놓음, 대부분 하나의 번호만 등록하는 유저가 많음 -->
-      <div th:if="${hasNumbers}">
+      <div th:if="${!#lists.isEmpty(myPhoneNumberList)}">
         <label for="current-number">현재 번호</label>
-        <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
+        <h2 id="current-number" th:text="${myPhoneNumberList.get(0)}"></h2>
         <div class="dropdown">
           <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             사용할 번호 선택
           </button>
           <ul class="dropdown-menu" id="phone-numbers">
-            <li th:each="myPhoneNumber : ${myPhoneNumbers}">
+            <li th:each="myPhoneNumber : ${myPhoneNumberList}">
               <a class="dropdown-item" th:text="${myPhoneNumber}"></a>
             </li>
           </ul>
         </div>
       </div>
-      <div th:unless="${hasNumbers}">
+      <div th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
         <h5>등록된 번호 없음</h5>
       </div>
 
       <div id="invitation-list" class="card">
         <h5>팀 초대 받은 내역</h5>
 
-        <div th:each="invite, i: ${inviteList}">
-          <button class="btn" th:text="${invite.teamName}" data-bs-toggle="modal"
+        <div th:each="invitation, i: ${invitationList}">
+          <button class="btn" th:text="${invitation.teamName}" data-bs-toggle="modal"
                   th:data-bs-target="'#invitationModal' + ${i.index}" ></button>
           <!-- Modal -->
           <div class="modal fade" th:id="'invitationModal' + ${i.index}" tabindex="-1" aria-labelledby="invitationModel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="invitationModelLabel" th:text="${invite.teamName} + '. 팀 초대 요청'"></h5>
+                  <h5 class="modal-title" id="invitationModelLabel" th:text="${invitation.teamName} + '. 팀 초대 요청'"></h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   팀 초대 요청을 수락하시겠습니까?
                 </div>
                 <div class="modal-footer">
-                  <button type="button"  th:uniqueKey="${invite.uniqueKey}"
+                  <button type="button"  th:uniqueKey="${invitation.uniqueKey}"
                           th:onclick="rejectInvite(this.getAttribute('uniqueKey'))"
                           class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
 
-                  <button type="button" th:uniqueKey="${invite.uniqueKey}"
+                  <button type="button" th:uniqueKey="${invitation.uniqueKey}"
                           th:onclick="acceptInvite(this.getAttribute('uniqueKey'))"
                           class="btn btn-primary" data-bs-dismiss="modal">네, 좋아요.</button>
                 </div>
@@ -83,7 +83,7 @@
       </div>
     </div>
 
-    <div class="fixed col card" th:if="${hasNumbers}">
+    <div class="fixed col card" th:if="${!#lists.isEmpty(myPhoneNumberList)}">
       <div class="row">
 
         <div class="col">
@@ -156,7 +156,7 @@
       </div>
     </div>
 
-    <div class="fixed col card" th:unless="${hasNumbers}">
+    <div class="fixed col card" th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
       <h5 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h5>
     </div>
   </div>
@@ -200,7 +200,7 @@
 
   function callStart(){
 
-    if(!checkFillField()){
+    if(!checkCallField()){
       return;
     }
 
@@ -216,12 +216,12 @@
       url: "/call/start",
       type: "POST",
       data: telDTO
-    }).done(function (result){
-      if(result){
-        alert("전화 걸기 성공");
+    }).done((success) => {
+      if(success){
+        alert(telDTO.targetPhoneNumber + "에 전화를 걸고 있습니다.");
         $("#targetCallNumber").val("");
       }else {
-        alert("실패")
+        alert("잠시 후 다시 시도해주세요.");
       }
     });
   }
@@ -232,18 +232,28 @@
       myPhoneNumber: $("#current-number").text(),
     };
 
+    console.log(telDTO);
+
     $.ajax({
       url: "/call/stop",
       type: "POST",
       data: telDTO
-    }).done(function (){
-      alert("전화 끊기를 요청했습니다.");
+    }).done((success) => {
+      if(success){
+        alert("전화 끊기를 요청했습니다.");
+      }else {
+        alert("잠시 후 다시 시도해주세요.");
+      }
+
     });
   }
+  function checkCallField(){
+    if($("#current-number").val() == ""){
+      alert("사용할 번호를 골라주세요.");
 
-  function checkFillField(){
-    if($("#current-number").val() == "" || $("#targetCallNumber").val() == ""){
-      alert("값을 입력해주세요.");
+      return false;
+    }else if($("#targetCallNumber").val() == ""){
+      alert("상대방 번호를 입력해주세요.");
 
       return false;
     }
@@ -256,7 +266,7 @@
 
 
   function sendMsg(){
-    if(!checkFillField()){
+    if(!checkMsgField()){
       return;
     }
 
@@ -271,8 +281,8 @@
       url: "/msg/sms",
       type: "POST",
       data: telDTO
-    }).done(function (result){
-      if(result){
+    }).done((success) => {
+      if(success){
         alert("메세지 전송 요청 성공");
         $("#targetMsgNumber").val("");
         $("#msg").val("");
@@ -291,7 +301,7 @@
     $("#targetMsgNumber").val("");
   }
 
-  function checkFillField(){
+  function checkMsgField(){
     if($("#current-number").val() == "" ||
             $("#targetCallNumber").val() == "" ||
             $("#msg").val() == ""){

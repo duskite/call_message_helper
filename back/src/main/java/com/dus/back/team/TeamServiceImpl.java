@@ -1,6 +1,6 @@
 package com.dus.back.team;
 
-import com.dus.back.domain.Invite;
+import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
 import com.dus.back.exception.DuplicateException;
@@ -19,10 +19,10 @@ public class TeamServiceImpl implements TeamService{
     private final MemberService memberService;
 
     private final TeamRepository teamRepository;
-    private final InviteRepository inviteRepository;
+    private final InvitationRepository inviteRepository;
 
 
-    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InviteRepository inviteRepository) {
+    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InvitationRepository inviteRepository) {
         this.memberService = memberService;
         this.teamRepository = teamRepository;
         this.inviteRepository = inviteRepository;
@@ -97,33 +97,39 @@ public class TeamServiceImpl implements TeamService{
 
 
     @Override
-    public void createInvite(Invite invite) {
-        inviteRepository.save(invite);
+    public boolean createInvite(Invitation invitation) {
+        try{
+            inviteRepository.save(invitation);
+
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
     @Override
-    public void rejectInvite(Invite invite) {
-        inviteRepository.remove(invite);
+    public void rejectInvite(Invitation invitation) {
+        inviteRepository.remove(invitation);
     }
 
     @Override
-    public void acceptInvite(Invite invite) {
-        Optional<Team> optionalTeam = teamRepository.findByTeamName(invite.getTeamName());
+    public void acceptInvite(Invitation invitation) {
+        Optional<Team> optionalTeam = teamRepository.findByTeamName(invitation.getTeamName());
         if (optionalTeam.isPresent()) {
             Team findTeam = optionalTeam.get();
-            Member findMember = memberService.findByUserId(invite.getInviteeUserId());
+            Member findMember = memberService.findByUserId(invitation.getInviteeUserId());
             findTeam.setMember(findMember);
 
             //초대 수락하고 나서 초대장 지우기
-            inviteRepository.remove(invite);
+            inviteRepository.remove(invitation);
         }else {
             throw new NoSuchElementException();
         }
     }
 
     @Override
-    public List<Invite> findAllInviteByInviteeUserId(String inviteeUserId) {
-        List<Invite> findInviteList = inviteRepository.findAllByInviteeUserId(inviteeUserId);
+    public List<Invitation> findAllInviteByInviteeUserId(String inviteeUserId) {
+        List<Invitation> findInviteList = inviteRepository.findAllByInviteeUserId(inviteeUserId);
         if(!findInviteList.isEmpty()){
             return findInviteList;
         }else {

@@ -40,17 +40,47 @@
     <hr class="my-4">
 
 
-    <button class="btn btn-dark btn-sm" th:onclick="deleteMember()">
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-dark btn-sm" th:onclick="updateMemberType()">
+        비즈니스 계정으로 변경
+      </button>
+    </div>
+    <div class="col">
+      <button class="btn btn-dark btn-sm" th:onclick="deleteMember()">
         회원 탈퇴
-    </button>
+      </button>
+    </div>
+  </div>
+
+
+
 
 
 </div>
 
 <script type="text/javascript" th:inline="javascript">
 
+  function updateMemberType() {
+    const memberDTO = {
+      userId: [[${userId}]]
+    };
+
+    $.ajax({
+      url: "/member/update/member-type",
+      type: "POST",
+      data: memberDTO
+    }).done((success) => {
+      if(success){
+        alert("비즈니스 계정으로 변경 되었습니다.");
+      }else {
+        alert("잠시 후 다시 시도해주세요.");
+      }
+    });
+  }
+
   function deleteMember(){
-    let memberDTO = {
+    const memberDTO = {
       userId: [[${userId}]]
     };
 
@@ -59,7 +89,7 @@
 
   function updatePassword(){
 
-    let memberDTO = {
+    const memberDTO = {
       userId: [[${userId}]],
       password : $("#password").val(),
       checkPassword : $("#checkPassword").val()
@@ -84,11 +114,11 @@
       url: "/member",
       type: "DELETE",
       data: memberDTO
-    }).done(function (result) {
-      if(result){
+    }).done((success) => {
+      if(success){
         alert("회원탈퇴 성공");
 
-        document.location.href = "/member/signin-page";
+        document.location.href = "/member/sign-in";
       }else {
         alert("실패");
       }
@@ -100,12 +130,12 @@
       url: "/member/update/password",
       type: "POST",
       data: memberDTO
-    }).done(function (result){
-      if(result){
+    }).done((success) => {
+      if(success){
         refreshPasswordInput();
         alert("비밀번호 변경 성공");
 
-        document.location.href = "/member/signin-page";
+        document.location.href = "/member/sign-in";
       }else {
         alert("변경 실패");
       }

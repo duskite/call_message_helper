@@ -1,7 +1,6 @@
 package com.dus.back.team;
 
-import com.dus.back.domain.Invite;
-import com.dus.back.domain.Member;
+import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Team;
 import org.springframework.validation.Errors;
 
@@ -35,22 +34,22 @@ public interface TeamService {
      * 초대장 생성
      * @param invite
      */
-    void createInvite(Invite invite);
+    boolean createInvite(Invitation invite);
 
     /**
      * 팀원 초대 거절시, 초대장 삭제
      * @param invite
      */
-    void rejectInvite(Invite invite);
+    void rejectInvite(Invitation invite);
 
-    void acceptInvite(Invite invite);
+    void acceptInvite(Invitation invite);
 
     /**
      * 유저 ID로 모든 초대장 조히
      * @param inviteeUserId
      * @return
      */
-    List<Invite> findAllInviteByInviteeUserId(String inviteeUserId);
+    List<Invitation> findAllInviteByInviteeUserId(String inviteeUserId);
 
 
 }

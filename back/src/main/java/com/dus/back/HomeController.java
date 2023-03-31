@@ -3,7 +3,7 @@ package com.dus.back;
 import com.dus.back.boilerplate.BoilerplateService;
 import com.dus.back.domain.Boilerplate;
 import com.dus.back.domain.Fcm;
-import com.dus.back.domain.Invite;
+import com.dus.back.domain.Invitation;
 import com.dus.back.fcm.FcmService;
 import com.dus.back.firebase.RequestFcmDTO;
 import com.dus.back.firebase.RequestFcmService;
@@ -51,9 +51,8 @@ public class HomeController {
 
         String userId = authentication.getName();
 
-        List<String> myPhoneNumbers = fcmService.findAllPhoneNumbersByUserId(userId);
-        standByPhone(myPhoneNumbers);
-        boolean hasNumbers = (myPhoneNumbers.size() > 0) ? true: false;
+        List<String> myPhoneNumberList = fcmService.findAllPhoneNumbersByUserId(userId);
+        standByPhone(myPhoneNumberList);
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
@@ -61,13 +60,12 @@ public class HomeController {
         boolean isBusinessUser = memberService.isBusinessUser(userId);
 
         model.addAttribute("userId", userId);
-        model.addAttribute("hasNumbers", hasNumbers);
-        model.addAttribute("myPhoneNumbers", myPhoneNumbers);
+        model.addAttribute("myPhoneNumberList", myPhoneNumberList);
         model.addAttribute("isBusinessUser", isBusinessUser);
 
         try {
-            List<Invite> findInviteList = teamService.findAllInviteByInviteeUserId(userId);
-            model.addAttribute("inviteList", findInviteList);
+            List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(userId);
+            model.addAttribute("invitationList", findInvitationList);
         } catch (NoSuchElementException e) {
             log.info("아직 받은 초대가 없음");
         }

@@ -45,6 +45,12 @@ public class Member {
         return this;
     }
 
+    public Member updateMemberType(MemberType memberType) {
+        this.memberType = memberType;
+
+        return this;
+    }
+
     @Builder
     public Member(String userId, String password, String email, MemberType memberType, Role role) {
         this.userId = userId;

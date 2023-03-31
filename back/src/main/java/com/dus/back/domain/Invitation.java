@@ -4,7 +4,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Invite {
+public class Invitation {
 
     private String uniqueKey;
 
@@ -14,7 +14,7 @@ public class Invite {
 
 
     @Builder
-    public Invite(String teamName, String adminUserId, String inviteeUserId) {
+    public Invitation(String teamName, String adminUserId, String inviteeUserId) {
         this.teamName = teamName;
         this.adminUserId = adminUserId;
         this.inviteeUserId = inviteeUserId;
