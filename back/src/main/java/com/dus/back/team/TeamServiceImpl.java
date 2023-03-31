@@ -96,7 +96,6 @@ public class TeamServiceImpl implements TeamService{
     }
 
 
-
     @Override
     public void createInvite(Invite invite) {
         inviteRepository.save(invite);
@@ -114,28 +113,22 @@ public class TeamServiceImpl implements TeamService{
             Team findTeam = optionalTeam.get();
             Member findMember = memberService.findByUserId(invite.getInviteeUserId());
             findTeam.setMember(findMember);
+
+            //초대 수락하고 나서 초대장 지우기
+            inviteRepository.remove(invite);
         }else {
             throw new NoSuchElementException();
         }
     }
 
     @Override
-    public Invite findInviteByInviteeUserId(String inviteeUserId) {
-        Optional<Invite> optionalInvite = inviteRepository.findByInviteeUserId(inviteeUserId);
-        if(optionalInvite.isPresent()){
-            return optionalInvite.get();
+    public List<Invite> findAllInviteByInviteeUserId(String inviteeUserId) {
+        List<Invite> findInviteList = inviteRepository.findAllByInviteeUserId(inviteeUserId);
+        if(!findInviteList.isEmpty()){
+            return findInviteList;
         }else {
-            throw new NoSuchElementException("userId로 조회되는 초대 내역이 없음");
+            throw new NoSuchElementException("userId로 조회되는 초대 내역들이 없음");
         }
     }
 
-    @Override
-    public Invite findInviteByAdminUserId(String adminUserId) {
-        Optional<Invite> optionalInvite = inviteRepository.findByInviteeUserId(adminUserId);
-        if(optionalInvite.isPresent()){
-            return optionalInvite.get();
-        }else {
-            throw new NoSuchElementException("adminUserId로 조회되는 초대 내역이 없음");
-        }
-    }
 }

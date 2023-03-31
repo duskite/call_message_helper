@@ -1,5 +1,6 @@
 package com.dus.back.team;
 
+import com.dus.back.domain.Invite;
 import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
 import com.dus.back.vaild.CheckTeamNameValidator;
@@ -9,14 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Controller
 @Slf4j
@@ -80,18 +79,6 @@ public class TeamController {
         return null;
     }
 
-    @PostMapping("/team/invite")
-    public String teamInvite(InviteDTO inviteDTO) {
-
-        log.info("팀원 초대. 초대 되는 팀명: {}", inviteDTO.getTeamName());
-        log.info("팀원 초대. 초대 되는 팀 관리자 ID: {}", inviteDTO.getAdminUserId());
-        log.info("팀원 초대. 초대 받는 사람 ID: {}", inviteDTO.getInviteeUserId());
-
-        teamService.createInvite(inviteDTO.toEntity());
-
-        return "/team/team-member-list";
-    }
-
     @GetMapping("/team/members")
     public String teamMembers(TeamDTO teamDTO, Model model) {
         Team findTeam = teamService.findByTeamName(teamDTO.getTeamName());
@@ -105,4 +92,56 @@ public class TeamController {
 
     }
 
+
+    @PostMapping("/team/invitation")
+    @ResponseBody
+    public void createInvitation(InviteDTO inviteDTO) {
+
+        log.info("초대장. 초대 되는 팀명: {}", inviteDTO.getTeamName());
+        log.info("초대장 초대 되는 팀 관리자 ID: {}", inviteDTO.getAdminUserId());
+        log.info("초대장 초대 받는 사람 ID: {}", inviteDTO.getInviteeUserId());
+
+        teamService.createInvite(inviteDTO.toEntity());
+    }
+
+    @PostMapping("/team/invitation/{uniqueKey}")
+    public String acceptInvitation(@PathVariable("uniqueKey") String uniqueKey, Authentication authentication, Model model) {
+
+        InviteDTO inviteDTO = uniqueKeyConvertInviteDTO(uniqueKey);
+        teamService.acceptInvite(inviteDTO.toEntity());
+
+        try {
+            List<Invite> findInviteList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+            model.addAttribute("inviteList", findInviteList);
+        } catch (NoSuchElementException e) {
+            log.info("받은 초대가 없음");
+        }
+
+        return "/home :: #invitation-list";
+    }
+
+    @DeleteMapping("/team/invitation/{uniqueKey}")
+    public String rejectInvitation(@PathVariable("uniqueKey") String uniqueKey, Authentication authentication, Model model) {
+
+        InviteDTO inviteDTO = uniqueKeyConvertInviteDTO(uniqueKey);
+        teamService.rejectInvite(inviteDTO.toEntity());
+
+        try {
+            List<Invite> findInviteList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+            model.addAttribute("inviteList", findInviteList);
+        } catch (NoSuchElementException e) {
+            log.info("받은 초대가 없음");
+        }
+
+        return "/home :: #invitation-list";
+    }
+
+    private InviteDTO uniqueKeyConvertInviteDTO(String uniqueKey){
+        String[] s = uniqueKey.split("_");
+        InviteDTO inviteDTO = new InviteDTO();
+        inviteDTO.setTeamName(s[0]);
+        inviteDTO.setInviteeUserId(s[1]);
+
+        return inviteDTO;
+    }
 }

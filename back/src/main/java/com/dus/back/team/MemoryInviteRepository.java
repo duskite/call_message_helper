@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.stereotype.Repository;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -30,30 +28,18 @@ public class MemoryInviteRepository implements InviteRepository{
     }
 
     @Override
-    public Optional<Invite> findByInviteeUserId(String inviteeUserId) {
+    public List<Invite> findAllByInviteeUserId(String inviteeUserId) {
+        List<Invite> list = new ArrayList<>();
+
         String findUniqueKey = null;
         for (String key : cacheStore.keySet()) {
             if (key.contains(inviteeUserId)) {
                 findUniqueKey = key;
 
-                return Optional.ofNullable(cacheStore.get(findUniqueKey));
+                list.add(cacheStore.get(findUniqueKey));
             }
         }
 
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<Invite> findByAdminUserId(String adminUserId) {
-        String findUniqueKey = null;
-        for (String key : cacheStore.keySet()) {
-            if (key.contains(adminUserId)) {
-                findUniqueKey = key;
-
-                return Optional.ofNullable(cacheStore.get(findUniqueKey));
-            }
-        }
-
-        return Optional.empty();
+        return list;
     }
 }

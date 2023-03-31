@@ -3,6 +3,7 @@ package com.dus.back.team;
 import com.dus.back.domain.Invite;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -13,8 +14,11 @@ public interface InviteRepository {
 
     void remove(Invite invite);
 
-    Optional<Invite> findByInviteeUserId(String inviteeUserId);
-
-    Optional<Invite> findByAdminUserId(String adminUserId);
+    /**
+     * 유저 ID로 모든 초대장 조회
+     * @param inviteeUserId
+     * @return
+     */
+    List<Invite> findAllByInviteeUserId(String inviteeUserId);
 
 }

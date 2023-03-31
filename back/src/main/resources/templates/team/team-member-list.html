@@ -5,7 +5,7 @@
   <div th:if="${memberList} != null">
     <div th:each="member, i : ${memberList}" class="form-check">
       <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${member.getUserId()}" class="form-check-input">
-      <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${member.getUserId()()}" class="form-check-label"></label>
+      <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${member.getUserId()}" class="form-check-label"></label>
 
       <span><button th:id="${'remove' + i.index}" class="member-remove-btn btn btn-primary" >삭제</button></span>
     </div>
@@ -36,11 +36,9 @@
     console.log(inviteDTO);
 
     $.ajax({
-      url: "/team/invite",
+      url: "/team/invitation",
       type: "POST",
       data: inviteDTO
-    }).done((fragment)=>{
-      $("#team-member-list").replaceWith(fragment);
     });
   }
 </script>

@@ -46,17 +46,11 @@ public interface TeamService {
     void acceptInvite(Invite invite);
 
     /**
-     * 유저 ID로 초대 받은 내역 조회
+     * 유저 ID로 모든 초대장 조히
      * @param inviteeUserId
      * @return
      */
-    Invite findInviteByInviteeUserId(String inviteeUserId);
+    List<Invite> findAllInviteByInviteeUserId(String inviteeUserId);
 
-    /**
-     * 팀 관리자 ID로 초대한 내역 조회
-     * @param adminUserId
-     * @return
-     */
-    Invite findInviteByAdminUserId(String adminUserId);
 
 }

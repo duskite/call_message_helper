@@ -66,8 +66,8 @@ public class HomeController {
         model.addAttribute("isBusinessUser", isBusinessUser);
 
         try {
-            Invite findInvite = teamService.findInviteByInviteeUserId(userId);
-            model.addAttribute("invite", findInvite);
+            List<Invite> findInviteList = teamService.findAllInviteByInviteeUserId(userId);
+            model.addAttribute("inviteList", findInviteList);
         } catch (NoSuchElementException e) {
             log.info("아직 받은 초대가 없음");
         }
