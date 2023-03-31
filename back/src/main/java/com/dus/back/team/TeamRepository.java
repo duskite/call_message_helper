@@ -3,6 +3,7 @@ package com.dus.back.team;
 import com.dus.back.domain.Team;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 public interface TeamRepository {
@@ -14,7 +15,7 @@ public interface TeamRepository {
     Optional<Team> findById(Long id);
 
     /**
-     * 팀을 생성한 어드민id로 조회
+     * 관리자 id로 조회
      * @param adminUserId
      * @return
      */
@@ -26,4 +27,11 @@ public interface TeamRepository {
      * @return
      */
     Optional<Team> findByTeamName(String teamName);
+
+    /**
+     * 관리자 id로 생성된 모든 팀 조회
+     * @param adminUserId
+     * @return
+     */
+    List<Team> findAllByAdminUserId(String adminUserId);
 }

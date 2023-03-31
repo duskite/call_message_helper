@@ -8,16 +8,17 @@
   <div class="row justify-content-center" >
     <h1 class="mb-5 fw-bold text-center">Team 관리</h1>
 
-    <div>
+    <button class="w-100 btn btn-secondary btn-lg"
+            th:onclick="|location.href='@{/team/create-form}'|">
       팀 생성
-    </div>
-    <div>
-      팀 목록 - 누르면
-    </div>
-    <div>
-      팀원들 조회
-      <div>
-        팀원 추가
+    </button>
+
+    <div class="container row">
+      <div class="col">
+        <div th:replace="team/team-list"/>
+      </div>
+      <div class="col">
+        <div th:replace="team/team-member-list"/>
       </div>
     </div>
 

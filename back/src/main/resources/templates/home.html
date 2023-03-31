@@ -48,6 +48,32 @@
       <div th:unless="${hasNumbers}">
         <h2>등록된 번호 없음</h2>
       </div>
+
+      <div class="card-body">
+        <h5>팀 초대 받은 내역</h5>
+        <div id="invitations">
+          <button th:if="${invite} != null" th:text="${invite.teamName}" data-bs-toggle="modal" data-bs-target="#invitationModel"></button>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="invitationModel" tabindex="-1" aria-labelledby="invitationModel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="invitationModelLabel">팀 초대 요청</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                팀 초대 요청을 수락하시겠습니까?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+                <button type="button" class="btn btn-primary">네, 좋아요.</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="fixed col card" th:if="${hasNumbers}">
@@ -80,7 +106,14 @@
 <script type="text/javascript">
   $("#phone-numbers li > a").on("click", function () {
     $("#current-number").text($(this).text());
-  })
+  });
+
+  $("#invitations > button").on("click", function (){
+    const teamName = $(this).text();
+    console.log(teamName);
+  });
+
+
 </script>
 </body>
 </html>

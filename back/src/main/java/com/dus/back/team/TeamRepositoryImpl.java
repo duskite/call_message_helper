@@ -49,4 +49,13 @@ public class TeamRepositoryImpl implements TeamRepository {
 
         return teamList.stream().findAny();
     }
+
+    @Override
+    public List<Team> findAllByAdminUserId(String adminUserId) {
+        List<Team> teamList = em.createQuery("select m from Team m where m.adminUserId=:adminUserId", Team.class)
+                .setParameter("adminUserId", adminUserId)
+                .getResultList();
+
+        return teamList;
+    }
 }

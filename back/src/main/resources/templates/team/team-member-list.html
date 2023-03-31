@@ -1,0 +1,46 @@
+<div id="team-member-list" th:fragment="team-member-list">
+
+  <h3>팀원 리스트</h3>
+
+  <div th:if="${memberList} != null">
+    <div th:each="member, i : ${memberList}" class="form-check">
+      <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${member.getUserId()}" class="form-check-input">
+      <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${member.getUserId()()}" class="form-check-label"></label>
+
+      <span><button th:id="${'remove' + i.index}" class="member-remove-btn btn btn-primary" >삭제</button></span>
+    </div>
+  </div>
+  <div th:unless="${memberList} != null">
+    <p>아직 팀원이 없습니다.</p>
+  </div>
+
+  <div>
+    <h5>팀원 초대하기</h5>
+    <div class="form-group">
+      <label for="inviteeUserId">초대할 팀원 ID</label>
+      <input type="text" id="inviteeUserId"  class="form-control" placeholder="초대할 팀원 ID를 입력해주세요.">
+    </div>
+    <button type="button" onclick="inviteMember()" class="btn btn-primary">등록</button>
+  </div>
+
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+  function inviteMember() {
+    const inviteDTO = {
+      teamName: [[${teamName}]],
+      adminUserId: [[${adminUserId}]],
+      inviteeUserId: $("#inviteeUserId").val()
+    }
+
+    console.log(inviteDTO);
+
+    $.ajax({
+      url: "/team/invite",
+      type: "POST",
+      data: inviteDTO
+    }).done((fragment)=>{
+      $("#team-member-list").replaceWith(fragment);
+    });
+  }
+</script>

@@ -1,0 +1,39 @@
+<div id="team-list" th:fragment="team-list">
+
+  <h3>팀 리스트</h3>
+
+  <div th:if="${teamList != null}">
+    <div th:each="team, i : ${teamList}" class="form-check">
+      <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${team.getTeamName()}" class="form-check-input">
+      <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${team.getTeamName()}" class="form-check-label"></label>
+
+      <span><button th:id="${'remove' + i.index}" class="team-remove-btn btn btn-primary" >삭제</button></span>
+    </div>
+  </div>
+  <div th:unless="${teamList != null}">
+    <p>아직 생성한 팀이 없습니다.</p>
+  </div>
+
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+  // 팀 선택
+  $("input[name=team-radio]").on("click", function (){
+    const selectedTeamName = $(this).val();
+    console.log(selectedTeamName);
+
+    const teamDTO = {
+      teamName : selectedTeamName,
+      adminUserId: [[${adminUserId}]]
+    }
+
+    $.ajax({
+      url: "/team/members",
+      type: "GET",
+      data: teamDTO
+    }).done((fragment)=>{
+      $("#team-member-list").replaceWith(fragment);
+    });
+  });
+</script>
