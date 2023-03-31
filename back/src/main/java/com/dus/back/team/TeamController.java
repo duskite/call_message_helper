@@ -35,8 +35,8 @@ public class TeamController {
     }
 
 
-    @GetMapping("/team-page/admin/{adminUserId}")
-    public String teamPage(Model model, Authentication authentication) {
+    @GetMapping("/team-manage/admin/{adminUserId}")
+    public String teamManage(Model model, Authentication authentication) {
 
         String adminUserId = authentication.getName();
         List<Team> teamList = teamService.findAllByAdminUserId(adminUserId);
@@ -44,14 +44,14 @@ public class TeamController {
         model.addAttribute("adminUserId", adminUserId);
         model.addAttribute("teamList", teamList);
 
-        return "/team/team-page";
+        return "/team/team-manage";
     }
 
-    @GetMapping("/team/create-form")
-    public String createForm(Model model, TeamDTO teamDTO, Authentication authentication) {
+    @GetMapping("/team-create")
+    public String teamCreate(Model model, TeamDTO teamDTO, Authentication authentication) {
         teamDTO.setAdminUserId(authentication.getName());
         model.addAttribute("teamDTO", teamDTO);
-        return "/team/create-form";
+        return "/team/team-create";
     }
 
     @PostMapping("/team")
@@ -65,7 +65,7 @@ public class TeamController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/team/create-form";
+            return "/team/team-create";
         }
 
         teamService.addTeam(teamDTO.toEntity());
@@ -88,7 +88,7 @@ public class TeamController {
         model.addAttribute("teamName", teamDTO.getTeamName());
         model.addAttribute("adminUserId", teamDTO.getAdminUserId());
 
-        return "/team/team-member-list";
+        return "/team/team-manage :: #team-member-list";
 
     }
 

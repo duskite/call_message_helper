@@ -20,10 +20,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/","/member/signin-page", "/member/login", "/fcm-token").permitAll()
+                .antMatchers("/","/member/sign-in", "/member/sign-up", "/member/login", "/fcm-token").permitAll()
                 .antMatchers("/home", "/call/**", "/msg/**").authenticated();
         http.formLogin()
-                .loginPage("/member/signin-page")
+                .loginPage("/member/sign-in")
                 .successHandler(loginSuccessHandler())
                 .failureHandler(loginFailHandler())
                 .usernameParameter("userId")

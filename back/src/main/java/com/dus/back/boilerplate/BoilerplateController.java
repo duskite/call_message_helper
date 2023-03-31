@@ -7,14 +7,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -34,7 +32,7 @@ public class BoilerplateController {
     }
 
 
-    @GetMapping("/boilerplate-page/{userId}")
+    @GetMapping("/boilerplate-manage/{userId}")
     public String boilerplatePage(Model model, Authentication authentication, @PathVariable("userId") String userId) {
 
         if(!userId.equals(authentication.getName())){
@@ -42,7 +40,7 @@ public class BoilerplateController {
         }
         setBaseModelInfo(model, authentication);
 
-        return "/boilerplate/boilerplate-page";
+        return "/boilerplate/boilerplate-manage";
     }
 
     /**
