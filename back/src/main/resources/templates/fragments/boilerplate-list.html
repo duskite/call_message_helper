@@ -1,0 +1,65 @@
+<div id="boilerplate-list" th:fragment="boilerplate-list">
+
+  <h3>상용구 리스트</h3>
+
+  <div th:each="boilerplate, i : ${boilerplateList}" class="form-check">
+    <input type="radio" name="boilerplate-radio" th:id="${'radio' + i.index}" th:value="${boilerplate.getMsg()}" class="form-check-input">
+    <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.getSubject()}" class="form-check-label"></label>
+
+    <div class="text-right" th:if="${isEditablePage}">
+      <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-primary" >삭제</button></span>
+    </div>
+  </div>
+
+
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+
+  // 상용구 선택
+  $("input[name=boilerplate-radio]").on("click", function (){
+    const selectedRadio = $(this).attr("id");
+    const index = selectedRadio.replace("radio", "");
+
+    const subject = $("#label" + index).text();
+    const msg = $(this).val();
+
+    console.log("선택된 라디오 버튼: " + selectedRadio);
+    console.log("선택된 메세지: " + msg);
+    console.log("선택된 제목: " + subject);
+
+    $("#subject").val(subject);
+    $("#msg").val(msg);
+    $(".field-error").css("display", "none");
+  });
+
+  // 상용구 삭제 버튼 클릭시
+  $(".boilerplate-remove-btn").on("click", function (){
+    const selectedBtn = $(this).attr("id");
+    const index = selectedBtn.replace("remove", "");
+
+    const subject = $("#label" + index).text();
+    console.log("삭제요청 제목: " + subject);
+
+    deleteBoilerplate(subject);
+  });
+
+  // 서버로 삭제 요청
+  function deleteBoilerplate(subject){
+    const boilerplateDTO = {
+      subject: subject,
+      authorUserId: [[${userId}]]
+    };
+
+    console.log(boilerplateDTO);
+
+    $.ajax({
+      url: "/boilerplate",
+      type: "DELETE",
+      data: boilerplateDTO
+    }).done((fragment)=>{
+      $("#boilerplate-list").replaceWith(fragment);
+    });
+  }
+
+</script>

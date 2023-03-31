@@ -36,6 +36,7 @@ public class MemberController {
     @PostMapping("/member")
     public String memberAdd(@Valid MemberDTO memberDTO, Errors errors, Model model) {
         if (errors.hasErrors()) {
+            log.info("회원 가입 에러 발생");
             model.addAttribute("memberDTO", memberDTO);
 
             Map<String, String> validatorResult = memberService.validateHandling(errors);
@@ -43,7 +44,7 @@ public class MemberController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/member/signup-page";
+            return "/member/sign-up";
         }
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
@@ -51,7 +52,7 @@ public class MemberController {
 
         memberService.addMember(memberDTO.toEntity());
 
-        return "redirect:/member/signin-page";
+        return "redirect:/member/sign-in";
     }
 
     @DeleteMapping("/member")
@@ -80,19 +81,19 @@ public class MemberController {
         return true;
     }
 
-    @GetMapping("/member/signup-page")
+    @GetMapping("/member/sign-up")
     public String signUp(Model model, MemberDTO memberDTO) {
         model.addAttribute("memberDTO", memberDTO);
-        return "/member/signup-page";
+        return "/member/sign-up";
     }
 
-    @GetMapping("/member/signin-page")
+    @GetMapping("/member/sign-in")
     public String signIn(Model model, @Nullable @RequestParam("error") String error, @Nullable @RequestParam("exception") String exception){
         model.addAttribute("error", error);
         model.addAttribute("exception", exception);
         model.addAttribute("loginDTO", new LoginDTO());
 
-        return "/member/signin-page";
+        return "/member/sign-in";
     }
 
     @GetMapping("/member/info/{userId}")
@@ -103,7 +104,7 @@ public class MemberController {
         }
 
         model.addAttribute("userId", userId);
-        return "/member/info-page";
+        return "/member/info";
 
     }
 

@@ -1,8 +1,10 @@
 package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
+import org.springframework.validation.Errors;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BoilerplateService {
 
@@ -18,14 +20,14 @@ public interface BoilerplateService {
      * @param boilerplate
      * @return
      */
-    Long modifyBoilerplate(Boilerplate boilerplate);
+    boolean modifyBoilerplate(Boilerplate boilerplate);
 
     /**
      * 상용구 삭제
      * @param boilerplate
      * @return
      */
-    boolean removeBoilerplate(Boilerplate boilerplate);
+    boolean deleteBoilerplate(Boilerplate boilerplate);
 
     /**
      * 작성자ID를 이용하여 등록된 모든 상용구 조회
@@ -40,5 +42,8 @@ public interface BoilerplateService {
      * @param boilerplate
      */
     void duplicateCheck(Boilerplate boilerplate);
+
+    Boilerplate findById(Long id);
+
 
 }

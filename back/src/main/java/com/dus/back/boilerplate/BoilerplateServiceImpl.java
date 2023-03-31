@@ -6,10 +6,11 @@ import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -29,22 +30,34 @@ public class BoilerplateServiceImpl implements BoilerplateService {
         duplicateCheck(boilerplate);
 
         String userId = boilerplate.getAuthorUserId();
-        log.info("fcm 등록을 위해 member 조회. userId: {}", userId);
+        log.info("상용구 등록을 위해 member 조회. userId: {}", userId);
         Member findMember = memberService.findByUserId(userId);
         boilerplate.setMember(findMember);
 
         return boilerplateRepository.save(boilerplate);
     }
 
-
-
     @Override
-    public Long modifyBoilerplate(Boilerplate boilerplate) {
-        return null;
+    public boolean modifyBoilerplate(Boilerplate boilerplate) {
+        String subject = boilerplate.getSubject();
+        String userId = boilerplate.getAuthorUserId();
+
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findBySubjectAndAuthorUserId(subject, userId);
+        if (optionalBoilerplate.isPresent()) {
+            Boilerplate findBoilerplate = optionalBoilerplate.get();
+
+            findBoilerplate.update(boilerplate.getMsg());
+
+            log.info("boilerplate modify 성공");
+            return true;
+        }else {
+            log.info("boilerplate modify 실패");
+            return false;
+        }
     }
 
     @Override
-    public boolean removeBoilerplate(Boilerplate boilerplate) {
+    public boolean deleteBoilerplate(Boilerplate boilerplate) {
         Optional<Boilerplate> optionalBoilerplate = boilerplateRepository
                 .findBySubjectAndAuthorUserId(boilerplate.getSubject(), boilerplate.getAuthorUserId());
 
@@ -68,4 +81,15 @@ public class BoilerplateServiceImpl implements BoilerplateService {
             throw new DuplicateException("상용구 중복");
         }
     }
+
+    @Override
+    public Boilerplate findById(Long id) {
+        Optional<Boilerplate> optionalBoilerplate = boilerplateRepository.findById(id);
+        if(optionalBoilerplate.isPresent()){
+            return optionalBoilerplate.get();
+        }else {
+            throw new NoSuchElementException();
+        }
+    }
+
 }

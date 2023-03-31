@@ -16,6 +16,11 @@
             내 정보
           </a>
         </div>
+        <div class="col" th:if="${isBusinessUser}">
+          <a class="btn btn-primary btn-sm" th:href="@{/team-manage/admin/{adminUserId}(adminUserId = ${userId})}">
+            팀 관리
+          </a>
+        </div>
         <div class="col">
           <a class="btn btn-secondary btn-sm" th:href="@{/logout}">
             로그아웃
@@ -41,7 +46,40 @@
         </div>
       </div>
       <div th:unless="${hasNumbers}">
-        <h2>등록된 번호 없음</h2>
+        <h5>등록된 번호 없음</h5>
+      </div>
+
+      <div id="invitation-list" class="card">
+        <h5>팀 초대 받은 내역</h5>
+
+        <div th:each="invite, i: ${inviteList}">
+          <button class="btn" th:text="${invite.teamName}" data-bs-toggle="modal"
+                  th:data-bs-target="'#invitationModal' + ${i.index}" ></button>
+          <!-- Modal -->
+          <div class="modal fade" th:id="'invitationModal' + ${i.index}" tabindex="-1" aria-labelledby="invitationModel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="invitationModelLabel" th:text="${invite.teamName} + '. 팀 초대 요청'"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  팀 초대 요청을 수락하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                  <button type="button"  th:uniqueKey="${invite.uniqueKey}"
+                          th:onclick="rejectInvite(this.getAttribute('uniqueKey'))"
+                          class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+
+                  <button type="button" th:uniqueKey="${invite.uniqueKey}"
+                          th:onclick="acceptInvite(this.getAttribute('uniqueKey'))"
+                          class="btn btn-primary" data-bs-dismiss="modal">네, 좋아요.</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -49,25 +87,77 @@
       <div class="row">
 
         <div class="col">
-          <div th:replace="fragments/tel/call/call-form"/>
+          <div id="call-form">
+
+            <div class="form-group">
+              <label for="targetCallNumber">상대방 번호</label>
+              <input type="text" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+            </div>
+            <div class="row">
+              <div class="col">
+                <button type="button" onclick="callStart()" class="btn btn-primary">전화 걸기</button>
+              </div>
+              <div class="col">
+                <button type="button" onclick="callStop()" class="btn btn-secondary">전화 끊기</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="col">
-          <div th:replace="fragments/tel/msg/msg-form"/>
+          <div id="msg-form">
+            <div>
+
+              <div class="form-group">
+                <label>상대방 번호</label>
+                <input type="text" id="targetMsgNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+              </div>
+              <div class="form-group">
+                <label>메세지 내용</label>
+                <textarea rows="15" type="text" id="msg" name="msg" class="form-control" placeholder="메세지 내용을 입력하세요"></textarea>
+              </div>
+
+
+              <div class="row">
+                <div class="col">
+                  <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
+                </div>
+                <div class="col">
+                  <button type="button" onclick="clearMsg()" class="btn btn-secondary">메세지 비우기</button>
+                </div>
+                <div class="col">
+                  <button type="button" onclick="clearAll()" class="btn btn-secondary">모두 비우기</button>
+                </div>
+              </div>
+
+
+            </div>
+
+            <div>
+              <form th:action="@{/msg/excel}" method="post" enctype="multipart/form-data">
+                <input th:class="file-selector-button" type="file" name="file">
+                <input type="submit" value="연락처 엑셀 파일 업로드">
+              </form>
+
+              <br>
+              <form th:action="@{/msg/excel-download}" method="get">
+                <input type="submit" value="메세지 대량 발송 양식 다운로드">
+              </form>
+            </div>
+          </div>
+
         </div>
 
         <div class="col">
-          <div th:replace="fragments/boilerplate/boilerplate-list"/>
-          <a th:href="@{/boilerplate-page/{userId}(userId = ${userId})}">상용구 관리</a>
+          <div th:replace="fragments/boilerplate-list"/>
+          <a th:href="@{/boilerplate-manage/{userId}(userId = ${userId})}">상용구 관리</a>
         </div>
 
       </div>
     </div>
 
     <div class="fixed col card" th:unless="${hasNumbers}">
-      <div class="row">
-        <h2 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h2>
-      </div>
+      <h5 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h5>
     </div>
   </div>
 </div>
@@ -75,7 +165,145 @@
 <script type="text/javascript">
   $("#phone-numbers li > a").on("click", function () {
     $("#current-number").text($(this).text());
-  })
+  });
+
+  function rejectInvite(uniqueKey) {
+
+    console.log(uniqueKey);
+
+    $.ajax({
+      url: "/team/invitation/" + uniqueKey,
+      type: "DELETE",
+      data: uniqueKey
+    }).done((fragment)=>{
+      $("#invitation-list").replaceWith(fragment);
+    });
+
+  }
+
+  function acceptInvite(uniqueKey) {
+
+    console.log(uniqueKey);
+
+    $.ajax({
+      url: "/team/invitation/" + uniqueKey,
+      type: "POST",
+      data: uniqueKey
+    }).done((fragment)=>{
+      $("#invitation-list").replaceWith(fragment);
+    });
+
+
+  }
+
+
+
+  function callStart(){
+
+    if(!checkFillField()){
+      return;
+    }
+
+    const telDTO = {
+      userId: [[${userId}]],
+      myPhoneNumber: $("#current-number").text(),
+      targetPhoneNumber: $("#targetCallNumber").val(),
+    };
+
+    console.log(telDTO);
+
+    $.ajax({
+      url: "/call/start",
+      type: "POST",
+      data: telDTO
+    }).done(function (result){
+      if(result){
+        alert("전화 걸기 성공");
+        $("#targetCallNumber").val("");
+      }else {
+        alert("실패")
+      }
+    });
+  }
+
+  function callStop(){
+    const telDTO = {
+      userId: [[${userId}]],
+      myPhoneNumber: $("#current-number").text(),
+    };
+
+    $.ajax({
+      url: "/call/stop",
+      type: "POST",
+      data: telDTO
+    }).done(function (){
+      alert("전화 끊기를 요청했습니다.");
+    });
+  }
+
+  function checkFillField(){
+    if($("#current-number").val() == "" || $("#targetCallNumber").val() == ""){
+      alert("값을 입력해주세요.");
+
+      return false;
+    }
+
+    return true;
+  }
+
+
+
+
+
+  function sendMsg(){
+    if(!checkFillField()){
+      return;
+    }
+
+    const telDTO = {
+      userId: [[${userId}]],
+      myPhoneNumber: $("#current-number").text(),
+      targetPhoneNumber: $("#targetMsgNumber").val(),
+      msg: $("#msg").val(),
+    };
+
+    $.ajax({
+      url: "/msg/sms",
+      type: "POST",
+      data: telDTO
+    }).done(function (result){
+      if(result){
+        alert("메세지 전송 요청 성공");
+        $("#targetMsgNumber").val("");
+        $("#msg").val("");
+      }else {
+        alert("실패");
+      }
+    });
+  }
+
+  function clearMsg(){
+    $("#msg").val("");
+  }
+
+  function clearAll(){
+    $("#msg").val("");
+    $("#targetMsgNumber").val("");
+  }
+
+  function checkFillField(){
+    if($("#current-number").val() == "" ||
+            $("#targetCallNumber").val() == "" ||
+            $("#msg").val() == ""){
+
+      alert("값을 입력해주세요.");
+
+      return false;
+    }
+
+    return true;
+  }
+
 </script>
 </body>
 </html>

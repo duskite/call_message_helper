@@ -49,7 +49,6 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-  /*<![CDATA[*/
   function deleteMember(){
     let memberDTO = {
       userId: [[${userId}]]
@@ -57,9 +56,7 @@
 
     deleteRequest(memberDTO);
   }
-  /*]]>*/
 
-  /*<![CDATA[*/
   function updatePassword(){
 
     let memberDTO = {
@@ -75,7 +72,6 @@
       alert("비밀번호가 불일치 합니다.");
     }
   }
-  /*]]>*/
 
   // 패스워드 입력란 비우기
   function refreshPasswordInput(){

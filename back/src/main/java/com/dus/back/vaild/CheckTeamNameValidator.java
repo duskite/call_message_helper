@@ -2,24 +2,26 @@ package com.dus.back.vaild;
 
 import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberDTO;
-import com.dus.back.member.MemberRepository;
-import com.dus.back.member.MemberService;
+import com.dus.back.team.TeamDTO;
+import com.dus.back.team.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * 회원 가입시 userId 중복 체크를 담당하는 컴포넌트
+ * 팀 생성시 teamName 중복 체크 담당
  */
 @Slf4j
 @Component
-public class CheckUserIdValidator implements Validator {
+public class CheckTeamNameValidator implements Validator {
 
-    private final MemberService memberService;
-    public CheckUserIdValidator(MemberService memberService) {
-        this.memberService = memberService;
+    private final TeamService teamService;
+
+    public CheckTeamNameValidator(TeamService teamService) {
+        this.teamService = teamService;
     }
+
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -29,19 +31,20 @@ public class CheckUserIdValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         try {
-            doValidate((MemberDTO) target, errors);
+            doValidate((TeamDTO) target, errors);
         } catch (RuntimeException e) {
             log.error("중복 검증 에러");
             throw e;
         }
+
     }
 
-    public void doValidate(MemberDTO memberDTO, Errors errors) {
+    public void doValidate(TeamDTO teamDTO, Errors errors) {
 
         try{
-            memberService.duplicateCheck(memberDTO.toEntity());
+            teamService.duplicateCheck(teamDTO.toEntity());
         }catch (DuplicateException e){
-            errors.rejectValue("userId", "아이디 중복", "이미 사용중인 아이디입니다.");
+            errors.rejectValue("teamName", "팀 이름 중복", "이미 사용중인 팀 이름입니다.");
         }
     }
 }
