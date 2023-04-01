@@ -1,7 +1,6 @@
 package com.dus.back.team;
 
-import com.dus.back.domain.Invite;
-import com.dus.back.domain.Member;
+import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Team;
 import org.springframework.validation.Errors;
 
@@ -12,7 +11,7 @@ public interface TeamService {
 
     Long addTeam(Team team);
 
-    void deleteTeam(Team team);
+    boolean deleteTeam(Team team);
 
     void duplicateCheck(Team team);
 
@@ -30,27 +29,37 @@ public interface TeamService {
     Map<String, String> validateHandling(Errors errors);
 
 
+    /**
+     * 팀원 삭제
+     * @param teamName
+     * @param userID
+     */
+    void deleteTeamMember(String teamName, String userID);
 
     /**
      * 초대장 생성
      * @param invite
      */
-    void createInvite(Invite invite);
+    boolean createInvite(Invitation invite);
 
     /**
      * 팀원 초대 거절시, 초대장 삭제
      * @param invite
      */
-    void rejectInvite(Invite invite);
+    void rejectInvite(Invitation invite);
 
-    void acceptInvite(Invite invite);
+    /**
+     * 팀원 초대 수락시
+     * @param invite
+     */
+    void acceptInvite(Invitation invite);
 
     /**
      * 유저 ID로 모든 초대장 조히
      * @param inviteeUserId
      * @return
      */
-    List<Invite> findAllInviteByInviteeUserId(String inviteeUserId);
+    List<Invitation> findAllInviteByInviteeUserId(String inviteeUserId);
 
 
 }

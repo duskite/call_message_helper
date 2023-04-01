@@ -76,10 +76,19 @@ public class MemberController {
 
         log.info("비밀번호 변경 요청");
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        memberService.modifyPassword(memberDTO.toEntity());
-
-        return true;
+        return memberService.modifyPassword(memberDTO.toEntity());
     }
+
+    @PostMapping("/member/update/member-type")
+    @ResponseBody
+    public boolean memberTypeModify(MemberDTO memberDTO) {
+
+        log.info("멤버 타입 변경 요청");
+
+        memberDTO.setMemberType(MemberType.BUSINESS);
+        return memberService.modifyMemberType(memberDTO.toEntity());
+    }
+
 
     @GetMapping("/member/sign-up")
     public String signUp(Model model, MemberDTO memberDTO) {

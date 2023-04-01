@@ -20,8 +20,8 @@ public class CallController {
     @PostMapping("/stop")
     @ResponseBody
     public boolean stopCall(TelDTO telDTO, Authentication authentication){
-        log.info("전화 요청. userId: {}", telDTO.getUserId());
-        log.info("전화 요청. myPhoneNumber: {}", telDTO.getMyPhoneNumber());
+        log.info("전화 끊기 요청. userId: {}", telDTO.getUserId());
+        log.info("전화 끊기 요청. myPhoneNumber: {}", telDTO.getMyPhoneNumber());
 
         if(!telDTO.getUserId().equals(authentication.getName())){
             return false;

@@ -21,7 +21,7 @@ public class SecurityConfig {
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/","/member/sign-in", "/member/sign-up", "/member/login", "/fcm-token").permitAll()
-                .antMatchers("/home", "/call/**", "/msg/**").authenticated();
+                .antMatchers("/home", "/call/**", "/msg/**", "/team/**", "/boilerplate/**").authenticated();
         http.formLogin()
                 .loginPage("/member/sign-in")
                 .successHandler(loginSuccessHandler())

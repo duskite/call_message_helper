@@ -17,17 +17,12 @@ public interface FcmService {
      * @param fcm
      * @return id
      */
-    Long addFcm(Fcm fcm);
+    Long addOrModifyFcm(Fcm fcm);
 
     Fcm findById(Long id);
 
     void deleteFcm(Fcm fcm);
 
-    /**
-     * 전화번호에 대응하는 1개의 fcm정보만 있는지 체크
-     * @param fcm
-     */
-    void duplicateCheck(Fcm fcm);
 
     /**
      * 휴대폰 번호에 대응하는 FCM 정보 조회
@@ -42,6 +37,8 @@ public interface FcmService {
      * @return
      */
     List<String> findAllPhoneNumbersByUserId(String userId);
+
+
 
 
 }

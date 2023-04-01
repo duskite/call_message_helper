@@ -90,6 +90,18 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public boolean modifyMemberType(Member member) {
+        Optional<Member> optionalMember = memberRepository.findByUserId(member.getUserId());
+        if(optionalMember.isPresent()){
+            Member findMember = optionalMember.get();
+            findMember.updateMemberType(member.getMemberType());
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
     public boolean isBusinessUser(String userId) {
         Optional<Member> optionalMember = memberRepository.findByUserId(userId);
         if (optionalMember.isPresent()) {

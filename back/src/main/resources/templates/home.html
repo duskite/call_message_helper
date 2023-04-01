@@ -31,74 +31,79 @@
       <hr class="my-4">
 
       <!--  번호가 등록되어 있는 유저는 기본값으로 하나 설정해놓음, 대부분 하나의 번호만 등록하는 유저가 많음 -->
-      <div th:if="${hasNumbers}">
+      <div th:if="${!#lists.isEmpty(myPhoneNumberList)}">
         <label for="current-number">현재 번호</label>
-        <h2 id="current-number" th:text="${myPhoneNumbers.get(0)}"></h2>
+        <h2 id="current-number" th:text="${myPhoneNumberList.get(0)}"></h2>
         <div class="dropdown">
           <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
             사용할 번호 선택
           </button>
           <ul class="dropdown-menu" id="phone-numbers">
-            <li th:each="myPhoneNumber : ${myPhoneNumbers}">
+            <li th:each="myPhoneNumber : ${myPhoneNumberList}">
               <a class="dropdown-item" th:text="${myPhoneNumber}"></a>
             </li>
           </ul>
         </div>
       </div>
-      <div th:unless="${hasNumbers}">
+      <div th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
         <h5>등록된 번호 없음</h5>
       </div>
 
-      <div id="invitation-list" class="card">
+      <div id="invitationListFrag" class="card-body">
         <h5>팀 초대 받은 내역</h5>
 
-        <div th:each="invite, i: ${inviteList}">
-          <button class="btn" th:text="${invite.teamName}" data-bs-toggle="modal"
-                  th:data-bs-target="'#invitationModal' + ${i.index}" ></button>
-          <!-- Modal -->
-          <div class="modal fade" th:id="'invitationModal' + ${i.index}" tabindex="-1" aria-labelledby="invitationModel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="invitationModelLabel" th:text="${invite.teamName} + '. 팀 초대 요청'"></h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  팀 초대 요청을 수락하시겠습니까?
-                </div>
-                <div class="modal-footer">
-                  <button type="button"  th:uniqueKey="${invite.uniqueKey}"
-                          th:onclick="rejectInvite(this.getAttribute('uniqueKey'))"
-                          class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
+        <div th:if="${!#lists.isEmpty(invitationList)}">
+          <ul class="list-group" th:each="invitation, i: ${invitationList}">
+            <li class="list-group-item" th:text="${invitation.teamName}" data-bs-toggle="modal"
+                    th:data-bs-target="'#invitationModal' + ${i.index}" ></li>
+            <!-- Modal -->
+            <div class="modal fade" th:id="'invitationModal' + ${i.index}" tabindex="-1" aria-labelledby="invitationModel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="invitationModelLabel" th:text="${invitation.teamName} + '. 팀 초대 요청'"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    팀 초대 요청을 수락하시겠습니까?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button"  th:uniqueKey="${invitation.uniqueKey}"
+                            th:onclick="|rejectInvite(this.getAttribute('uniqueKey'))|"
+                            class="btn btn-secondary" data-bs-dismiss="modal">아니오</button>
 
-                  <button type="button" th:uniqueKey="${invite.uniqueKey}"
-                          th:onclick="acceptInvite(this.getAttribute('uniqueKey'))"
-                          class="btn btn-primary" data-bs-dismiss="modal">네, 좋아요.</button>
+                    <button type="button" th:uniqueKey="${invitation.uniqueKey}"
+                            th:onclick="|acceptInvite(this.getAttribute('uniqueKey'))|"
+                            class="btn btn-primary" data-bs-dismiss="modal">네, 좋아요.</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
+          </ul>
+        </div>
+        <div th:unless="${!#lists.isEmpty(invitationList)}">
+          <p>아직 초대 받은 내역이 없습니다.</p>
         </div>
       </div>
+
     </div>
 
-    <div class="fixed col card" th:if="${hasNumbers}">
+    <div class="fixed col card" th:if="${!#lists.isEmpty(myPhoneNumberList)}">
       <div class="row">
 
         <div class="col">
           <div id="call-form">
-
+            <h3 class="py-1 text-center">전화</h3>
             <div class="form-group">
               <label for="targetCallNumber">상대방 번호</label>
               <input type="text" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
             </div>
             <div class="row">
               <div class="col">
-                <button type="button" onclick="callStart()" class="btn btn-primary">전화 걸기</button>
+                <button type="button" onclick="callStart()" class="w-100 btn btn-primary">전화 걸기</button>
               </div>
               <div class="col">
-                <button type="button" onclick="callStop()" class="btn btn-secondary">전화 끊기</button>
+                <button type="button" onclick="callStop()" class="w-100 btn btn-secondary">전화 끊기</button>
               </div>
             </div>
           </div>
@@ -106,8 +111,8 @@
 
         <div class="col">
           <div id="msg-form">
+            <h3 class="py-1 text-center">문자</h3>
             <div>
-
               <div class="form-group">
                 <label>상대방 번호</label>
                 <input type="text" id="targetMsgNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
@@ -120,49 +125,58 @@
 
               <div class="row">
                 <div class="col">
-                  <button type="button" onclick="sendMsg()" class="btn btn-primary">전송</button>
+                  <button type="button" onclick="sendMsg()" class="w-100 btn btn-primary btn-lg">전송</button>
                 </div>
                 <div class="col">
-                  <button type="button" onclick="clearMsg()" class="btn btn-secondary">메세지 비우기</button>
+                  <button type="button" onclick="clearMsg()" class="w-100 btn btn-secondary btn-sm">메세지 비우기</button>
                 </div>
                 <div class="col">
-                  <button type="button" onclick="clearAll()" class="btn btn-secondary">모두 비우기</button>
+                  <button type="button" onclick="clearAll()" class="w-100 btn btn-secondary btn-sm">모두 비우기</button>
                 </div>
               </div>
-
-
             </div>
 
-            <div>
-              <form th:action="@{/msg/excel}" method="post" enctype="multipart/form-data">
-                <input th:class="file-selector-button" type="file" name="file">
-                <input type="submit" value="연락처 엑셀 파일 업로드">
-              </form>
 
-              <br>
-              <form th:action="@{/msg/excel-download}" method="get">
-                <input type="submit" value="메세지 대량 발송 양식 다운로드">
-              </form>
+
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExcel" aria-expanded="false" aria-controls="collapseExcel">
+              대량 문자 발송
+            </button>
+            <div class="collapse" id="collapseExcel">
+              <div class="card card-body">
+                <div>
+                  <form th:action="@{/msg/excel}" method="post" enctype="multipart/form-data">
+                    <input th:class="file-selector-button" type="file" name="file">
+                    <input type="submit" value="연락처 엑셀 파일 업로드">
+                  </form>
+
+                  <br>
+                  <form th:action="@{/msg/excel-download}" method="get">
+                    <input type="submit" value="메세지 대량 발송 양식 다운로드">
+                  </form>
+                </div>
+              </div>
             </div>
+
+
+
           </div>
-
         </div>
 
         <div class="col">
           <div th:replace="fragments/boilerplate-list"/>
-          <a th:href="@{/boilerplate-manage/{userId}(userId = ${userId})}">상용구 관리</a>
+          <a class="btn btn-primary" th:href="@{/boilerplate-manage/{userId}(userId = ${userId})}">상용구 관리</a>
         </div>
 
       </div>
     </div>
 
-    <div class="fixed col card" th:unless="${hasNumbers}">
+    <div class="fixed col card" th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
       <h5 class="col">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h5>
     </div>
   </div>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
   $("#phone-numbers li > a").on("click", function () {
     $("#current-number").text($(this).text());
   });
@@ -176,7 +190,7 @@
       type: "DELETE",
       data: uniqueKey
     }).done((fragment)=>{
-      $("#invitation-list").replaceWith(fragment);
+      $("#invitationListFrag").replaceWith(fragment);
     });
 
   }
@@ -190,7 +204,7 @@
       type: "POST",
       data: uniqueKey
     }).done((fragment)=>{
-      $("#invitation-list").replaceWith(fragment);
+      $("#invitationListFrag").replaceWith(fragment);
     });
 
 
@@ -200,7 +214,7 @@
 
   function callStart(){
 
-    if(!checkFillField()){
+    if(!checkCallField()){
       return;
     }
 
@@ -216,12 +230,12 @@
       url: "/call/start",
       type: "POST",
       data: telDTO
-    }).done(function (result){
-      if(result){
-        alert("전화 걸기 성공");
+    }).done((success) => {
+      if(success){
+        alert(telDTO.targetPhoneNumber + "에 전화를 걸고 있습니다.");
         $("#targetCallNumber").val("");
       }else {
-        alert("실패")
+        alert("잠시 후 다시 시도해주세요.");
       }
     });
   }
@@ -232,18 +246,29 @@
       myPhoneNumber: $("#current-number").text(),
     };
 
+    console.log(telDTO);
+
     $.ajax({
       url: "/call/stop",
       type: "POST",
       data: telDTO
-    }).done(function (){
-      alert("전화 끊기를 요청했습니다.");
+    }).done((success) => {
+      if(success){
+        alert("전화 끊기를 요청했습니다.");
+      }else {
+        alert("잠시 후 다시 시도해주세요.");
+      }
+
     });
   }
+  function checkCallField(){
+    console.log($("#current-number").text());
+    if($("#current-number").text() == ""){
+      alert("사용할 번호를 골라주세요.");
 
-  function checkFillField(){
-    if($("#current-number").val() == "" || $("#targetCallNumber").val() == ""){
-      alert("값을 입력해주세요.");
+      return false;
+    }else if($("#targetCallNumber").val() == ""){
+      alert("상대방 번호를 입력해주세요.");
 
       return false;
     }
@@ -256,7 +281,7 @@
 
 
   function sendMsg(){
-    if(!checkFillField()){
+    if(!checkMsgField()){
       return;
     }
 
@@ -271,8 +296,8 @@
       url: "/msg/sms",
       type: "POST",
       data: telDTO
-    }).done(function (result){
-      if(result){
+    }).done((success) => {
+      if(success){
         alert("메세지 전송 요청 성공");
         $("#targetMsgNumber").val("");
         $("#msg").val("");
@@ -291,12 +316,17 @@
     $("#targetMsgNumber").val("");
   }
 
-  function checkFillField(){
-    if($("#current-number").val() == "" ||
-            $("#targetCallNumber").val() == "" ||
-            $("#msg").val() == ""){
+  function checkMsgField(){
+    if($("#current-number").text() == ""){
+      alert("사용할 번호를 골라주세요.");
 
-      alert("값을 입력해주세요.");
+      return false;
+    }else if($("#targetMsgNumber").val() == ""){
+      alert("상대방 번호를 입력해주세요.");
+
+      return false;
+    }else if($("#msg").val() == ""){
+      alert("메세지 내용을 입력해주세요.");
 
       return false;
     }

@@ -11,7 +11,7 @@
         <div class="container row">
             <div class="col">
                 <div id="boilerplate-form">
-                    <h3>상용구 등록</h3>
+                    <h3 class="py-1 text-center">상용구 등록</h3>
 
                     <h5 class="field-error" style="display: none"></h5>
 
@@ -24,18 +24,20 @@
                         <textarea rows="15" type="text" id="msg" class="form-control" placeholder="내용을 입력하세요."></textarea>
                     </div>
 
+
                     <div class="row">
                         <div class="col">
-                            <button type="button" onclick="createBoilerplate()" class="btn btn-primary">등록</button>
+                            <button type="button" onclick="createBoilerplate()" class="w-100 btn btn-primary btn-lg">등록</button>
                         </div>
                         <div class="col">
-                            <button type="button" onclick="updateBoilerplate()" class="btn btn-secondary">수정</button>
+                            <button type="button" onclick="updateBoilerplate()" class="w-100 btn btn-secondary btn-lg">수정</button>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="col">
-                <div th:replace="fragments/boilerplate-list"/>
+                <div th:replace="/fragments/boilerplate-list"/>
             </div>
         </div>
     </div>
@@ -44,6 +46,10 @@
 <script type="text/javascript" th:inline="javascript">
 
     function createBoilerplate(){
+        if(!checkBoilerplateField()){
+            return;
+        }
+
         const boilerPlateDTO = {
             subject: $("#subject").val(),
             msg: $("#msg").val(),
@@ -83,9 +89,13 @@
         $(".field-error").css("display", "block");
     }
 
-    function checkFillField(){
-        if($("#subject").val() == "" || $("#msg").val() == ""){
-            alert("값을 입력해주세요.");
+    function checkBoilerplateField(){
+        if($("#subject").val() == ""){
+            alert("상용구 제목을 입력해주세요.");
+
+            return false;
+        }else if($("#msg").val() == ""){
+            alert("상용구 내용을 입력해주세요.");
 
             return false;
         }
@@ -94,7 +104,7 @@
     }
 
     function updateBoilerplate() {
-        if(!checkFillField()){
+        if(!checkBoilerplateField()){
 
             return;
         }

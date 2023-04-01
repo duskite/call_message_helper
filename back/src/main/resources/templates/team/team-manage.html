@@ -8,59 +8,72 @@
   <div class="row justify-content-center" >
     <h1 class="mb-5 fw-bold text-center">Team 관리</h1>
 
-    <button class="w-100 btn btn-secondary btn-lg"
-            th:onclick="|location.href='@{/team-create}'|">
-      팀 생성
-    </button>
-
     <div class="container row">
       <div class="col">
         <div id="team-list">
 
-          <h3>팀 리스트</h3>
+          <h3 class="py-1">팀 리스트</h3>
 
-          <div th:if="${teamList} != null">
+          <div th:if="${!#lists.isEmpty(teamList)}">
             <div th:each="team, i : ${teamList}" class="form-check">
-              <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${team.getTeamName()}" class="form-check-input">
-              <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${team.getTeamName()}" class="form-check-label"></label>
+              <input type="radio" name="team-radio" th:value="${team.teamName}">
+              <label th:for="team-radio" th:text="${team.teamName}"></label>
 
-              <span><button th:id="${'remove' + i.index}" class="team-remove-btn btn btn-primary" >삭제</button></span>
+              <span><button th:id="${'remove' + i.index}"
+                            th:teamName="${team.teamName}"
+                            th:onclick="|deleteTeam(this.getAttribute('teamName'))|"
+                            class="team-remove-btn btn btn-dark btn-sm" >삭제</button></span>
             </div>
           </div>
-          <div th:unless="${teamList} != null">
+          <div th:unless="${!#lists.isEmpty(teamList)}">
             <p>아직 생성한 팀이 없습니다.</p>
           </div>
 
         </div>
       </div>
       <div class="col">
+
+<!--        팀을 골랐을때 비동기로 갱신 되는 부분-->
         <div id="team-member-list">
-          <h3>팀원 리스트</h3>
+          <h3 class="py-1">팀원 리스트</h3>
 
-          <div th:if="${memberList} != null">
-            <div th:each="member, i : ${memberList}" class="form-check">
-              <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${member.getUserId()}" class="form-check-input">
-              <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${member.getUserId()}" class="form-check-label"></label>
-
-              <span><button th:id="${'remove' + i.index}" class="member-remove-btn btn btn-primary" >삭제</button></span>
-            </div>
+          <div th:if="${!#lists.isEmpty(memberList)}">
+            <ul class="list-group" th:each="member, i : ${memberList}">
+              <li class="list-group-item" th:value="${member.userId}">
+              <label th:text="${member.userId}"></label>
+              <span><button th:teamName="${teamName}" th:userId="${member.userId}"
+                            th:onclick="|deleteTeamMember(this.getAttribute('teamName'), this.getAttribute('userId'))|"
+                            class="team-member-remove-btn btn btn-dark btn-sm" >삭제</button></span>
+              </li>
+            </ul>
           </div>
-          <div th:unless="${memberList} != null">
+          <div th:unless="${!#lists.isEmpty(memberList)}">
             <p>아직 팀원이 없습니다.</p>
           </div>
 
+          <hr class="my-4">
+
           <div>
-            <h5>팀원 초대하기</h5>
+            <h3 class="py-1">팀원 초대하기</h3>
             <div class="form-group">
-              <label for="inviteeUserId">초대할 팀원 ID</label>
-              <input type="text" id="inviteeUserId"  class="form-control" placeholder="초대할 팀원 ID를 입력해주세요.">
+              <label for="inviteeUserId">초대할 유저 ID</label>
+              <input type="text" id="inviteeUserId"  class="form-control" placeholder="초대할 유저 ID를 입력해주세요.">
+              <span><button type="button" th:teamName="${teamName}" th:onclick="|inviteMember(this.getAttribute('teamName'))|"
+                            class="btn btn-primary">등록</button></span>
             </div>
-            <button type="button" onclick="inviteMember()" class="btn btn-primary">등록</button>
+
           </div>
 
         </div>
       </div>
     </div>
+
+    <hr class="my-4">
+
+    <button class="w-100 btn btn-primary btn-lg"
+            th:onclick="|location.href='@{/team-create}'|">
+      팀 생성
+    </button>
 
   </div>
 </div>
@@ -87,11 +100,52 @@
     });
   });
 
-  function inviteMember() {
+  //팀원 삭제 요청
+  function deleteTeamMember(teamName, userId) {
+    console.log(teamName);
+    console.log(userId);
+
+    $.ajax({
+      url: "/team/" + teamName + "/members/" + userId,
+      type: "DELETE"
+    }).done((fragment)=>{
+      $("#team-member-list").replaceWith(fragment);
+    });
+  }
+
+  function deleteTeam(teamName) {
+    const teamDTO = {
+      teamName: teamName,
+      adminUserId: [[${adminUserId}]]
+    };
+
+    console.log(teamDTO);
+
+    $.ajax({
+      url: "/team",
+      type: "DELETE",
+      data: teamDTO
+    }).done((success)=>{
+      if(success){
+        location.href = "/team-manage/admin/" + [[${adminUserId}]];
+      }else {
+        alert("팀 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
+    });
+  }
+
+
+
+
+  function inviteMember(teamName) {
     const inviteDTO = {
-      teamName: [[${teamName}]],
+      teamName: teamName,
       adminUserId: [[${adminUserId}]],
       inviteeUserId: $("#inviteeUserId").val()
+    }
+
+    if (!checkInviteField(inviteDTO)) {
+      return;
     }
 
     console.log(inviteDTO);
@@ -100,7 +154,27 @@
       url: "/team/invitation",
       type: "POST",
       data: inviteDTO
-    });
+    }).done((success) => {
+      if(success){
+        alert(inviteDTO.inviteeUserId + "님에게 초대장을 발송했습니다.");
+      }else {
+        alert("해당 유저는 이미 팀원입니다.");
+      }
+    })
+  }
+
+  function checkInviteField(inviteDTO) {
+    if(inviteDTO.teamName == null){
+      alert("초대할 팀을 골라주세요.");
+
+      return false;
+    }else if(inviteDTO.inviteeUserId == ""){
+      alert("초대할 유저 ID를 입력해주세요.");
+
+      return false;
+    }
+
+    return true;
   }
 </script>
 

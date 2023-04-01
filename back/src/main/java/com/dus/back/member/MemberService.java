@@ -50,6 +50,13 @@ public interface MemberService {
      */
     boolean modifyPassword(Member member);
 
+    /**
+     * 멤버 타입 변경
+     * @param member
+     * @return
+     */
+    boolean modifyMemberType(Member member);
+
 
     /**
      * 기업 고객인지 확인

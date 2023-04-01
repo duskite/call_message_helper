@@ -63,14 +63,14 @@ public class BoilerplateController {
             log.error("상용구 중복 등록 에러 발생");
             customErrorResponse(httpServletResponse);
 
-            return "/fragments/boilerplate/boilerplate-list";
+            return "/fragments/boilerplate-list";
         }
 
         boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
 
         setBaseModelInfo(model, authentication);
 
-        return "/fragments/boilerplate/boilerplate-list";
+        return "/fragments/boilerplate-list";
     }
 
     @PutMapping("/boilerplate")
@@ -82,7 +82,7 @@ public class BoilerplateController {
 
         setBaseModelInfo(model, authentication);
 
-        return "/fragments/boilerplate/boilerplate-list";
+        return "/fragments/boilerplate-list";
 
     }
 
@@ -93,7 +93,7 @@ public class BoilerplateController {
         boilerplateService.deleteBoilerplate(boilerplateDTO.toEntity());
         setBaseModelInfo(model, authentication);
 
-        return "/fragments/boilerplate/boilerplate-list";
+        return "/fragments/boilerplate-list";
     }
 
     /**

@@ -1,31 +1,34 @@
 package com.dus.back.team;
 
-import com.dus.back.domain.Invite;
+import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
 import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
+@Slf4j
 public class TeamServiceImpl implements TeamService{
 
     private final MemberService memberService;
 
     private final TeamRepository teamRepository;
-    private final InviteRepository inviteRepository;
+    private final InvitationRepository invitationRepository;
 
 
-    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InviteRepository inviteRepository) {
+    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InvitationRepository invitationRepository) {
         this.memberService = memberService;
         this.teamRepository = teamRepository;
-        this.inviteRepository = inviteRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     @Override
@@ -36,13 +39,15 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public void deleteTeam(Team team) {
+    public boolean deleteTeam(Team team) {
 
         Optional<Team> optionalTeam = teamRepository.findByTeamName(team.getTeamName());
         if(optionalTeam.isPresent()){
             teamRepository.remove(optionalTeam.get());
+            return true;
+        }else {
+            return false;
         }
-
     }
 
     @Override
@@ -95,40 +100,56 @@ public class TeamServiceImpl implements TeamService{
         return validatorResult;
     }
 
-
     @Override
-    public void createInvite(Invite invite) {
-        inviteRepository.save(invite);
-    }
-
-    @Override
-    public void rejectInvite(Invite invite) {
-        inviteRepository.remove(invite);
-    }
-
-    @Override
-    public void acceptInvite(Invite invite) {
-        Optional<Team> optionalTeam = teamRepository.findByTeamName(invite.getTeamName());
+    public void deleteTeamMember(String teamName, String userID) {
+        Optional<Team> optionalTeam = teamRepository.findByTeamName(teamName);
         if (optionalTeam.isPresent()) {
             Team findTeam = optionalTeam.get();
-            Member findMember = memberService.findByUserId(invite.getInviteeUserId());
+            Stream<Member> memberStream = findTeam.getMembers().stream().filter(member ->
+                    member.getUserId().equals(userID)
+            );
+            Optional<Member> optionalMember = memberStream.findAny();
+            Member findMember = optionalMember.get();
+
+            log.info("팀원 삭제 로직. 삭제를 위해 찾은 멤버 {}", findMember.getUserId());
+            findTeam.getMembers().remove(findMember);
+
+        }else {
+            throw new NoSuchElementException("팀원 삭제를 위해, 팀이름으로 팀을 조회했으나 존재하지 않음");
+        }
+    }
+
+
+    @Override
+    public boolean createInvite(Invitation invitation) {
+
+        invitationRepository.save(invitation);
+        return true;
+    }
+
+    @Override
+    public void rejectInvite(Invitation invitation) {
+        invitationRepository.remove(invitation);
+    }
+
+    @Override
+    public void acceptInvite(Invitation invitation) {
+        Optional<Team> optionalTeam = teamRepository.findByTeamName(invitation.getTeamName());
+        if (optionalTeam.isPresent()) {
+            Team findTeam = optionalTeam.get();
+            Member findMember = memberService.findByUserId(invitation.getInviteeUserId());
             findTeam.setMember(findMember);
 
             //초대 수락하고 나서 초대장 지우기
-            inviteRepository.remove(invite);
+            invitationRepository.remove(invitation);
         }else {
             throw new NoSuchElementException();
         }
     }
 
     @Override
-    public List<Invite> findAllInviteByInviteeUserId(String inviteeUserId) {
-        List<Invite> findInviteList = inviteRepository.findAllByInviteeUserId(inviteeUserId);
-        if(!findInviteList.isEmpty()){
-            return findInviteList;
-        }else {
-            throw new NoSuchElementException("userId로 조회되는 초대 내역들이 없음");
-        }
+    public List<Invitation> findAllInviteByInviteeUserId(String inviteeUserId) {
+        return invitationRepository.findAllByInviteeUserId(inviteeUserId);
     }
 
 }

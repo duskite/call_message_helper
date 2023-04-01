@@ -1,13 +1,23 @@
 <div id="boilerplate-list" th:fragment="boilerplate-list">
 
-  <h3>상용구 리스트</h3>
+  <h3 class="py-1 text-center">상용구 리스트</h3>
 
-  <div th:each="boilerplate, i : ${boilerplateList}" class="form-check">
-    <input type="radio" name="boilerplate-radio" th:id="${'radio' + i.index}" th:value="${boilerplate.getMsg()}" class="form-check-input">
-    <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.getSubject()}" class="form-check-label"></label>
+  <div class="card-body">
+    <h5>개인 상용구</h5>
+    <div th:each="boilerplate, i : ${boilerplateList}" class="form-check">
+      <input type="radio" name="boilerplate-radio" th:id="${'radio' + i.index}" th:value="${boilerplate.msg}" class="form-check-input">
+      <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.subject}" class="form-check-label"></label>
 
-    <div class="text-right" th:if="${isEditablePage}">
-      <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-primary" >삭제</button></span>
+      <div class="text-right" th:if="${isEditablePage}">
+        <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-dark btn-sm" >삭제</button></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <h5>팀 상용구</h5>
+    <div id="teamBoilerPlate">
+
     </div>
   </div>
 

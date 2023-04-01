@@ -34,4 +34,10 @@ public class Fcm {
         this.token = token;
         this.userId = userId;
     }
+
+    public Fcm updateToken(String token) {
+        this.token = token;
+
+        return this;
+    }
 }
