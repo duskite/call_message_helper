@@ -39,11 +39,14 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public void deleteTeam(Team team) {
+    public boolean deleteTeam(Team team) {
 
         Optional<Team> optionalTeam = teamRepository.findByTeamName(team.getTeamName());
         if(optionalTeam.isPresent()){
             teamRepository.remove(optionalTeam.get());
+            return true;
+        }else {
+            return false;
         }
     }
 
@@ -119,13 +122,9 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public boolean createInvite(Invitation invitation) {
-        try{
-            invitationRepository.save(invitation);
 
-            return true;
-        }catch (Exception e){
-            return false;
-        }
+        invitationRepository.save(invitation);
+        return true;
     }
 
     @Override

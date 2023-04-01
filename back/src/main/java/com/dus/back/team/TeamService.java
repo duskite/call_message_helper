@@ -11,7 +11,7 @@ public interface TeamService {
 
     Long addTeam(Team team);
 
-    void deleteTeam(Team team);
+    boolean deleteTeam(Team team);
 
     void duplicateCheck(Team team);
 

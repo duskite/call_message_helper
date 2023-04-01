@@ -3,6 +3,7 @@ package com.dus.back.team;
 import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
+import com.dus.back.member.MemberService;
 import com.dus.back.vaild.CheckTeamNameValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -22,10 +23,12 @@ import java.util.NoSuchElementException;
 public class TeamController {
 
     private final TeamService teamService;
+    private final MemberService memberService;
     private final CheckTeamNameValidator checkTeamNameValidator;
 
-    public TeamController(TeamService teamService, CheckTeamNameValidator checkTeamNameValidator) {
+    public TeamController(TeamService teamService, MemberService memberService, CheckTeamNameValidator checkTeamNameValidator) {
         this.teamService = teamService;
+        this.memberService = memberService;
         this.checkTeamNameValidator = checkTeamNameValidator;
     }
 
@@ -80,15 +83,10 @@ public class TeamController {
 
 
     @DeleteMapping("/team")
-    public String teamDelete(TeamDTO teamDTO, Model model, Authentication authentication) {
+    @ResponseBody
+    public boolean teamDelete(TeamDTO teamDTO, Authentication authentication) {
 
-
-        teamService.deleteTeam(teamDTO.toEntity());
-
-        List<Team> teamList = teamService.findAllByAdminUserId(teamDTO.getAdminUserId());
-        model.addAttribute("teamList", teamList);
-
-        return "/team/team-manage :: #team-list";
+        return teamService.deleteTeam(teamDTO.toEntity());
     }
 
     @GetMapping("/team/members")
@@ -133,6 +131,12 @@ public class TeamController {
         log.info("초대장. 초대 되는 팀명: {}", invitationDTO.getTeamName());
         log.info("초대장 초대 되는 팀 관리자 ID: {}", invitationDTO.getAdminUserId());
         log.info("초대장 초대 받는 사람 ID: {}", invitationDTO.getInviteeUserId());
+
+        Team findTeam = teamService.findByTeamName(invitationDTO.getTeamName());
+        Member findMember = memberService.findByUserId(invitationDTO.getInviteeUserId());
+        if(findTeam.getMembers().contains(findMember)){
+            return false;
+        }
 
         return teamService.createInvite(invitationDTO.toEntity());
     }
