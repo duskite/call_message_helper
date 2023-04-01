@@ -29,6 +29,12 @@ public interface TeamService {
     Map<String, String> validateHandling(Errors errors);
 
 
+    /**
+     * 팀원 삭제
+     * @param teamName
+     * @param userID
+     */
+    void deleteTeamMember(String teamName, String userID);
 
     /**
      * 초대장 생성
@@ -42,6 +48,10 @@ public interface TeamService {
      */
     void rejectInvite(Invitation invite);
 
+    /**
+     * 팀원 초대 수락시
+     * @param invite
+     */
     void acceptInvite(Invitation invite);
 
     /**

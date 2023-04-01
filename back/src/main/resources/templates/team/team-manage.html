@@ -8,11 +8,6 @@
   <div class="row justify-content-center" >
     <h1 class="mb-5 fw-bold text-center">Team 관리</h1>
 
-    <button class="w-50 btn btn-secondary btn-lg"
-            th:onclick="|location.href='@{/team-create}'|">
-      팀 생성
-    </button>
-
     <div class="container row">
       <div class="col">
         <div id="team-list">
@@ -24,7 +19,7 @@
               <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${team.teamName}" class="form-check-input">
               <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${team.teamName}" class="form-check-label"></label>
 
-              <span><button th:id="${'remove' + i.index}" class="team-remove-btn btn btn-primary" >삭제</button></span>
+              <span><button th:id="${'remove' + i.index}" class="team-remove-btn btn btn-dark btn-sm" >삭제</button></span>
             </div>
           </div>
           <div th:unless="${!#lists.isEmpty(teamList)}">
@@ -44,7 +39,9 @@
               <input type="radio" name="team-radio" th:id="${'radio' + i.index}" th:value="${member.userId}" class="form-check-input">
               <label th:for="team-radio" th:id="${'label' + i.index}" th:text="${member.userId}" class="form-check-label"></label>
 
-              <span><button th:id="${'remove' + i.index}" class="team-member-remove-btn btn btn-primary" >삭제</button></span>
+              <span><button th:id="${'remove' + i.index}" th:teamName="${teamName}" th:userId="${member.userId}"
+                            th:onclick="|deleteTeamMember(this.getAttribute('teamName'), this.getAttribute('userId'))|"
+                            class="team-member-remove-btn btn btn-dark btn-sm" >삭제</button></span>
             </div>
           </div>
           <div th:unless="${!#lists.isEmpty(memberList)}">
@@ -64,6 +61,13 @@
         </div>
       </div>
     </div>
+
+    <hr class="my-4">
+
+    <button class="w-100 btn btn-primary btn-lg"
+            th:onclick="|location.href='@{/team-create}'|">
+      팀 생성
+    </button>
 
   </div>
 </div>
@@ -90,18 +94,20 @@
     });
   });
 
-  // 팀원 삭제 버튼 클릭시
-  $(".team-remove-btn").on("click", function (){
-    const selectedBtn = $(this).attr("id");
-    const index = selectedBtn.replace("remove", "");
+  //팀원 삭제 요청
+  function deleteTeamMember(teamName, userId) {
+    console.log(teamName);
+    console.log(userId);
 
-    const teamName = $("#label" + index).text();
-    console.log("삭제요청 팀 이름: " + teamName);
+    $.ajax({
+      url: "/team/" + teamName + "/members/" + userId,
+      type: "DELETE"
+    }).done((fragment)=>{
+      $("#team-member-list").replaceWith(fragment);
+    });
+  }
 
-    deleteTeamMember(teamName);
-  });
-
-  function deleteTeamMember(teamName) {
+  function deleteTeam(teamName) {
     const teamDTO = {
       teamName: teamName,
       adminUserId: [[${adminUserId}]]
@@ -117,6 +123,7 @@
       $("#team-list").replaceWith(fragment);
     });
   }
+
 
 
 

@@ -5,27 +5,30 @@ import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
 import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
+@Slf4j
 public class TeamServiceImpl implements TeamService{
 
     private final MemberService memberService;
 
     private final TeamRepository teamRepository;
-    private final InvitationRepository inviteRepository;
+    private final InvitationRepository invitationRepository;
 
 
-    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InvitationRepository inviteRepository) {
+    public TeamServiceImpl(MemberService memberService, TeamRepository teamRepository, InvitationRepository invitationRepository) {
         this.memberService = memberService;
         this.teamRepository = teamRepository;
-        this.inviteRepository = inviteRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     @Override
@@ -42,7 +45,6 @@ public class TeamServiceImpl implements TeamService{
         if(optionalTeam.isPresent()){
             teamRepository.remove(optionalTeam.get());
         }
-
     }
 
     @Override
@@ -95,11 +97,30 @@ public class TeamServiceImpl implements TeamService{
         return validatorResult;
     }
 
+    @Override
+    public void deleteTeamMember(String teamName, String userID) {
+        Optional<Team> optionalTeam = teamRepository.findByTeamName(teamName);
+        if (optionalTeam.isPresent()) {
+            Team findTeam = optionalTeam.get();
+            Stream<Member> memberStream = findTeam.getMembers().stream().filter(member ->
+                    member.getUserId().equals(userID)
+            );
+            Optional<Member> optionalMember = memberStream.findAny();
+            Member findMember = optionalMember.get();
+
+            log.info("팀원 삭제 로직. 삭제를 위해 찾은 멤버 {}", findMember.getUserId());
+            findTeam.getMembers().remove(findMember);
+
+        }else {
+            throw new NoSuchElementException("팀원 삭제를 위해, 팀이름으로 팀을 조회했으나 존재하지 않음");
+        }
+    }
+
 
     @Override
     public boolean createInvite(Invitation invitation) {
         try{
-            inviteRepository.save(invitation);
+            invitationRepository.save(invitation);
 
             return true;
         }catch (Exception e){
@@ -109,7 +130,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public void rejectInvite(Invitation invitation) {
-        inviteRepository.remove(invitation);
+        invitationRepository.remove(invitation);
     }
 
     @Override
@@ -121,7 +142,7 @@ public class TeamServiceImpl implements TeamService{
             findTeam.setMember(findMember);
 
             //초대 수락하고 나서 초대장 지우기
-            inviteRepository.remove(invitation);
+            invitationRepository.remove(invitation);
         }else {
             throw new NoSuchElementException();
         }
@@ -129,12 +150,7 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public List<Invitation> findAllInviteByInviteeUserId(String inviteeUserId) {
-        List<Invitation> findInviteList = inviteRepository.findAllByInviteeUserId(inviteeUserId);
-        if(!findInviteList.isEmpty()){
-            return findInviteList;
-        }else {
-            throw new NoSuchElementException("userId로 조회되는 초대 내역들이 없음");
-        }
+        return invitationRepository.findAllByInviteeUserId(inviteeUserId);
     }
 
 }

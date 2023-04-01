@@ -63,12 +63,8 @@ public class HomeController {
         model.addAttribute("myPhoneNumberList", myPhoneNumberList);
         model.addAttribute("isBusinessUser", isBusinessUser);
 
-        try {
-            List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(userId);
-            model.addAttribute("invitationList", findInvitationList);
-        } catch (NoSuchElementException e) {
-            log.info("아직 받은 초대가 없음");
-        }
+        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+        model.addAttribute("invitationList", findInvitationList);
 
         return "home";
     }

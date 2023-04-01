@@ -53,7 +53,7 @@ public class TeamController {
     }
 
     @GetMapping("/team-create")
-    public String teamCreate(Model model, TeamDTO teamDTO, Authentication authentication) {
+    public String teamCreatePage(Model model, TeamDTO teamDTO, Authentication authentication) {
         teamDTO.setAdminUserId(authentication.getName());
         model.addAttribute("teamDTO", teamDTO);
         return "/team/team-create";
@@ -101,8 +101,29 @@ public class TeamController {
         model.addAttribute("adminUserId", teamDTO.getAdminUserId());
 
         return "/team/team-manage :: #team-member-list";
-
     }
+    @DeleteMapping("/team/{teamName}/members/{userId}")
+    public String teamMemberDelete(@PathVariable("teamName") String teamName, @PathVariable("userId") String userId,
+                                   Model model, Authentication authentication) {
+
+        log.info("팀원 삭제 요청. 팀이름: {}", teamName);
+        log.info("팀원 삭제 요청. 유저ID: {}", userId);
+
+        //팀원 삭제 처리
+        teamService.deleteTeamMember(teamName, userId);
+
+        //새로 로드해서 내려주기
+        Team findTeam = teamService.findByTeamName(teamName);
+        List<Member> memberList = findTeam.getMembers();
+
+        model.addAttribute("memberList", memberList);
+        model.addAttribute("teamName", teamName);
+        model.addAttribute("adminUserId", authentication.getName());
+
+        return "/team/team-manage :: #team-member-list";
+    }
+
+
 
 
     @PostMapping("/team/invitation")
@@ -122,12 +143,10 @@ public class TeamController {
         InvitationDTO invitationDTO = uniqueKeyConvertInvitationDTO(uniqueKey);
         teamService.acceptInvite(invitationDTO.toEntity());
 
-        try {
-            List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
-            model.addAttribute("invitationList", findInvitationList);
-        } catch (NoSuchElementException e) {
-            log.info("받은 초대가 없음");
-        }
+
+        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+        model.addAttribute("invitationList", findInvitationList);
+
 
         return "/home :: #invitation-list";
     }
@@ -138,12 +157,8 @@ public class TeamController {
         InvitationDTO invitationDTO = uniqueKeyConvertInvitationDTO(uniqueKey);
         teamService.rejectInvite(invitationDTO.toEntity());
 
-        try {
-            List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
-            model.addAttribute("invitationList", findInvitationList);
-        } catch (NoSuchElementException e) {
-            log.info("받은 초대가 없음");
-        }
+        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+        model.addAttribute("invitationList", findInvitationList);
 
         return "/home :: #invitation-list";
     }

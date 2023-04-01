@@ -7,7 +7,7 @@
     <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.subject}" class="form-check-label"></label>
 
     <div class="text-right" th:if="${isEditablePage}">
-      <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-primary" >삭제</button></span>
+      <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-dark btn-sm" >삭제</button></span>
     </div>
   </div>
 
