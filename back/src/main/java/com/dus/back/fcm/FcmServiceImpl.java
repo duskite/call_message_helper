@@ -29,8 +29,15 @@ public class FcmServiceImpl implements FcmService {
 
 
     @Override
-    public Long addFcm(Fcm fcm) {
-        duplicateCheck(fcm);
+    public Long addOrModifyFcm(Fcm fcm) {
+
+        Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(fcm.getPhoneNumber());
+        if(optionalFcm.isPresent()){
+            Fcm findFcm = optionalFcm.get();
+            findFcm.updateToken(fcm.getToken());
+
+            return findFcm.getId();
+        }
 
         String userId = fcm.getUserId();
         log.info("fcm 등록을 위해 member 조회. userId: {}", userId);
@@ -51,14 +58,6 @@ public class FcmServiceImpl implements FcmService {
         Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(fcm.getPhoneNumber());
         if(optionalFcm.isPresent()){
             fcmRepository.remove(optionalFcm.get());
-        }
-    }
-
-    @Override
-    public void duplicateCheck(Fcm fcm) {
-        Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(fcm.getPhoneNumber());
-        if(optionalFcm.isPresent()){
-            throw new DuplicateException("fcm 전화번호 중복");
         }
     }
 

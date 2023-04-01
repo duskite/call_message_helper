@@ -21,11 +21,11 @@ public class FcmController {
 
     @PostMapping("/fcm-token")
     @ResponseBody
-    public Long fcmAdd(@RequestBody FcmDTO fcmDTO){
+    public Long fcmAddOrModify(@RequestBody FcmDTO fcmDTO){
         log.info("FCM 등록 요청. userId: {}", fcmDTO.getUserId());
         log.info("FCM 등록 요청. phoneNumber: {}", fcmDTO.getPhoneNumber());
         log.info("FCM 등록 요청. token: {}", fcmDTO.getToken());
 
-        return fcmService.addFcm(fcmDTO.toEntity());
+        return fcmService.addOrModifyFcm(fcmDTO.toEntity());
     }
 }

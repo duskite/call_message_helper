@@ -27,7 +27,7 @@ class FcmServiceImplTest {
     void save() {
         Fcm fcm = createFcm();
 
-        fcmService.addFcm(fcm);
+        fcmService.addOrModifyFcm(fcm);
 
         Fcm findFcm = fcmService.findById(fcm.getId());
         Assertions.assertThat(findFcm).isEqualTo(fcm);
@@ -38,7 +38,7 @@ class FcmServiceImplTest {
     void remove() {
         Fcm fcm = createFcm();
 
-        fcmService.addFcm(fcm);
+        fcmService.addOrModifyFcm(fcm);
         fcmService.deleteFcm(fcm);
 
         Assertions.assertThatThrownBy(() -> {
@@ -53,9 +53,9 @@ class FcmServiceImplTest {
         Fcm fcm1 = createFcm();
         Fcm fcm2 = createFcm();
 
-        fcmService.addFcm(fcm1);
+        fcmService.addOrModifyFcm(fcm1);
         Assertions.assertThatThrownBy(() -> {
-            fcmService.addFcm(fcm2);
+            fcmService.addOrModifyFcm(fcm2);
         }).isInstanceOf(DuplicateException.class);
     }
 
@@ -67,7 +67,7 @@ class FcmServiceImplTest {
                     .phoneNumber("0101234567" + i)
                     .token("aaa").build();
 
-            fcmService.addFcm(fcm);
+            fcmService.addOrModifyFcm(fcm);
         });
     }
 
@@ -82,7 +82,7 @@ class FcmServiceImplTest {
         Fcm fcm = createFcm();
         fcm.setMember(member);
 
-        fcmService.addFcm(fcm);
+        fcmService.addOrModifyFcm(fcm);
     }
 
     @Test
