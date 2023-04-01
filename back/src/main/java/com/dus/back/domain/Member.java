@@ -29,7 +29,7 @@ public class Member {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
     private List<Boilerplate> boilerplates = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "members")
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "members")
     private List<Team> teams = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
