@@ -95,7 +95,11 @@
       userId: [[${userId}]]
     };
 
-    deleteRequest(memberDTO);
+    if(confirm("정말 탈퇴하시겠습니까?")){
+      deleteRequest(memberDTO);
+    }else {
+
+    }
   }
 
   function deleteRequest(memberDTO){
@@ -109,8 +113,7 @@
     }).done((success) => {
       if(success){
         alert("회원탈퇴 성공");
-
-        document.location.href = "/logout";
+        window.location.href = "/member/sign-in";
       }else {
         alert("실패");
       }

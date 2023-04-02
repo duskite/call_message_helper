@@ -11,6 +11,7 @@ import com.dus.back.member.MemberType;
 import com.dus.back.team.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,27 +49,32 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
 
+
         String userId = authentication.getName();
+        log.info("현재 로그인 된 유저: {}", userId);
+
+
+        Member findMember = memberService.findByUserId(userId);
+        List<Team> teamList = findMember.getTeams();
+        model.addAttribute("teamList", teamList);
+
 
         List<String> myPhoneNumberList = fcmService.findAllPhoneNumbersByUserId(userId);
+        model.addAttribute("myPhoneNumberList", myPhoneNumberList);
         standByPhone(myPhoneNumberList);
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
-
         boolean isBusinessUser = memberService.isBusinessUser(userId);
 
         model.addAttribute("userId", userId);
-        model.addAttribute("myPhoneNumberList", myPhoneNumberList);
         model.addAttribute("isBusinessUser", isBusinessUser);
 
         List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
         model.addAttribute("invitationList", findInvitationList);
 
 
-        Member findMember = memberService.findByUserId(userId);
-        List<Team> teamList = findMember.getTeams();
-        model.addAttribute("teamList", teamList);
+
 
         return "home";
     }

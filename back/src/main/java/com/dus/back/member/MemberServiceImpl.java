@@ -30,10 +30,13 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void deleteMember(String userId) {
+    public boolean deleteMember(String userId) {
         Optional<Member> optionalMember = memberRepository.findByUserId(userId);
         if(optionalMember.isPresent()){
             memberRepository.remove(optionalMember.get());
+            return true;
+        }else {
+            return false;
         }
     }
 

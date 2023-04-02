@@ -17,7 +17,7 @@ public interface MemberService {
      */
     Long addMember(Member member);
 
-    void deleteMember(String userId);
+    boolean deleteMember(String userId);
 
     void duplicateCheck(Member member);
 

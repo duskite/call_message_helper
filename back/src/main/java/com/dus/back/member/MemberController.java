@@ -62,8 +62,9 @@ public class MemberController {
             return false;
         }
 
-        memberService.deleteMember(userId);
-        return true;
+        authentication.setAuthenticated(false);
+
+        return memberService.deleteMember(userId);
     }
 
     @PostMapping("/member/{userId}/password")
@@ -135,7 +136,6 @@ public class MemberController {
     @GetMapping("/member/{userId}/info")
     public String info(Model model, Authentication authentication, @PathVariable("userId") String userId,
                        MemberDTO memberDTO) {
-
         if(!userId.equals(authentication.getName())){
             return "forbidden";
         }
