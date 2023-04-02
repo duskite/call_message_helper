@@ -1,75 +1,29 @@
-<div id="boilerplate-list" th:fragment="boilerplate-list">
 
-  <h3 class="py-1 text-center">상용구 리스트</h3>
+<div th:id="personalBoilerplateList" th:fragment="personal-boilerplate-list">
+    <div class="card-body">
+        <div th:each="boilerplate : ${boilerplateList}">
+            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}"
+                   th:onclick="|selectedBoilerplate(this.getAttribute('subject'), this.getAttribute('value'))|">
+            <label th:text="${boilerplate.subject}"></label>
 
-  <div class="card-body">
-    <h5>개인 상용구</h5>
-    <div th:each="boilerplate, i : ${boilerplateList}" class="form-check">
-      <input type="radio" name="boilerplate-radio" th:id="${'radio' + i.index}" th:value="${boilerplate.msg}" class="form-check-input">
-      <label th:for="boilerplate-radio" th:id="${'label' + i.index}" th:text="${boilerplate.subject}" class="form-check-label"></label>
-
-      <div class="text-right" th:if="${isEditablePage}">
-        <span><button th:id="${'remove' + i.index}" class="boilerplate-remove-btn btn btn-dark btn-sm" >삭제</button></span>
-      </div>
+            <div class="text-right" th:if="${isEditablePage}">
+                <span><button th:subject="${boilerplate.subject}" th:onclick="|deleteBoilerplate(this.getAttribute('subject'))|" class="boilerplate-remove-btn btn btn-dark btn-sm" >삭제</button></span>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="card-body">
-    <h5>팀 상용구</h5>
-    <div id="teamBoilerPlate">
-
-    </div>
-  </div>
-
-
 </div>
 
-<script type="text/javascript" th:inline="javascript">
 
-  // 상용구 선택
-  $("input[name=boilerplate-radio]").on("click", function (){
-    const selectedRadio = $(this).attr("id");
-    const index = selectedRadio.replace("radio", "");
+<div th:id="teamBoilerplateList" th:fragment="team-boilerplate-list">
+    <div class="card-body">
+        <div th:each="boilerplate : ${teamBoilerplateList}">
+            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}"
+                   th:onclick="|selectedBoilerplate(this.getAttribute('subject'), this.getAttribute('value'))|">
+            <label th:text="${boilerplate.subject}"></label>
 
-    const subject = $("#label" + index).text();
-    const msg = $(this).val();
-
-    console.log("선택된 라디오 버튼: " + selectedRadio);
-    console.log("선택된 메세지: " + msg);
-    console.log("선택된 제목: " + subject);
-
-    $("#subject").val(subject);
-    $("#msg").val(msg);
-    $(".field-error").css("display", "none");
-  });
-
-  // 상용구 삭제 버튼 클릭시
-  $(".boilerplate-remove-btn").on("click", function (){
-    const selectedBtn = $(this).attr("id");
-    const index = selectedBtn.replace("remove", "");
-
-    const subject = $("#label" + index).text();
-    console.log("삭제요청 제목: " + subject);
-
-    deleteBoilerplate(subject);
-  });
-
-  // 서버로 삭제 요청
-  function deleteBoilerplate(subject){
-    const boilerplateDTO = {
-      subject: subject,
-      authorUserId: [[${userId}]]
-    };
-
-    console.log(boilerplateDTO);
-
-    $.ajax({
-      url: "/boilerplate",
-      type: "DELETE",
-      data: boilerplateDTO
-    }).done((fragment)=>{
-      $("#boilerplate-list").replaceWith(fragment);
-    });
-  }
-
-</script>
+            <div class="text-right" th:if="${isEditablePage}">
+                <span><button th:subject="${boilerplate.subject}" th:onclick="|deleteBoilerplate(this.getAttribute('subject'))|" class="boilerplate-remove-btn btn btn-dark btn-sm" >삭제</button></span>
+            </div>
+        </div>
+    </div>
+</div>

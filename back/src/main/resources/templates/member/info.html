@@ -9,24 +9,27 @@
     <h2>비밀번호 변경</h2>
   </div>
 
+  <form th:action="@{/member/${userId}/password}" th:object="${memberDTO}" onsubmit="return checkPassword()" method="post">
     <div class="form-group">
       <label for="userId">아이디</label>
-      <input type="text" id="userId" name="userId" class="form-control" th:value="${userId}" readonly/>
+      <input type="text" id="userId" name="userId" th:field="*{userId}" class="form-control" th:value="${userId}" readonly/>
     </div>
     <div class="form-group">
       <label for="password">새로운 비밀번호</label>
-      <input type="password" id="password" name="password" class="form-control" placeholder="새로운 비밀번호를 입력하세요.">
+      <input type="password" id="password" name="password" th:field="*{password}" placeholder="새로운 비밀번호를 입력하세요."
+             th:class="${#fields.hasErrors('password')}? 'form-control field-error' : 'form-control'">
+      <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
     </div>
     <div class="form-group">
-      <label for="checkPassword">새로운 비밀번호 재입력</label>
-      <input type="password" id="checkPassword" class="form-control" placeholder="새로운 비밀번호를 다시 한번 입력하세요.">
+      <label for="password2">새로운 비밀번호 확인</label>
+      <input type="password" id="password2" name="password2" class="form-control" placeholder="새로운 비밀번호를 다시 한번 입력하세요.">
     </div>
 
     <hr class="my-4">
 
     <div class="row">
       <div class="col">
-        <button class="w-100 btn btn-primary btn-lg" th:onclick="updatePassword()">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">
           비밀번호 변경
         </button>
       </div>
@@ -36,8 +39,9 @@
         </button>
       </div>
     </div>
+  </form>
 
-    <hr class="my-4">
+  <hr class="my-4">
 
 
   <div class="row">
@@ -67,7 +71,7 @@
     };
 
     $.ajax({
-      url: "/member/update/member-type",
+      url: "/member/" + memberDTO.userId + "/member-type",
       type: "POST",
       data: memberDTO
     }).done((success) => {
@@ -87,28 +91,6 @@
     deleteRequest(memberDTO);
   }
 
-  function updatePassword(){
-
-    const memberDTO = {
-      userId: [[${userId}]],
-      password : $("#password").val(),
-      checkPassword : $("#checkPassword").val()
-    }
-
-    if(checkPassword(memberDTO.password, memberDTO.checkPassword)){
-      updateRequest(memberDTO);
-    }else {
-      refreshPasswordInput();
-      alert("비밀번호가 불일치 합니다.");
-    }
-  }
-
-  // 패스워드 입력란 비우기
-  function refreshPasswordInput(){
-    $("#password").val("");
-    $("#checkPassword").val("");
-  }
-
   function deleteRequest(memberDTO){
     $.ajax({
       url: "/member",
@@ -125,30 +107,37 @@
     });
   }
 
-  function updateRequest(memberDTO){
-    $.ajax({
-      url: "/member/update/password",
-      type: "POST",
-      data: memberDTO
-    }).done((success) => {
-      if(success){
-        refreshPasswordInput();
-        alert("비밀번호 변경 성공");
-
-        document.location.href = "/member/sign-in";
-      }else {
-        alert("변경 실패");
-      }
-    });
-  }
 
   // 패스워드 일치 확인
-  function checkPassword(password1, password2){
-    if(password1 != password2){
+  function checkPassword(){
+
+    const password = $("#password").val();
+    const password2 = $("#password2").val();
+
+    console.log(password);
+    console.log(password2);
+
+    if(password == ""){
+      alert("비밀번호를 입력하세요.");
       return false;
-    }else {
-      return true;
     }
+    if(password2 == ""){
+      alert("비밀번호 확인란을 입력하세요.");
+      return false;
+    }
+
+    if(password != password2){
+      alert("비밀번호가 불일치 합니다.");
+      refreshPasswordField();
+      return false;
+    }
+
+    return true;
+  }
+
+  function refreshPasswordField() {
+    $("#password").val("");
+    $("#password2").val("");
   }
 
 </script>

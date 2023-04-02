@@ -34,6 +34,8 @@ public class TeamServiceImpl implements TeamService{
     @Override
     public Long addTeam(Team team) {
         duplicateCheck(team);
+        Member adminMember = memberService.findByUserId(team.getAdminUserId());
+        team.setMember(adminMember);
 
         return teamRepository.save(team);
     }

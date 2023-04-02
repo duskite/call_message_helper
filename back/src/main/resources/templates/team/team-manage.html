@@ -86,15 +86,9 @@
     const selectedTeamName = $(this).val();
     console.log(selectedTeamName);
 
-    const teamDTO = {
-      teamName : selectedTeamName,
-      adminUserId: [[${adminUserId}]]
-    }
-
     $.ajax({
-      url: "/team/members",
+      url: "/team/" + selectedTeamName + "/members",
       type: "GET",
-      data: teamDTO
     }).done((fragment)=>{
       $("#team-member-list").replaceWith(fragment);
     });

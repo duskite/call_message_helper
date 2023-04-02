@@ -60,7 +60,7 @@ class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("userId 중복 불가 체크")
+    @DisplayName("회원가입 체크: 동일한 아이디로 회원가입 할 수 없음")
     void duplicateUserId() {
         Member member1 = createMember();
         Member member2 = createMember();
@@ -85,7 +85,7 @@ class MemberServiceImplTest {
     }
 
     @Test
-    @DisplayName("중복 가입은 아이디로만 체크함")
+    @DisplayName("회원 가입 여러건 체크: 아이디가 다를 경우 성공함")
     void insertMembers(){
         IntStream.rangeClosed(1, 100).forEach(i ->{
             Member member = Member.builder()

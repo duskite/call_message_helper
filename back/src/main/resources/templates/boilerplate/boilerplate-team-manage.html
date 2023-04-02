@@ -6,7 +6,10 @@
 
 <div class="container py-5" style="max-width: 800px">
     <div class="row justify-content-center" >
-        <h1 class="mb-5 fw-bold text-center">상용구 관리</h1>
+        <div>
+            <h1 class="mb-5 fw-bold text-center">팀 상용구 관리</h1>
+            <h5 class="text-center" th:text="'팀 이름: ' + ${teamName} + ', 관리자 id: ' + ${adminUserId}"></h5>
+        </div>
 
         <div class="container row">
             <div class="col">
@@ -37,7 +40,7 @@
                 </div>
             </div>
             <div class="col">
-                <div th:replace="~{/fragments/boilerplate-list :: personal-boilerplate-list}"/>
+                <div th:replace="~{/fragments/boilerplate-list :: team-boilerplate-list}"/>
             </div>
         </div>
     </div>
@@ -62,8 +65,9 @@
         const boilerPlateDTO = {
             subject: $("#subject").val(),
             msg: $("#msg").val(),
-            authorUserId: [[${userId}]],
-            boilerplateType: "PERSONAL",
+            authorUserId: [[${adminUserId}]],
+            boilerplateType: "TEAM",
+            teamName: [[${teamName}]]
         };
 
         console.log(boilerPlateDTO);
@@ -73,7 +77,7 @@
             type: "POST",
             data: boilerPlateDTO,
             success: function (fragment){
-                $("#personalBoilerplateList").replaceWith(fragment);
+                $("#teamBoilerplateList").replaceWith(fragment);
 
                 $("#subject").val("");
                 $("#msg").val("");
@@ -93,6 +97,25 @@
             }
         });
     }
+    // 상용구 삭제
+    function deleteBoilerplate(subject){
+        const boilerplateDTO = {
+            subject: subject,
+            authorUserId: [[${adminUserId}]],
+            boilerplateType: "TEAM",
+            teamName: [[${teamName}]]
+        };
+
+        console.log(boilerplateDTO);
+
+        $.ajax({
+            url: "/boilerplate",
+            type: "DELETE",
+            data: boilerplateDTO
+        }).done((fragment)=>{
+            $("#teamBoilerplateList").replaceWith(fragment);
+        });
+    }
 
     function updateBoilerplate() {
         if(!checkBoilerplateField()){
@@ -103,8 +126,9 @@
         const boilerPlateDTO = {
             subject: $("#subject").val(),
             msg: $("#msg").val(),
-            authorUserId: [[${userId}]],
-            boilerplateType: "PERSONAL",
+            authorUserId: [[${adminUserId}]],
+            boilerplateType: "TEAM",
+            teamName: [[${teamName}]]
         };
 
         console.log(boilerPlateDTO);
@@ -114,7 +138,7 @@
             type: "PUT",
             data: boilerPlateDTO,
             success: function (fragment){
-                $("#personalBoilerplateList").replaceWith(fragment);
+                $("#teamBoilerplateList").replaceWith(fragment);
 
                 $("#subject").val("");
                 $("#msg").val("");
@@ -122,25 +146,6 @@
             error: function (){
                 alert("잠시 후 다시 시도해주세요");
             }
-        });
-    }
-
-    // 상용구 삭제
-    function deleteBoilerplate(subject){
-        const boilerplateDTO = {
-            subject: subject,
-            authorUserId: [[${userId}]],
-            boilerplateType: "PERSONAL",
-        };
-
-        console.log(boilerplateDTO);
-
-        $.ajax({
-            url: "/boilerplate",
-            type: "DELETE",
-            data: boilerplateDTO
-        }).done((fragment)=>{
-            $("#personalBoilerplateList").replaceWith(fragment);
         });
     }
 

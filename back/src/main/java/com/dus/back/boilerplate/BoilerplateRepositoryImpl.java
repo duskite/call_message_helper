@@ -33,9 +33,11 @@ public class BoilerplateRepositoryImpl implements BoilerplateRepository {
     }
 
     @Override
-    public List<Boilerplate> findAllByAuthorUserId(String authorUserId) {
-        List<Boilerplate> result = em.createQuery("select m from Boilerplate m where m.authorUserId =:authorUserId", Boilerplate.class)
+    public List<Boilerplate> findAllPersonalByAuthorUserId(String authorUserId) {
+        BoilerplateType boilerplateType = BoilerplateType.PERSONAL;
+        List<Boilerplate> result = em.createQuery("select m from Boilerplate m where m.authorUserId =:authorUserId and m.boilerplateType =: boilerplateType", Boilerplate.class)
                 .setParameter("authorUserId", authorUserId)
+                .setParameter("boilerplateType", boilerplateType)
                 .getResultList();
         return result;
     }

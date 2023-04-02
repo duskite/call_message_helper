@@ -1,5 +1,6 @@
 package com.dus.back.team;
 
+import com.dus.back.domain.Boilerplate;
 import com.dus.back.domain.Invitation;
 import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
@@ -75,12 +76,10 @@ public class TeamController {
 
             return "/team/team-create";
         }
-
         teamService.addTeam(teamDTO.toEntity());
 
         return "redirect:/team-manage/admin/" + authentication.getName();
     }
-
 
     @DeleteMapping("/team")
     @ResponseBody
@@ -89,14 +88,15 @@ public class TeamController {
         return teamService.deleteTeam(teamDTO.toEntity());
     }
 
-    @GetMapping("/team/members")
-    public String teamMembers(TeamDTO teamDTO, Model model) {
-        Team findTeam = teamService.findByTeamName(teamDTO.getTeamName());
+    @GetMapping("/team/{teamName}/members")
+    public String teamMembers(@PathVariable("teamName")String teamName, Model model) {
+        Team findTeam = teamService.findByTeamName(teamName);
         List<Member> memberList = findTeam.getMembers();
 
+
         model.addAttribute("memberList", memberList);
-        model.addAttribute("teamName", teamDTO.getTeamName());
-        model.addAttribute("adminUserId", teamDTO.getAdminUserId());
+        model.addAttribute("teamName", findTeam.getTeamName());
+        model.addAttribute("adminUserId", findTeam.getAdminUserId());
 
         return "/team/team-manage :: #team-member-list";
     }
@@ -121,6 +121,18 @@ public class TeamController {
         return "/team/team-manage :: #team-member-list";
     }
 
+
+    @GetMapping("/team/{teamName}/boilerplates")
+    public String teamBoilerplates(@PathVariable("teamName") String teamName, Model model) {
+        Team findTeam = teamService.findByTeamName(teamName);
+        List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
+        model.addAttribute("teamBoilerplateList", teamBoilerplateList);
+
+        log.info("팀 상용구들 가져오기. 팀 명: {}", teamName);
+        log.info("팀 상용구들 가져오기. 상용구 개수: {}", teamBoilerplateList.size());
+
+        return "/fragments/boilerplate-list :: team-boilerplate-list";
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
+import com.dus.back.domain.Team;
 import org.springframework.validation.Errors;
 
 import java.util.List;
@@ -14,6 +15,13 @@ public interface BoilerplateService {
      * @return
      */
     Long addBoilerplate(Boilerplate boilerplate);
+
+    /**
+     * 팀 상용구 등록
+     * @param boilerplate
+     * @return
+     */
+    Long addTeamBoilerplate(Boilerplate boilerplate, Team team);
 
     /**
      * 상용구 수정
@@ -34,7 +42,7 @@ public interface BoilerplateService {
      * @param authorUserId
      * @return
      */
-    List<Boilerplate> findAllBoilerplate(String authorUserId);
+    List<Boilerplate> findAllPersonalBoilerplate(String authorUserId);
 
 
     /**
