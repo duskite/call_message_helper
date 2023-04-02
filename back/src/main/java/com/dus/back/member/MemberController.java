@@ -98,7 +98,9 @@ public class MemberController {
         log.info("비밀번호 변경 요청");
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         if(memberService.modifyPassword(memberDTO.toEntity())){
-            return "redirect:/logout";
+
+            log.info("비밀번호 변경 성공");
+            return "redirect:/member/sign-in";
         }else {
             return "/member/info";
         }

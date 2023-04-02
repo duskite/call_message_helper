@@ -50,6 +50,7 @@ public class SignInActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), FcmRegisterActivity.class);
                     intent.putExtra("userId", userId);
                     startActivity(intent);
+                    finish();
                 }else {
                     Log.e(TAG, errorMessage);
                     Handler handler = new Handler(Looper.getMainLooper());

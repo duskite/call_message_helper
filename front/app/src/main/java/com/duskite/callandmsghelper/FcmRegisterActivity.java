@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class FcmRegisterActivity extends AppCompatActivity {
     private Button btnRegisterFcm;
     private HttpUil httpUtil;
     private String fcmToken, userId;
+    private TextView tvMyPhoneNumber, tvMyUserId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,11 @@ public class FcmRegisterActivity extends AppCompatActivity {
 
         btnRegisterFcm = (Button) findViewById(R.id.btnRegisterFcm);
         btnRegisterFcm.setOnClickListener(setOnClickListener);
+
+        tvMyUserId = (TextView) findViewById(R.id.tvMyUserId);
+        tvMyUserId.setText(userId);
+        tvMyPhoneNumber = (TextView) findViewById(R.id.tvMyPhoneNumber);
+        tvMyPhoneNumber.setText(getMyNumber());
 
     }
 

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CallAndMsgHelper</string>
+    <string name="information">
+        문자, 전화 업무에 도움을 주는 서비스입니다.
+        웹 사이트에서 회원 가입한 아이디를 사용하여
+        로그인 해주세요.
+    </string>
 </resources>

@@ -145,6 +145,7 @@
               <div class="card card-body">
                 <div>
                   <form th:action="@{/msg/excel}" method="post" enctype="multipart/form-data">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                     <input th:class="file-selector-button" type="file" name="file">
                     <input type="submit" value="연락처 엑셀 파일 업로드">
                   </form>
@@ -217,6 +218,10 @@
 </div>
 
 <script type="text/javascript" th:inline="javascript">
+  const header = $("meta[name='_csrf_header']").attr('content');
+  const token = $("meta[name='_csrf']").attr('content');
+
+
   $("#phone-numbers li > a").on("click", function () {
     $("#current-number").text($(this).text());
   });
@@ -228,7 +233,10 @@
     $.ajax({
       url: "/team/invitation/" + uniqueKey,
       type: "DELETE",
-      data: uniqueKey
+      data: uniqueKey,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((fragment)=>{
       $("#invitationListFrag").replaceWith(fragment);
     });
@@ -242,7 +250,10 @@
     $.ajax({
       url: "/team/invitation/" + uniqueKey,
       type: "POST",
-      data: uniqueKey
+      data: uniqueKey,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((fragment)=>{
       $("#invitationListFrag").replaceWith(fragment);
     });
@@ -269,7 +280,10 @@
     $.ajax({
       url: "/call/start",
       type: "POST",
-      data: telDTO
+      data: telDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert(telDTO.targetPhoneNumber + "에 전화를 걸고 있습니다.");
@@ -291,7 +305,10 @@
     $.ajax({
       url: "/call/stop",
       type: "POST",
-      data: telDTO
+      data: telDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert("전화 끊기를 요청했습니다.");
@@ -335,7 +352,10 @@
     $.ajax({
       url: "/msg/sms",
       type: "POST",
-      data: telDTO
+      data: telDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert("메세지 전송 요청 성공");
@@ -384,7 +404,7 @@
 
     $.ajax({
       url: "/team/" + selectedTeam + "/boilerplates",
-      type: "GET",
+      type: "GET"
     }).done((fragment)=>{
       $("#teamBoilerplateList").replaceWith(fragment);
     });

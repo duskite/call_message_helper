@@ -18,7 +18,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf().ignoringAntMatchers("/fcm-token", "/member/login");
         http.authorizeRequests()
                 .antMatchers("/","/member/sign-in", "/member/sign-up", "/member/login", "/fcm-token").permitAll()
                 .antMatchers("/home", "/call/**", "/msg/**", "/team/**", "/boilerplate/**").authenticated();
@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .passwordParameter("password")
                 .loginProcessingUrl("/member/login");
         http.exceptionHandling().accessDeniedPage("/forbidden");
-        http.logout().logoutUrl("/logout").logoutSuccessUrl("/");
+        http.logout().logoutUrl("/logout").logoutSuccessUrl("/member/sign-in");
         http.userDetailsService(userDetailsService);
 
         return http.build();
