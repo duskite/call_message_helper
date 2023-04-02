@@ -67,16 +67,41 @@ public class MemberController {
     }
 
     @PostMapping("/member/{userId}/password")
-    @ResponseBody
-    public boolean passwordModify(@PathVariable("userId")String userId, MemberDTO memberDTO, Authentication authentication) {
+    public String passwordModify(@PathVariable("userId")String userId, @Valid MemberDTO memberDTO, Errors errors,
+                                  Authentication authentication, Model model) {
 
         if(!memberDTO.getUserId().equals(authentication.getName())){
-            return false;
+            return "forbidden";
+        }
+
+        if (!errors.getFieldErrors("password").isEmpty()) {
+
+            log.info("비밀번호 변경 에러 발생");
+            model.addAttribute("userId", userId);
+            model.addAttribute("memberDTO", memberDTO);
+
+            Map<String, String> validatorResult = memberService.validateHandling(errors);
+            for (String key : validatorResult.keySet()) {
+
+                if(!key.equals("password")){
+                    continue;
+                }
+
+                log.info("비밀번호 변경 에러 key: {}", key);
+                log.info("비밀번호 변경 에러 내용: {}", validatorResult.get(key));
+                model.addAttribute(key, validatorResult.get(key));
+            }
+
+            return "/member/info";
         }
 
         log.info("비밀번호 변경 요청");
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        return memberService.modifyPassword(memberDTO.toEntity());
+        if(memberService.modifyPassword(memberDTO.toEntity())){
+            return "redirect:/logout";
+        }else {
+            return "/member/info";
+        }
     }
 
     @PostMapping("/member/{userId}/member-type")
@@ -106,13 +131,16 @@ public class MemberController {
     }
 
     @GetMapping("/member/{userId}/info")
-    public String info(Model model, Authentication authentication, @PathVariable("userId") String userId) {
+    public String info(Model model, Authentication authentication, @PathVariable("userId") String userId,
+                       MemberDTO memberDTO) {
 
         if(!userId.equals(authentication.getName())){
             return "forbidden";
         }
 
         model.addAttribute("userId", userId);
+        model.addAttribute("memberDTO", memberDTO);
+
         return "/member/info";
 
     }
