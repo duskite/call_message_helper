@@ -66,9 +66,9 @@ public class MemberController {
         return true;
     }
 
-    @PostMapping("/member/update/password")
+    @PostMapping("/member/{userId}/password")
     @ResponseBody
-    public boolean passwordModify(MemberDTO memberDTO, Authentication authentication) {
+    public boolean passwordModify(@PathVariable("userId")String userId, MemberDTO memberDTO, Authentication authentication) {
 
         if(!memberDTO.getUserId().equals(authentication.getName())){
             return false;
@@ -79,9 +79,9 @@ public class MemberController {
         return memberService.modifyPassword(memberDTO.toEntity());
     }
 
-    @PostMapping("/member/update/member-type")
+    @PostMapping("/member/{userId}/member-type")
     @ResponseBody
-    public boolean memberTypeModify(MemberDTO memberDTO) {
+    public boolean memberTypeModify(@PathVariable("userId")String userId, MemberDTO memberDTO) {
 
         log.info("멤버 타입 변경 요청");
 
@@ -105,7 +105,7 @@ public class MemberController {
         return "/member/sign-in";
     }
 
-    @GetMapping("/member/info/{userId}")
+    @GetMapping("/member/{userId}/info")
     public String info(Model model, Authentication authentication, @PathVariable("userId") String userId) {
 
         if(!userId.equals(authentication.getName())){

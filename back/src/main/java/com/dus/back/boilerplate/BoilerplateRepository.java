@@ -14,11 +14,11 @@ public interface BoilerplateRepository {
     Optional<Boilerplate> findById(Long id);
 
     /**
-     * 작성자 아이디로 생성된 모든 상용구 찾기
+     * 작성자 아이디로 생성된 모든 일반 상용구 찾기
      * @param authorUserId
      * @return
      */
-    List<Boilerplate> findAllByAuthorUserId(String authorUserId);
+    List<Boilerplate> findAllPersonalByAuthorUserId(String authorUserId);
 
     /**
      * 상용구 제목과 작성자ID로 찾기

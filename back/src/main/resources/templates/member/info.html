@@ -67,7 +67,7 @@
     };
 
     $.ajax({
-      url: "/member/update/member-type",
+      url: "/member/" + memberDTO.userId + "/member-type",
       type: "POST",
       data: memberDTO
     }).done((success) => {
@@ -127,7 +127,7 @@
 
   function updateRequest(memberDTO){
     $.ajax({
-      url: "/member/update/password",
+      url: "/member/+ " + memberDTO.userId + "/password",
       type: "POST",
       data: memberDTO
     }).done((success) => {

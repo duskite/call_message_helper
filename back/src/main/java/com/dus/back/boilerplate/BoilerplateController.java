@@ -1,6 +1,10 @@
 package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
+import com.dus.back.domain.Member;
+import com.dus.back.domain.Team;
+import com.dus.back.member.MemberService;
+import com.dus.back.team.TeamService;
 import com.dus.back.vaild.CheckBoilerplateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -20,27 +24,17 @@ public class BoilerplateController {
 
     private final BoilerplateService boilerplateService;
     private final CheckBoilerplateValidator checkBoilerplateValidator;
+    private final TeamService teamService;
 
-    public BoilerplateController(BoilerplateService boilerplateService, CheckBoilerplateValidator checkBoilerplateValidator) {
+    public BoilerplateController(BoilerplateService boilerplateService, CheckBoilerplateValidator checkBoilerplateValidator, TeamService teamService) {
         this.boilerplateService = boilerplateService;
         this.checkBoilerplateValidator = checkBoilerplateValidator;
+        this.teamService = teamService;
     }
 
     @InitBinder
     public void validatorBinder(WebDataBinder binder) {
         binder.addValidators(checkBoilerplateValidator);
-    }
-
-
-    @GetMapping("/boilerplate-manage/{userId}")
-    public String boilerplatePage(Model model, Authentication authentication, @PathVariable("userId") String userId) {
-
-        if(!userId.equals(authentication.getName())){
-            return "forbidden";
-        }
-        setBaseModelInfo(model, authentication);
-
-        return "/boilerplate/boilerplate-manage";
     }
 
     /**
@@ -53,6 +47,39 @@ public class BoilerplateController {
         httpServletResponse.setHeader("duplicate-error", "true");
     }
 
+
+    @GetMapping("/boilerplate-manage/{userId}")
+    public String boilerplatePage(Model model, Authentication authentication, @PathVariable("userId") String userId) {
+
+        if(!userId.equals(authentication.getName())){
+            return "forbidden";
+        }
+        List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
+
+        model.addAttribute("boilerplateList", boilerplateList);
+        model.addAttribute("userId", userId);
+        model.addAttribute("isEditablePage", true);
+
+        return "/boilerplate/boilerplate-manage";
+    }
+
+    @GetMapping("/boilerplate-manage/{teamName}/{adminUserId}")
+    public String boilerplateTeamPage(Model model, @PathVariable("teamName") String teamName,
+                                      @PathVariable("adminUserId") String adminUserId) {
+
+        model.addAttribute("teamName", teamName);
+        model.addAttribute("adminUserId", adminUserId);
+
+        Team findTeam = teamService.findByTeamName(teamName);
+        List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
+        model.addAttribute("teamBoilerplateList", teamBoilerplateList);
+        model.addAttribute("isEditablePage", true);
+
+        return "/boilerplate/boilerplate-team-manage";
+    }
+
+
+
     @PostMapping("/boilerplate")
     public String boilerplateAdd(@Valid BoilerplateDTO boilerplateDTO, Errors errors, Model model,
                                  Authentication authentication, HttpServletResponse httpServletResponse) {
@@ -63,26 +90,59 @@ public class BoilerplateController {
             log.error("상용구 중복 등록 에러 발생");
             customErrorResponse(httpServletResponse);
 
-            return "/fragments/boilerplate-list";
+            if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
+                return "/fragments/boilerplate-list :: team-boilerplate-list";
+            }else {
+                return "/fragments/boilerplate-list :: personal-boilerplate-list";
+            }
         }
 
-        boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
+        model.addAttribute("userId", authentication.getName());
+        model.addAttribute("isEditablePage", true);
 
-        setBaseModelInfo(model, authentication);
+        if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
+            Team findTeam = teamService.findByTeamName(boilerplateDTO.getTeamName());
+            boilerplateService.addTeamBoilerplate(boilerplateDTO.toEntity(), findTeam);
+            List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
+            model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
-        return "/fragments/boilerplate-list";
+            return "/fragments/boilerplate-list :: team-boilerplate-list";
+
+        }else {
+            boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
+            List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
+            model.addAttribute("boilerplateList", boilerplateList);
+
+            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+        }
+
     }
 
     @PutMapping("/boilerplate")
     public String boilerplateUpdate(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
         log.info("boilerplate 수정 요청");
-
-        boilerplateService.modifyBoilerplate(boilerplateDTO.toEntity());
         log.info("수정 요청 온 DTO: {}", boilerplateDTO.toString());
 
-        setBaseModelInfo(model, authentication);
 
-        return "/fragments/boilerplate-list";
+        boilerplateService.modifyBoilerplate(boilerplateDTO.toEntity());
+
+        model.addAttribute("userId", authentication.getName());
+        model.addAttribute("isEditablePage", true);
+
+        if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
+            Team findTeam = teamService.findByTeamName(boilerplateDTO.getTeamName());
+            List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
+            model.addAttribute("teamBoilerplateList", teamBoilerplateList);
+
+            return "/fragments/boilerplate-list :: team-boilerplate-list";
+
+        }else {
+            List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
+            model.addAttribute("boilerplateList", boilerplateList);
+
+            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+        }
+
 
     }
 
@@ -90,23 +150,24 @@ public class BoilerplateController {
     public String boilerplateDelete(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
         log.info("boilerplate 삭제 요청");
 
+
         boilerplateService.deleteBoilerplate(boilerplateDTO.toEntity());
-        setBaseModelInfo(model, authentication);
 
-        return "/fragments/boilerplate-list";
-    }
-
-    /**
-     * 상용구 화면에 필요한 기본 정보를 구성함
-     * @param model
-     * @param authentication
-     */
-    private void setBaseModelInfo(Model model, Authentication authentication) {
-
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(authentication.getName());
-
-        model.addAttribute("boilerplateList", boilerplateList);
         model.addAttribute("userId", authentication.getName());
         model.addAttribute("isEditablePage", true);
+
+        if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
+            Team findTeam = teamService.findByTeamName(boilerplateDTO.getTeamName());
+            List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
+            model.addAttribute("teamBoilerplateList", teamBoilerplateList);
+
+            return "/fragments/boilerplate-list :: team-boilerplate-list";
+
+        }else {
+            List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
+            model.addAttribute("boilerplateList", boilerplateList);
+
+            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+        }
     }
 }

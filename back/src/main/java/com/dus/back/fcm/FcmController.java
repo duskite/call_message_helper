@@ -14,7 +14,6 @@ public class FcmController {
 
     private final FcmService fcmService;
 
-
     public FcmController(FcmService fcmService) {
         this.fcmService = fcmService;
     }

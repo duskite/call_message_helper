@@ -16,6 +16,8 @@ public class BoilerplateDTO {
     private BoilerplateType boilerplateType;
     private String authorUserId;
 
+    private String teamName;
+
     public Boilerplate toEntity(){
         return Boilerplate.builder().subject(subject).msg(msg).boilerplateType(boilerplateType).authorUserId(authorUserId).build();
     }

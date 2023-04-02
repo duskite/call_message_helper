@@ -2,6 +2,7 @@ package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
 import com.dus.back.domain.Member;
+import com.dus.back.domain.Team;
 import com.dus.back.exception.DuplicateException;
 import com.dus.back.member.MemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,18 @@ public class BoilerplateServiceImpl implements BoilerplateService {
         log.info("상용구 등록을 위해 member 조회. userId: {}", userId);
         Member findMember = memberService.findByUserId(userId);
         boilerplate.setMember(findMember);
+
+        return boilerplateRepository.save(boilerplate);
+    }
+
+    @Override
+    public Long addTeamBoilerplate(Boilerplate boilerplate, Team team) {
+        duplicateCheck(boilerplate);
+
+        String userId = boilerplate.getAuthorUserId();
+        Member findMember = memberService.findByUserId(userId);
+        boilerplate.setMember(findMember);
+        boilerplate.setTeam(team);
 
         return boilerplateRepository.save(boilerplate);
     }
@@ -70,8 +83,8 @@ public class BoilerplateServiceImpl implements BoilerplateService {
     }
 
     @Override
-    public List<Boilerplate> findAllBoilerplate(String authorUserId) {
-        return boilerplateRepository.findAllByAuthorUserId(authorUserId);
+    public List<Boilerplate> findAllPersonalBoilerplate(String authorUserId) {
+        return boilerplateRepository.findAllPersonalByAuthorUserId(authorUserId);
     }
 
     @Override

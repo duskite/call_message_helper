@@ -1,14 +1,13 @@
 package com.dus.back;
 
 import com.dus.back.boilerplate.BoilerplateService;
-import com.dus.back.domain.Boilerplate;
-import com.dus.back.domain.Fcm;
-import com.dus.back.domain.Invitation;
+import com.dus.back.domain.*;
 import com.dus.back.fcm.FcmService;
 import com.dus.back.firebase.RequestFcmDTO;
 import com.dus.back.firebase.RequestFcmService;
 import com.dus.back.firebase.RequestFcmType;
 import com.dus.back.member.MemberService;
+import com.dus.back.member.MemberType;
 import com.dus.back.team.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -54,7 +53,7 @@ public class HomeController {
         List<String> myPhoneNumberList = fcmService.findAllPhoneNumbersByUserId(userId);
         standByPhone(myPhoneNumberList);
 
-        List<Boilerplate> boilerplateList = boilerplateService.findAllBoilerplate(userId);
+        List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
 
         boolean isBusinessUser = memberService.isBusinessUser(userId);
@@ -65,6 +64,11 @@ public class HomeController {
 
         List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
         model.addAttribute("invitationList", findInvitationList);
+
+
+        Member findMember = memberService.findByUserId(userId);
+        List<Team> teamList = findMember.getTeams();
+        model.addAttribute("teamList", teamList);
 
         return "home";
     }
