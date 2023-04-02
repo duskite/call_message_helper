@@ -2,7 +2,8 @@
 <div th:id="personalBoilerplateList" th:fragment="personal-boilerplate-list">
     <div class="card-body">
         <div th:each="boilerplate : ${boilerplateList}">
-            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}">
+            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}"
+                   th:onclick="|selectedBoilerplate(this.getAttribute('subject'), this.getAttribute('value'))|">
             <label th:text="${boilerplate.subject}"></label>
 
             <div class="text-right" th:if="${isEditablePage}">
@@ -16,7 +17,8 @@
 <div th:id="teamBoilerplateList" th:fragment="team-boilerplate-list">
     <div class="card-body">
         <div th:each="boilerplate : ${teamBoilerplateList}">
-            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}">
+            <input type="radio" name="boilerplate-radio" th:subject="${boilerplate.subject}" th:value="${boilerplate.msg}"
+                   th:onclick="|selectedBoilerplate(this.getAttribute('subject'), this.getAttribute('value'))|">
             <label th:text="${boilerplate.subject}"></label>
 
             <div class="text-right" th:if="${isEditablePage}">

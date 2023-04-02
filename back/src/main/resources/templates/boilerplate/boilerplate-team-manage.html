@@ -48,19 +48,14 @@
 
 <script type="text/javascript" th:inline="javascript">
 
-    // 상용구 선택
-    $("input[name=boilerplate-radio]").on("click", function (){
-        const subject = $(this).attr("subject");
-        const msg = $(this).val();
-
+    function selectedBoilerplate(subject, msg) {
         console.log("상용구 제목: " + subject);
         console.log("상용구 내용: " + msg);
 
         $("#subject").val(subject);
         $("#msg").val(msg);
         $(".field-error").css("display", "none");
-    });
-
+    }
 
     function createBoilerplate(){
         if(!checkBoilerplateField()){

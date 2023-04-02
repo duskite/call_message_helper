@@ -128,9 +128,11 @@ public class TeamController {
         List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
         model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
-        return "/fragments/boilerplate-list :: #teamBoilerplateList";
-    }
+        log.info("팀 상용구들 가져오기. 팀 명: {}", teamName);
+        log.info("팀 상용구들 가져오기. 상용구 개수: {}", teamBoilerplateList.size());
 
+        return "/fragments/boilerplate-list :: team-boilerplate-list";
+    }
 
 
 
