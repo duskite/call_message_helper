@@ -30,20 +30,6 @@ public class MsgServiceImpl implements MsgService{
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 
-    @Override
-    public boolean sendMms(TelDTO telDTO) {
-        return false;
-    }
-
-    @Override
-    public void receiveSms(TelDTO telDTO) {
-
-    }
-
-    @Override
-    public void receiveMms(TelDTO telDTO) {
-
-    }
 
     @Override
     public boolean sendManySms(List<TelDTO> telDTOList) {
