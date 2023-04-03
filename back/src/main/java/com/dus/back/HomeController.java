@@ -61,7 +61,7 @@ public class HomeController {
 
         List<String> myPhoneNumberList = fcmService.findAllPhoneNumbersByUserId(userId);
         model.addAttribute("myPhoneNumberList", myPhoneNumberList);
-        standByPhone(myPhoneNumberList);
+        standByPhone(userId, myPhoneNumberList);
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
@@ -75,7 +75,6 @@ public class HomeController {
 
 
 
-
         return "home";
     }
 
@@ -83,9 +82,9 @@ public class HomeController {
      * 로그인시 휴대폰 깨우기 요청
      * @param myPhoneNumbers
      */
-    private void standByPhone(List<String> myPhoneNumbers) {
+    private void standByPhone(String userId, List<String> myPhoneNumbers) {
         for (String phoneNumber : myPhoneNumbers) {
-            Fcm findFcm = fcmService.findByPhoneNumber(phoneNumber);
+            Fcm findFcm = fcmService.findByUserIdAndPhoneNumber(userId, phoneNumber);
             RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
             requestFcmDTO.setRequestFcmType(RequestFcmType.STAND_BY);
             requestFcmService.sendFcmMessage(findFcm.getToken(), requestFcmDTO);

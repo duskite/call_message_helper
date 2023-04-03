@@ -103,7 +103,7 @@ class FcmServiceImplTest {
         fcmService.addOrModifyFcm(fcm1);
         fcmService.addOrModifyFcm(fcm2);
 
-        Fcm findFcm = fcmService.findByPhoneNumber("01012345678");
+        Fcm findFcm = fcmService.findByUserIdAndPhoneNumber("ysy","01012345678");
         Assertions.assertThat(findFcm.getToken()).isNotEqualTo("aaa");
         Assertions.assertThat(findFcm.getToken()).isEqualTo("bbb");
     }

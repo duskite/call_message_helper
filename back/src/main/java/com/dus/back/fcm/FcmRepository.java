@@ -25,11 +25,11 @@ public interface FcmRepository {
 
 
     /**
-     * 휴대폰 번호에 대응하는 FCM 정보 조회
+     * 유저ID 와 휴대폰 번호에 대응하는 FCM 정보 조회
      * @param phoneNumber
      * @return Optional<Fcm>
      */
-    Optional<Fcm> findByPhoneNumber(String phoneNumber);
+    Optional<Fcm> findByUserIdAndPhoneNumber(String userId, String phoneNumber);
 
 
     /**
