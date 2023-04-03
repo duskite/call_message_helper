@@ -7,17 +7,14 @@ import com.dus.back.firebase.RequestFcmDTO;
 import com.dus.back.firebase.RequestFcmService;
 import com.dus.back.firebase.RequestFcmType;
 import com.dus.back.member.MemberService;
-import com.dus.back.member.MemberType;
 import com.dus.back.team.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * 사용자별 메인 화면을 보여주는 컨트롤러
@@ -41,10 +38,10 @@ public class HomeController {
     }
 
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
+//    @GetMapping("/")
+//    public String index() {
+//        return "index";
+//    }
 
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
