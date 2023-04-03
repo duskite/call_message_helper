@@ -26,24 +26,10 @@ public class MsgServiceImpl implements MsgService{
         requestFcmDTO.setRequestFcmType(RequestFcmType.SMS);
         requestFcmDTO.setTelDTO(telDTO);
 
-        String token = fcmService.findByPhoneNumber(telDTO.getMyPhoneNumber()).getToken();
+        String token = fcmService.findByUserIdAndPhoneNumber(telDTO.getUserId(), telDTO.getMyPhoneNumber()).getToken();
         return requestFcmService.sendFcmMessage(token, requestFcmDTO);
     }
 
-    @Override
-    public boolean sendMms(TelDTO telDTO) {
-        return false;
-    }
-
-    @Override
-    public void receiveSms(TelDTO telDTO) {
-
-    }
-
-    @Override
-    public void receiveMms(TelDTO telDTO) {
-
-    }
 
     @Override
     public boolean sendManySms(List<TelDTO> telDTOList) {
@@ -51,7 +37,10 @@ public class MsgServiceImpl implements MsgService{
             return false;
         }
 
-        String token = fcmService.findByPhoneNumber(telDTOList.get(0).getMyPhoneNumber()).getToken();
+        String userId = telDTOList.get(0).getUserId();
+        String myPhoneNumber = telDTOList.get(0).getMyPhoneNumber();
+
+        String token = fcmService.findByUserIdAndPhoneNumber(userId, myPhoneNumber).getToken();
 
         for (TelDTO telDTO : telDTOList) {
             RequestFcmDTO requestFcmDTO = new RequestFcmDTO();

@@ -38,3 +38,5 @@ out/
 
 
 src/main/resources/private/firebase-admin.json
+src/main/resources/application-private.yml
+src/main/resources/application-prod.yml

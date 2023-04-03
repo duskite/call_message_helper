@@ -34,8 +34,9 @@ public class FcmRepositoryImpl implements FcmRepository{
     }
 
     @Override
-    public Optional<Fcm> findByPhoneNumber(String phoneNumber) {
-        List<Fcm> result = em.createQuery("select m from Fcm m where m.phoneNumber =:phoneNumber", Fcm.class)
+    public Optional<Fcm> findByUserIdAndPhoneNumber(String userId, String phoneNumber) {
+        List<Fcm> result = em.createQuery("select m from Fcm m where m.userId=:userId and m.phoneNumber =:phoneNumber", Fcm.class)
+                .setParameter("userId", userId)
                 .setParameter("phoneNumber", phoneNumber)
                 .getResultList();
 

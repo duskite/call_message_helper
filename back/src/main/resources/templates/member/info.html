@@ -10,6 +10,7 @@
   </div>
 
   <form th:action="@{/member/${userId}/password}" th:object="${memberDTO}" onsubmit="return checkPassword()" method="post">
+    <input type="hidden" th:name="_csrf" th:value="${_csrf.token}"/>
     <div class="form-group">
       <label for="userId">아이디</label>
       <input type="text" id="userId" name="userId" th:field="*{userId}" class="form-control" th:value="${userId}" readonly/>
@@ -65,6 +66,9 @@
 
 <script type="text/javascript" th:inline="javascript">
 
+  const header = $("meta[name='_csrf_header']").attr('content');
+  const token = $("meta[name='_csrf']").attr('content');
+
   function updateMemberType() {
     const memberDTO = {
       userId: [[${userId}]]
@@ -73,7 +77,10 @@
     $.ajax({
       url: "/member/" + memberDTO.userId + "/member-type",
       type: "POST",
-      data: memberDTO
+      data: memberDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert("비즈니스 계정으로 변경 되었습니다.");
@@ -88,19 +95,25 @@
       userId: [[${userId}]]
     };
 
-    deleteRequest(memberDTO);
+    if(confirm("정말 탈퇴하시겠습니까?")){
+      deleteRequest(memberDTO);
+    }else {
+
+    }
   }
 
   function deleteRequest(memberDTO){
     $.ajax({
       url: "/member",
       type: "DELETE",
-      data: memberDTO
+      data: memberDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert("회원탈퇴 성공");
-
-        document.location.href = "/logout";
+        window.location.href = "/member/sign-in";
       }else {
         alert("실패");
       }

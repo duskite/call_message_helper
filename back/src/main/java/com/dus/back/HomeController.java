@@ -11,6 +11,7 @@ import com.dus.back.member.MemberType;
 import com.dus.back.team.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,27 +49,36 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
 
+
         String userId = authentication.getName();
+        log.info("현재 로그인 된 유저: {}", userId);
+
+        if(!authentication.isAuthenticated()){
+            return "/member/sign-in";
+        }
+
+
+        Member findMember = memberService.findByUserId(userId);
+
+        boolean isBusinessUser = memberService.isBusinessUser(userId);
+        model.addAttribute("userId", userId);
+        model.addAttribute("isBusinessUser", isBusinessUser);
+
+        List<Team> teamList = findMember.getTeams();
+        model.addAttribute("teamList", teamList);
+
 
         List<String> myPhoneNumberList = fcmService.findAllPhoneNumbersByUserId(userId);
-        standByPhone(myPhoneNumberList);
+        model.addAttribute("myPhoneNumberList", myPhoneNumberList);
+        standByPhone(userId, myPhoneNumberList);
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
 
-        boolean isBusinessUser = memberService.isBusinessUser(userId);
 
-        model.addAttribute("userId", userId);
-        model.addAttribute("myPhoneNumberList", myPhoneNumberList);
-        model.addAttribute("isBusinessUser", isBusinessUser);
-
-        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(userId);
         model.addAttribute("invitationList", findInvitationList);
 
-
-        Member findMember = memberService.findByUserId(userId);
-        List<Team> teamList = findMember.getTeams();
-        model.addAttribute("teamList", teamList);
 
         return "home";
     }
@@ -77,9 +87,9 @@ public class HomeController {
      * 로그인시 휴대폰 깨우기 요청
      * @param myPhoneNumbers
      */
-    private void standByPhone(List<String> myPhoneNumbers) {
+    private void standByPhone(String userId, List<String> myPhoneNumbers) {
         for (String phoneNumber : myPhoneNumbers) {
-            Fcm findFcm = fcmService.findByPhoneNumber(phoneNumber);
+            Fcm findFcm = fcmService.findByUserIdAndPhoneNumber(userId, phoneNumber);
             RequestFcmDTO requestFcmDTO = new RequestFcmDTO();
             requestFcmDTO.setRequestFcmType(RequestFcmType.STAND_BY);
             requestFcmService.sendFcmMessage(findFcm.getToken(), requestFcmDTO);

@@ -10,28 +10,17 @@ import java.util.List;
 public interface MsgService {
 
     /**
-     * 안드로이드 단말기에 sms 발송 요청
+     * 안드로이드 단말기에 문자 발송 요청
+     * 안드로이드 단에서 문자 길이에 따라 sms, mms 자동으로 변경되어 발송됨
      * @param telDTO
      */
     boolean sendSms(TelDTO telDTO);
 
-    /**
-     * 안드로이드 단말기에 mms 발송 요청
-     * @param telDTO
-     */
-    boolean sendMms(TelDTO telDTO);
-
-    /**
-     * 현재 단말기에서 받은 sms 를 수신
-     * @param telDTO
-     */
-    void receiveSms(TelDTO telDTO);
-
-    /**
-     * 현재 단말기에서 받은 mms 를 수신
-     * @param telDTO
-     */
-    void receiveMms(TelDTO telDTO);
+//    /**
+//     * 안드로이드 단말기에 mms 발송 요청
+//     * @param telDTO
+//     */
+//    boolean sendMms(TelDTO telDTO);
 
     /**
      * 문자 대량 발송 요청

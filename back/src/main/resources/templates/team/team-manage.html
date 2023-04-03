@@ -81,6 +81,9 @@
 
 <script type="text/javascript" th:inline="javascript">
 
+  const header = $("meta[name='_csrf_header']").attr('content');
+  const token = $("meta[name='_csrf']").attr('content');
+
   // 팀 선택
   $("input[name=team-radio]").on("click", function (){
     const selectedTeamName = $(this).val();
@@ -88,7 +91,7 @@
 
     $.ajax({
       url: "/team/" + selectedTeamName + "/members",
-      type: "GET",
+      type: "GET"
     }).done((fragment)=>{
       $("#team-member-list").replaceWith(fragment);
     });
@@ -101,7 +104,10 @@
 
     $.ajax({
       url: "/team/" + teamName + "/members/" + userId,
-      type: "DELETE"
+      type: "DELETE",
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((fragment)=>{
       $("#team-member-list").replaceWith(fragment);
     });
@@ -118,7 +124,10 @@
     $.ajax({
       url: "/team",
       type: "DELETE",
-      data: teamDTO
+      data: teamDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success)=>{
       if(success){
         location.href = "/team-manage/admin/" + [[${adminUserId}]];
@@ -147,12 +156,15 @@
     $.ajax({
       url: "/team/invitation",
       type: "POST",
-      data: inviteDTO
+      data: inviteDTO,
+      beforeSend: function (xhr){
+        xhr.setRequestHeader(header, token);
+      }
     }).done((success) => {
       if(success){
         alert(inviteDTO.inviteeUserId + "님에게 초대장을 발송했습니다.");
       }else {
-        alert("해당 유저는 이미 팀원입니다.");
+        alert("이미 팀원이거나, 존재하지 않는 유저입니다.");
       }
     })
   }

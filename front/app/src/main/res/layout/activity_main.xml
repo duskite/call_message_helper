@@ -13,11 +13,28 @@
         android:gravity="center"
         android:orientation="vertical"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/information"
+            />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnSignInActivity"
+            android:background="#F6D73C"
+            android:layout_margin="10dp"
             android:text="로그인"/>
     </LinearLayout>
+
 
 </LinearLayout>

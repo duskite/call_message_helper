@@ -43,7 +43,7 @@ public class FcmService extends FirebaseMessagingService {
 
         if(fcmType.equals("SMS")){
             String msg = fcmData.get("msg");
-            sendSMS(phoneNumber, msg);
+            sendMMS(phoneNumber, msg);
         } else if (fcmType.equals("MMS")) {
             String msg = fcmData.get("msg");
             sendMMS(phoneNumber, msg);
@@ -59,14 +59,19 @@ public class FcmService extends FirebaseMessagingService {
         super.onNewToken(token);
     }
 
-    private void sendSMS(String number, String msg){
+//    private void sendSMS(String number, String msg){
+//
+//        Log.d(TAG, "넘어온 번호:" + number);
+//
+//        SmsManager smsManager = SmsManager.getDefault();
+//        smsManager.sendTextMessage(number, null, msg, null, null);
+//    }
 
-        Log.d(TAG, "넘어온 번호:" + number);
-
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(number, null, msg, null, null);
-    }
-
+    /**
+     * 문자 길이에 따라 자동으로 sms 혹은 mms 로 변경 되어 발송됨
+     * @param number
+     * @param msg
+     */
     private void sendMMS(String number, String msg){
         SmsManager smsManager = SmsManager.getDefault();
 

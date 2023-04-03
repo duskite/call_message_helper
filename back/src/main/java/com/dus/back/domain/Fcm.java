@@ -7,6 +7,9 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = @UniqueConstraint(
+        name = "userIdAndPhoneNumber", columnNames = {"userId", "phoneNumber"}
+))
 public class Fcm {
 
     @Id
@@ -18,8 +21,6 @@ public class Fcm {
     private Member member;
 
     private String userId;
-
-    @Column(unique = true)
     private String phoneNumber;
     private String token;
 

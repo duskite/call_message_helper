@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local-ysy
+
+    group:
+      local-ysy:
+        - local
+        - private
+      prod-ysy:
+        - prod
+        - private
+

@@ -1,9 +1,7 @@
 package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
-import com.dus.back.domain.Member;
 import com.dus.back.domain.Team;
-import com.dus.back.member.MemberService;
 import com.dus.back.team.TeamService;
 import com.dus.back.vaild.CheckBoilerplateValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +52,7 @@ public class BoilerplateController {
         if(!userId.equals(authentication.getName())){
             return "forbidden";
         }
+
         List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
 
         model.addAttribute("boilerplateList", boilerplateList);
@@ -65,7 +64,11 @@ public class BoilerplateController {
 
     @GetMapping("/boilerplate-manage/{teamName}/{adminUserId}")
     public String boilerplateTeamPage(Model model, @PathVariable("teamName") String teamName,
-                                      @PathVariable("adminUserId") String adminUserId) {
+                                      @PathVariable("adminUserId") String adminUserId, Authentication authentication) {
+
+        if(!adminUserId.equals(authentication.getName())){
+            return "forbidden";
+        }
 
         model.addAttribute("teamName", teamName);
         model.addAttribute("adminUserId", adminUserId);
@@ -84,6 +87,11 @@ public class BoilerplateController {
     public String boilerplateAdd(@Valid BoilerplateDTO boilerplateDTO, Errors errors, Model model,
                                  Authentication authentication, HttpServletResponse httpServletResponse) {
 
+        if (!boilerplateDTO.getAuthorUserId().equals(authentication.getName())) {
+            return "forbidden";
+        }
+
+
         log.info("boilerplate 등록 요청");
 
         if (errors.hasErrors()) {
@@ -97,12 +105,14 @@ public class BoilerplateController {
             }
         }
 
+
         model.addAttribute("userId", authentication.getName());
         model.addAttribute("isEditablePage", true);
 
         if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
             Team findTeam = teamService.findByTeamName(boilerplateDTO.getTeamName());
             boilerplateService.addTeamBoilerplate(boilerplateDTO.toEntity(), findTeam);
+
             List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
             model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
@@ -111,6 +121,7 @@ public class BoilerplateController {
         }else {
             boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
             List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
+
             model.addAttribute("boilerplateList", boilerplateList);
 
             return "/fragments/boilerplate-list :: personal-boilerplate-list";
@@ -120,9 +131,13 @@ public class BoilerplateController {
 
     @PutMapping("/boilerplate")
     public String boilerplateUpdate(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
+
+        if (!boilerplateDTO.getAuthorUserId().equals(authentication.getName())) {
+            return "forbidden";
+        }
+
         log.info("boilerplate 수정 요청");
         log.info("수정 요청 온 DTO: {}", boilerplateDTO.toString());
-
 
         boilerplateService.modifyBoilerplate(boilerplateDTO.toEntity());
 
@@ -149,6 +164,10 @@ public class BoilerplateController {
     @DeleteMapping("/boilerplate")
     public String boilerplateDelete(Model model, BoilerplateDTO boilerplateDTO, Authentication authentication) {
         log.info("boilerplate 삭제 요청");
+
+        if (!boilerplateDTO.getAuthorUserId().equals(authentication.getName())) {
+            return "forbidden";
+        }
 
 
         boilerplateService.deleteBoilerplate(boilerplateDTO.toEntity());

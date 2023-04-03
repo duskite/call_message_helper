@@ -31,17 +31,21 @@ public class FcmServiceImpl implements FcmService {
     @Override
     public Long addOrModifyFcm(Fcm fcm) {
 
-        Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(fcm.getPhoneNumber());
+        String userId = fcm.getUserId();
+
+        Optional<Fcm> optionalFcm = fcmRepository.findByUserIdAndPhoneNumber(userId, fcm.getPhoneNumber());
         if(optionalFcm.isPresent()){
             Fcm findFcm = optionalFcm.get();
             findFcm.updateToken(fcm.getToken());
+            log.info("fcm 토큰 업데이트. 이미 존재하는 번호여서 새로추가하지 않고 기존 정보를 업데이트함");
 
             return findFcm.getId();
         }
 
-        String userId = fcm.getUserId();
+
         log.info("fcm 등록을 위해 member 조회. userId: {}", userId);
         Member findMember = memberService.findByUserId(userId);
+        log.info("조회된 userId: {}", findMember.getUserId());
         fcm.setMember(findMember);
 
         return fcmRepository.save(fcm);
@@ -55,15 +59,15 @@ public class FcmServiceImpl implements FcmService {
 
     @Override
     public void deleteFcm(Fcm fcm) {
-        Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(fcm.getPhoneNumber());
+        Optional<Fcm> optionalFcm = fcmRepository.findByUserIdAndPhoneNumber(fcm.getUserId(), fcm.getPhoneNumber());
         if(optionalFcm.isPresent()){
             fcmRepository.remove(optionalFcm.get());
         }
     }
 
     @Override
-    public Fcm findByPhoneNumber(String phoneNumber) {
-        Optional<Fcm> optionalFcm = fcmRepository.findByPhoneNumber(phoneNumber);
+    public Fcm findByUserIdAndPhoneNumber(String userId, String phoneNumber) {
+        Optional<Fcm> optionalFcm = fcmRepository.findByUserIdAndPhoneNumber(userId, phoneNumber);
         if(optionalFcm.isPresent()){
             return optionalFcm.get();
         }else {

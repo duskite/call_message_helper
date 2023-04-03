@@ -48,7 +48,7 @@ public class MsgController {
             return false;
         }
 
-        return msgService.sendMms(telDTO);
+        return msgService.sendSms(telDTO);
     }
 
     @GetMapping("/excel-download")

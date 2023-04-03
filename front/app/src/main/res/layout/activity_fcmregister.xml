@@ -10,11 +10,39 @@
         android:gravity="center"
         android:orientation="vertical"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMyUserId"
+            android:gravity="center"
+            android:text="유저 ID"
+            android:textSize="30dp"
+            android:layout_margin="10dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMyPhoneNumber"
+            android:text="휴대폰 번호"
+            android:textSize="30dp"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="단말기 등록 후 사용 가능 합니다. 아래 버튼을 눌러주세요."
+            android:gravity="center"
+            />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnRegisterFcm"
-            android:text="fcm 토큰 전송 테스트"/>
+            android:background="#F6D73C"
+            android:layout_margin="10dp"
+            android:text="현재 단말기 등록"/>
     </LinearLayout>
 
 

@@ -145,8 +145,12 @@ public class TeamController {
         log.info("초대장 초대 받는 사람 ID: {}", invitationDTO.getInviteeUserId());
 
         Team findTeam = teamService.findByTeamName(invitationDTO.getTeamName());
-        Member findMember = memberService.findByUserId(invitationDTO.getInviteeUserId());
-        if(findTeam.getMembers().contains(findMember)){
+        try {
+            Member findMember = memberService.findByUserId(invitationDTO.getInviteeUserId());
+            if (findTeam.getMembers().contains(findMember)) {
+                return false;
+            }
+        } catch (NoSuchElementException e) {
             return false;
         }
 

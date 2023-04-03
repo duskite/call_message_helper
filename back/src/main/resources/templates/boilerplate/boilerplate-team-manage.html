@@ -48,6 +48,9 @@
 
 <script type="text/javascript" th:inline="javascript">
 
+    const header = $("meta[name='_csrf_header']").attr('content');
+    const token = $("meta[name='_csrf']").attr('content');
+
     function selectedBoilerplate(subject, msg) {
         console.log("상용구 제목: " + subject);
         console.log("상용구 내용: " + msg);
@@ -75,6 +78,9 @@
         $.ajax({
             url: "/boilerplate",
             type: "POST",
+            beforeSend: function (xhr){
+                xhr.setRequestHeader(header, token);
+            },
             data: boilerPlateDTO,
             success: function (fragment){
                 $("#teamBoilerplateList").replaceWith(fragment);
@@ -111,7 +117,10 @@
         $.ajax({
             url: "/boilerplate",
             type: "DELETE",
-            data: boilerplateDTO
+            data: boilerplateDTO,
+            beforeSend: function (xhr){
+                xhr.setRequestHeader(header, token);
+            }
         }).done((fragment)=>{
             $("#teamBoilerplateList").replaceWith(fragment);
         });
@@ -137,6 +146,9 @@
             url: "/boilerplate",
             type: "PUT",
             data: boilerPlateDTO,
+            beforeSend: function (xhr){
+                xhr.setRequestHeader(header, token);
+            },
             success: function (fragment){
                 $("#teamBoilerplateList").replaceWith(fragment);
 
