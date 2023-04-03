@@ -7,7 +7,7 @@
 <div class="container py-5" style="max-width: 1500px">
   <div class="row justify-content-center">
 
-    <div class="fixed card col-3 mx-3">
+    <div class="fixed card col-3 p-4">
       <h2 th:text="${userId}"></h2>
 
       <div class="row">
@@ -90,7 +90,7 @@
 
     </div>
 
-    <div class="fixed col card" th:if="${!#lists.isEmpty(myPhoneNumberList)}">
+    <div class="fixed col card p-4" th:if="${!#lists.isEmpty(myPhoneNumberList)}">
       <div class="row">
 
         <div class="col">
@@ -213,7 +213,7 @@
       </div>
     </div>
 
-    <div class="fixed col card" th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
+    <div class="fixed col card p-4" th:unless="${!#lists.isEmpty(myPhoneNumberList)}">
       <h5 class="text-center col py-5">등록된 번호가 없습니다. 안드로이드 단말기에서 번호 등록을 먼저 진행해주세요</h5>
     </div>
   </div>

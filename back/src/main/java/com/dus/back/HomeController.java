@@ -53,8 +53,17 @@ public class HomeController {
         String userId = authentication.getName();
         log.info("현재 로그인 된 유저: {}", userId);
 
+        if(!authentication.isAuthenticated()){
+            return "/member/sign-in";
+        }
+
 
         Member findMember = memberService.findByUserId(userId);
+
+        boolean isBusinessUser = memberService.isBusinessUser(userId);
+        model.addAttribute("userId", userId);
+        model.addAttribute("isBusinessUser", isBusinessUser);
+
         List<Team> teamList = findMember.getTeams();
         model.addAttribute("teamList", teamList);
 
@@ -65,14 +74,10 @@ public class HomeController {
 
         List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(userId);
         model.addAttribute("boilerplateList", boilerplateList);
-        boolean isBusinessUser = memberService.isBusinessUser(userId);
 
-        model.addAttribute("userId", userId);
-        model.addAttribute("isBusinessUser", isBusinessUser);
 
-        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
+        List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(userId);
         model.addAttribute("invitationList", findInvitationList);
-
 
 
         return "home";
