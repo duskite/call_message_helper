@@ -2,10 +2,12 @@ package com.dus.back.boilerplate;
 
 import com.dus.back.domain.Boilerplate;
 import com.dus.back.domain.Member;
+import com.dus.back.domain.Team;
 import com.dus.back.member.MemberService;
 import com.dus.back.member.MemberType;
 import org.assertj.core.api.Assertions;
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,20 @@ class BoilerplateServiceImplTest {
     MemberService memberService;
     @Autowired
     EntityManager em;
+
+    @Test
+    @DisplayName("작성자가 없는 상용구는 존재할 수 없음")
+    void needAdminInTeam() {
+
+        Boilerplate boilerplate = Boilerplate.builder()
+                .subject("test")
+                .msg("테스트")
+                .build();
+
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> {
+            boilerplateService.addBoilerplate(boilerplate);
+        }).isInstanceOf(NoSuchElementException.class);
+    }
 
     @Test
     @DisplayName("상용구 1건 등록")
@@ -84,6 +100,37 @@ class BoilerplateServiceImplTest {
                 boilerplate.setMember(member);
             });
         }).isInstanceOf(PersistenceException.class);
+    }
+
+    @Test
+    @DisplayName("유저가 다르면 동일한 제목의 상용구 등록 가능")
+    void duplicateBoilerplatesDifferentMember() {
+        Member member = createMember();
+        Member member2 = Member.builder()
+                .userId("another")
+                .password("1234")
+                .memberType(MemberType.PERSONAL)
+                .email("ysy@naver.com")
+                .build();
+        memberService.addMember(member);
+        memberService.addMember(member2);
+
+        Boilerplate boilerplate = Boilerplate.builder()
+                .subject("test")
+                .msg("aaa")
+                .authorUserId(member.getUserId())
+                .build();
+        Boilerplate boilerplate2 = Boilerplate.builder()
+                .subject("test")
+                .msg("aaa")
+                .authorUserId(member2.getUserId())
+                .build();
+        em.persist(boilerplate);
+        em.persist(boilerplate2);
+
+
+        boilerplate.setMember(member);
+        boilerplate2.setMember(member2);
     }
 
 

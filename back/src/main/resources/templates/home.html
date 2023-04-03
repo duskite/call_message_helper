@@ -98,7 +98,7 @@
             <h3 class="py-1 text-center">전화</h3>
             <div class="form-group">
               <label for="targetCallNumber">상대방 번호</label>
-              <input type="text" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="targetCallNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
             </div>
             <div class="row">
               <div class="col">
@@ -117,7 +117,7 @@
             <div>
               <div class="form-group">
                 <label>상대방 번호</label>
-                <input type="text" id="targetMsgNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
+                <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" id="targetMsgNumber" name="phoneNumber" class="form-control" placeholder="번호를 입력하세요">
               </div>
               <div class="form-group">
                 <label>메세지 내용</label>

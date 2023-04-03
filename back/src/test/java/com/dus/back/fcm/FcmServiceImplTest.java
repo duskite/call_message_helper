@@ -1,5 +1,6 @@
 package com.dus.back.fcm;
 
+import com.dus.back.domain.Boilerplate;
 import com.dus.back.domain.Fcm;
 import com.dus.back.domain.Member;
 import com.dus.back.exception.DuplicateException;
@@ -26,14 +27,14 @@ class FcmServiceImplTest {
     EntityManager em;
 
     @Test
-    @DisplayName("회원만 fcm 등록을 할 수 있음")
-    void save() {
+    @DisplayName("생성한 유저가 없는 fcm정보는 존재할 수 없음")
+    void needAdminInTeam() {
+
         Fcm fcm = Fcm.builder()
                 .phoneNumber("01012345678")
-                .token("asdasd")
-                .userId("ysy").build();
+                .build();
 
-        Assertions.assertThatThrownBy(() -> {
+        org.assertj.core.api.Assertions.assertThatThrownBy(() -> {
             fcmService.addOrModifyFcm(fcm);
         }).isInstanceOf(NoSuchElementException.class);
     }
@@ -49,7 +50,6 @@ class FcmServiceImplTest {
 
         Fcm fcm = Fcm.builder()
                 .phoneNumber("01012345678")
-                .token("asdasd")
                 .userId("ysy")
                 .build();
         fcm.setMember(member);
@@ -67,17 +67,19 @@ class FcmServiceImplTest {
                 .password("1234")
                 .build();
         memberService.addMember(member);
+
         Fcm fcm = Fcm.builder()
                 .phoneNumber("01012345678")
                 .token(originalToken)
                 .userId("ysy")
                 .build();
         fcmService.addOrModifyFcm(fcm);
+
         Fcm findFcm = fcmService.findById(fcm.getId());
         findFcm.updateToken("bbb");
 
         Fcm updatedTokenFcm = fcmService.findById(findFcm.getId());
-        Assertions.assertThat(originalToken).isNotEqualTo(updatedTokenFcm.getToken());
+        Assertions.assertThat("aaa").isNotEqualTo(updatedTokenFcm.getToken());
     }
 
     @Test
@@ -85,19 +87,18 @@ class FcmServiceImplTest {
     void duplicateFcm() {
         Member member = Member.builder()
                 .userId("ysy")
-                .password("1234")
                 .build();
         memberService.addMember(member);
 
         Fcm fcm1 = Fcm.builder()
                 .phoneNumber("01012345678")
-                .token("aaa")
                 .userId("ysy")
+                .token("aaa")
                 .build();
         Fcm fcm2 = Fcm.builder()
                 .phoneNumber("01012345678")
-                .token("bbb")
                 .userId("ysy")
+                .token("bbb")
                 .build();
 
         fcmService.addOrModifyFcm(fcm1);
@@ -120,12 +121,37 @@ class FcmServiceImplTest {
         IntStream.rangeClosed(0, 9).forEach(i ->{
             Fcm fcm = Fcm.builder()
                     .phoneNumber("0101234567" + i)
-                    .token("aaa")
-                    .userId("ysy")
+                    .userId(member.getUserId())
                     .build();
 
             fcmService.addOrModifyFcm(fcm);
         });
+    }
+
+    @Test
+    @DisplayName("서로 다른 유저가 동일한 휴대전화를 등록할 수 있음")
+    void sameFcmRegister() {
+        Member member = Member.builder()
+                .userId("ysy")
+                .build();
+        Member member2 = Member.builder()
+                .userId("test")
+                .build();
+        memberService.addMember(member);
+        memberService.addMember(member2);
+
+
+        Fcm fcm = Fcm.builder()
+                .phoneNumber("01012345678")
+                .userId(member.getUserId())
+                .build();
+        Fcm fcm2 = Fcm.builder()
+                .phoneNumber("01012345678")
+                .userId(member2.getUserId())
+                .build();
+
+        fcmService.addOrModifyFcm(fcm);
+        fcmService.addOrModifyFcm(fcm2);
     }
 
 }
