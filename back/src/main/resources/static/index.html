@@ -1,9 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head th:replace="fragments/head :: head"/>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/base.css">
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+</head>
 
 <body>
-<nav th:replace="fragments/nav :: nav"/>
+<nav class="navbar navbar-light bg-light static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/home">Home</a>
+    </div>
+</nav>
 
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
@@ -21,13 +32,13 @@
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-secondary btn-lg"
-                    th:onclick="|location.href='@{/member/sign-up}'|">
+                    onclick="location.href='/member/sign-up'">
                 회원 가입
             </button>
         </div>
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg"
-                    th:onclick="|location.href='@{/member/sign-in}'|">
+                    onclick="location.href='/member/sign-in'">
                 로그인
             </button>
         </div>
