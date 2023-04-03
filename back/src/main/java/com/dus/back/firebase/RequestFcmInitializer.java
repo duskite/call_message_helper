@@ -28,10 +28,10 @@ public class RequestFcmInitializer {
 
         try{
             ClassPathResource resource = new ClassPathResource("private/firebase-admin.json");
-            FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+//            FileInputStream serviceAccount = new FileInputStream(resource.getFile());
 
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.fromStream(resource.getInputStream()))
                     .build();
 
             FirebaseApp.initializeApp(options);
