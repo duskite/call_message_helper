@@ -37,12 +37,6 @@ public class HomeController {
         this.teamService = teamService;
     }
 
-
-//    @GetMapping("/")
-//    public String index() {
-//        return "index";
-//    }
-
     @GetMapping("/home")
     public String home(Model model, Authentication authentication){
 
@@ -51,7 +45,7 @@ public class HomeController {
         log.info("현재 로그인 된 유저: {}", userId);
 
         if(!authentication.isAuthenticated()){
-            return "/member/sign-in";
+            return "member/sign-in";
         }
 
 

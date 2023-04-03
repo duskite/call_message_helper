@@ -59,7 +59,7 @@ public class BoilerplateController {
         model.addAttribute("userId", userId);
         model.addAttribute("isEditablePage", true);
 
-        return "/boilerplate/boilerplate-manage";
+        return "boilerplate/boilerplate-manage";
     }
 
     @GetMapping("/boilerplate-manage/{teamName}/{adminUserId}")
@@ -78,7 +78,7 @@ public class BoilerplateController {
         model.addAttribute("teamBoilerplateList", teamBoilerplateList);
         model.addAttribute("isEditablePage", true);
 
-        return "/boilerplate/boilerplate-team-manage";
+        return "boilerplate/boilerplate-team-manage";
     }
 
 
@@ -99,9 +99,9 @@ public class BoilerplateController {
             customErrorResponse(httpServletResponse);
 
             if (boilerplateDTO.getBoilerplateType() == BoilerplateType.TEAM) {
-                return "/fragments/boilerplate-list :: team-boilerplate-list";
+                return "fragments/boilerplate-list :: team-boilerplate-list";
             }else {
-                return "/fragments/boilerplate-list :: personal-boilerplate-list";
+                return "fragments/boilerplate-list :: personal-boilerplate-list";
             }
         }
 
@@ -116,7 +116,7 @@ public class BoilerplateController {
             List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
             model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
-            return "/fragments/boilerplate-list :: team-boilerplate-list";
+            return "fragments/boilerplate-list :: team-boilerplate-list";
 
         }else {
             boilerplateService.addBoilerplate(boilerplateDTO.toEntity());
@@ -124,7 +124,7 @@ public class BoilerplateController {
 
             model.addAttribute("boilerplateList", boilerplateList);
 
-            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+            return "fragments/boilerplate-list :: personal-boilerplate-list";
         }
 
     }
@@ -149,13 +149,13 @@ public class BoilerplateController {
             List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
             model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
-            return "/fragments/boilerplate-list :: team-boilerplate-list";
+            return "fragments/boilerplate-list :: team-boilerplate-list";
 
         }else {
             List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
             model.addAttribute("boilerplateList", boilerplateList);
 
-            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+            return "fragments/boilerplate-list :: personal-boilerplate-list";
         }
 
 
@@ -180,13 +180,13 @@ public class BoilerplateController {
             List<Boilerplate> teamBoilerplateList = findTeam.getBoilerplates();
             model.addAttribute("teamBoilerplateList", teamBoilerplateList);
 
-            return "/fragments/boilerplate-list :: team-boilerplate-list";
+            return "fragments/boilerplate-list :: team-boilerplate-list";
 
         }else {
             List<Boilerplate> boilerplateList = boilerplateService.findAllPersonalBoilerplate(authentication.getName());
             model.addAttribute("boilerplateList", boilerplateList);
 
-            return "/fragments/boilerplate-list :: personal-boilerplate-list";
+            return "fragments/boilerplate-list :: personal-boilerplate-list";
         }
     }
 }

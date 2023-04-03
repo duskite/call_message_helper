@@ -53,14 +53,14 @@ public class TeamController {
         model.addAttribute("adminUserId", adminUserId);
 
 
-        return "/team/team-manage";
+        return "team/team-manage";
     }
 
     @GetMapping("/team-create")
     public String teamCreatePage(Model model, TeamDTO teamDTO, Authentication authentication) {
         teamDTO.setAdminUserId(authentication.getName());
         model.addAttribute("teamDTO", teamDTO);
-        return "/team/team-create";
+        return "team/team-create";
     }
 
     @PostMapping("/team")
@@ -74,11 +74,11 @@ public class TeamController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/team/team-create";
+            return "team/team-create";
         }
         teamService.addTeam(teamDTO.toEntity());
 
-        return "redirect:/team-manage/admin/" + authentication.getName();
+        return "redirect:team-manage/admin/" + authentication.getName();
     }
 
     @DeleteMapping("/team")
@@ -98,7 +98,7 @@ public class TeamController {
         model.addAttribute("teamName", findTeam.getTeamName());
         model.addAttribute("adminUserId", findTeam.getAdminUserId());
 
-        return "/team/team-manage :: #team-member-list";
+        return "team/team-manage :: #team-member-list";
     }
     @DeleteMapping("/team/{teamName}/members/{userId}")
     public String teamMemberDelete(@PathVariable("teamName") String teamName, @PathVariable("userId") String userId,
@@ -118,7 +118,7 @@ public class TeamController {
         model.addAttribute("teamName", teamName);
         model.addAttribute("adminUserId", authentication.getName());
 
-        return "/team/team-manage :: #team-member-list";
+        return "team/team-manage :: #team-member-list";
     }
 
 
@@ -131,7 +131,7 @@ public class TeamController {
         log.info("팀 상용구들 가져오기. 팀 명: {}", teamName);
         log.info("팀 상용구들 가져오기. 상용구 개수: {}", teamBoilerplateList.size());
 
-        return "/fragments/boilerplate-list :: team-boilerplate-list";
+        return "fragments/boilerplate-list :: team-boilerplate-list";
     }
 
 
@@ -168,7 +168,7 @@ public class TeamController {
         model.addAttribute("invitationList", findInvitationList);
 
 
-        return "/home :: #invitation-list";
+        return "home :: #invitation-list";
     }
 
     @DeleteMapping("/team/invitation/{uniqueKey}")
@@ -180,7 +180,7 @@ public class TeamController {
         List<Invitation> findInvitationList = teamService.findAllInviteByInviteeUserId(authentication.getName());
         model.addAttribute("invitationList", findInvitationList);
 
-        return "/home :: #invitation-list";
+        return "home :: #invitation-list";
     }
 
     private InvitationDTO uniqueKeyConvertInvitationDTO(String uniqueKey){

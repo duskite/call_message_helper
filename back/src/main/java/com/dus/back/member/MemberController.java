@@ -50,7 +50,7 @@ public class MemberController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/member/sign-up";
+            return "member/sign-up";
         }
 
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
@@ -58,7 +58,7 @@ public class MemberController {
 
         memberService.addMember(memberDTO.toEntity());
 
-        return "redirect:/member/sign-in";
+        return "redirect:member/sign-in";
     }
 
     @DeleteMapping("/member")
@@ -99,7 +99,7 @@ public class MemberController {
                 model.addAttribute(key, validatorResult.get(key));
             }
 
-            return "/member/info";
+            return "member/info";
         }
 
         log.info("비밀번호 변경 요청");
@@ -109,7 +109,7 @@ public class MemberController {
             log.info("비밀번호 변경 성공");
             return "redirect:/member/sign-in";
         } else {
-            return "/member/info";
+            return "member/info";
         }
     }
 
@@ -127,7 +127,7 @@ public class MemberController {
     @GetMapping("/member/sign-up")
     public String signUp(Model model, MemberDTO memberDTO) {
         model.addAttribute("memberDTO", memberDTO);
-        return "/member/sign-up";
+        return "member/sign-up";
     }
 
     @GetMapping("/member/sign-in")
@@ -136,7 +136,7 @@ public class MemberController {
         model.addAttribute("exception", exception);
         model.addAttribute("loginDTO", new LoginDTO());
 
-        return "/member/sign-in";
+        return "member/sign-in";
     }
 
     @GetMapping("/member/{userId}/info")
@@ -149,13 +149,13 @@ public class MemberController {
         model.addAttribute("userId", userId);
         model.addAttribute("memberDTO", memberDTO);
 
-        return "/member/info";
+        return "member/info";
     }
 
     @GetMapping("/member/find-password")
     public String findPassword(Model model) {
         model.addAttribute("userId", new String());
-        return "/member/find-password";
+        return "member/find-password";
     }
 
     @PostMapping("/member/find-password/{userId}")
