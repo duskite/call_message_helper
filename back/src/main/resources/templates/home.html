@@ -202,7 +202,9 @@
                 <a class="btn btn-primary" th:href="@{/boilerplate-manage/{userId}(userId = ${userId})}">개인 상용구 관리</a>
               </div>
               <div class="col">
-                <button class="btn btn-primary" onclick="teamBoilerplateManage()">팀 상용구 관리</button>
+                <div th:if="${isBusinessUser}">
+                  <button class="btn btn-primary" onclick="teamBoilerplateManage()">팀 상용구 관리</button>
+                </div>
               </div>
             </div>
           </div>
@@ -415,9 +417,23 @@
     console.log(selectedTeam);
     if(selectedTeam == null || selectedTeam == ""){
       alert("팀을 먼저 골라주세요.");
+
       return;
     }
-    location.href = "/boilerplate-manage/" + selectedTeam + "/" + [[${userId}]];
+    $.ajax({
+      url: "/team/" + selectedTeam + "/admin",
+      type: "GET",
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader(header, token);
+      }
+    }).done((adminUserId) => {
+      if(adminUserId == [[${userId}]]){
+        location.href = "/boilerplate-manage/" + selectedTeam + "/" + adminUserId;
+      }else {
+        alert("팀의 관리자만 접근 가능합니다.");
+      }
+    });
+
   }
 
 

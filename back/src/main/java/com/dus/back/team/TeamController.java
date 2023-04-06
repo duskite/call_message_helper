@@ -88,6 +88,15 @@ public class TeamController {
         return teamService.deleteTeam(teamDTO.toEntity());
     }
 
+    @GetMapping("/team/{teamName}/admin")
+    @ResponseBody
+    public String teamAdminUserId(@PathVariable("teamName") String teamName) {
+        Team findTeam = teamService.findByTeamName(teamName);
+        String adminUserId = findTeam.getAdminUserId();
+
+        return adminUserId;
+    }
+
     @GetMapping("/team/{teamName}/members")
     public String teamMembers(@PathVariable("teamName")String teamName, Model model) {
         Team findTeam = teamService.findByTeamName(teamName);
